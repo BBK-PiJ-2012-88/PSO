@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class TheFourClusters implements Neighbourhood {
 
 	private HashMap<Integer, Double> fitness;
-	private TheWheel neighbourhood = new TheWheel();
+	private TheStar neighbourhood = new TheStar();
 	private boolean maximum = false;
 	
 	public TheFourClusters(){}
@@ -24,7 +24,7 @@ public class TheFourClusters implements Neighbourhood {
 	public int neighbourhoodBest(int particle){
 		assert fitness != null;
 		neighbourhood.setMaximum(maximum);
-		int bottom = getBottomOfWheel(particle);
+		int bottom = getBottomOfStar(particle);
 		neighbourhood.setSolutionFitness(getSubFitness(bottom, bottom + bottom));
 		int result = neighbourhood.neighbourhoodBest(particle);
 		return getFitness(bottom, result, particle);
@@ -62,7 +62,7 @@ public class TheFourClusters implements Neighbourhood {
 		}
 	}
 
-	private int getBottomOfWheel(int particle) {
+	private int getBottomOfStar(int particle) {
 		int segment = fitness.size() / 4;
 		if(particle < segment){
 			return 0;

@@ -26,10 +26,10 @@ public class TheRing implements Neighbourhood {
 	 */
 	@Override
 	public int neighbourhoodBest(int particle){
-		if(particle == fitness.size()){
+		if(particle == fitness.size() - 1){
 			return calculateNeighbourhoodBest(0, particle - 1, particle);
 		}else if(particle == 0){
-			return calculateNeighbourhoodBest(0, 1, fitness.size());
+			return calculateNeighbourhoodBest(0, 1, fitness.size() - 1);
 		}else{
 			return calculateNeighbourhoodBest(particle - 1, particle, particle + 1);
 		}

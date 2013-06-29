@@ -88,9 +88,10 @@ public class VanillaSwarm {
 		this.upperLimit = upperLimit;
 		this.lowerLimit = lowerLimit;
 	}
-	
+	//going to need to sort out the null thing or it
+	//won't initiate solutions each time.
 	public Vector<Double> optimise(){
-		assert(objectiveFunction != null);
+		assert objectiveFunction != null;
 		int iteration = 0;
 		do{
 			iteration++;
