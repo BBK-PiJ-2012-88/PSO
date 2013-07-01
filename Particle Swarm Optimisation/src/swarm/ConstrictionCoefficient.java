@@ -41,12 +41,12 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 			assert(neighbourhood != null && velocities != null && position != null
 					&& fitness != null);
 			double constrictionCoefficient = calculateConstrictionCoefficient();
+			calculateVelocities();
 			for(int i = 0; i < velocities.length; i++){
 				for(int k = 0; k < velocities[i].length; k++){
 					velocities[i][k] = velocities[i][k] * constrictionCoefficient;
 				}
 			}
-			calculateVelocities();
 			return getVelocities();
 		}
 		

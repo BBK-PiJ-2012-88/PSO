@@ -1,5 +1,7 @@
 package swarm;
 
+import java.util.Vector;
+
 public interface Function {
 	
 	/*
@@ -11,5 +13,6 @@ public interface Function {
 	 * Returns the fitness of a candidate solution
 	 */
 	double CalculateFitness(double[] candidateSolution);
-	//bla
+	
+	double CalculateFitness(Vector<Double> candidateSolution);
 }

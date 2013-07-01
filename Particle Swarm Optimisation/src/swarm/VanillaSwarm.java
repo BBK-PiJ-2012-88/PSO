@@ -35,13 +35,13 @@ public class VanillaSwarm {
 	/*
 	 * Upper limit used to generate initial candidate solutions
 	 */
-	private int upperLimit = 1;
+	private double upperLimit = 1;
 	
 	/*
 	 * Lower limit used to generate initial candidate solutions. Default value is 0
 	 */
-	private int lowerLimit = 0;
-	
+	private double lowerLimit = 0;
+
 	/* The fitness measurement of the best solution found by each
 	 * particle
 	 */
@@ -71,6 +71,7 @@ public class VanillaSwarm {
 		this.objectiveFunction = objectiveFunction;
 		this.velocityUpdate = velocityUpdate;
 		this.haltingCriteria = haltingCriteria;
+	//	this.fitness = new HashMap <Integer, Double>();
 	}
 	
 	public VanillaSwarm(Function objectiveFunction, VelocityUpdate velocityUpdate, HaltingCriteria haltingCriteria, boolean maximum){
@@ -96,7 +97,7 @@ public class VanillaSwarm {
 		do{
 			iteration++;
 			if(position == null){
-				intiateCandidateSolutions();
+				initiateCandidateSolutions();
 			}else{
 				velocityUpdate.updateData(personalBest, position, fitness);
 				setVelocities(velocityUpdate.updateVelocities());
@@ -105,7 +106,7 @@ public class VanillaSwarm {
 			calculateFitness();
 			calculateGlobalBest();
 			haltingCriteria.updateData(globalBest, fitness.get(globalBest), iteration);
-		}while(haltingCriteria.halt());
+		}while(!haltingCriteria.halt());
 		Vector<Double> result = new Vector<Double>();
 		for(int i = 0; i < personalBest[globalBest].length; i++){
 			result.add(personalBest[globalBest][i]);
@@ -135,7 +136,6 @@ public class VanillaSwarm {
 			double currentfitness = objectiveFunction.CalculateFitness(position[i]);
 			if(maximum){
 				if(currentfitness > fitness.get(i)){
-					// might have to add "|| solutionFitness.get(i) == null"
 					fitness.put(i, currentfitness);
 					updatePersonalBest(i);
 				}
@@ -164,7 +164,7 @@ public class VanillaSwarm {
 			}
 		}else{
 			for(int i = 0; i < fitness.size(); i++){
-				if(fitness.get(i) > fitness.get(best)){
+				if(fitness.get(i) < fitness.get(best)){
 					best = i;
 				}
 			}
@@ -172,18 +172,50 @@ public class VanillaSwarm {
 		globalBest = best;
 	}
 	
-	private void intiateCandidateSolutions() {
+	private void initiateCandidateSolutions() {
 		int columns = objectiveFunction.getVariables();
 		position = new double[numberOfParticles][columns];
+		double random = upperLimit - lowerLimit;
 		for(int i = 0; i < numberOfParticles; i++){
 			for(int k = 0; k < objectiveFunction.getVariables(); k++){
-				double d = lowerLimit + (Math.random() * upperLimit);
+				double d = lowerLimit + (Math.random() * random);
 				position[i][k] = d;
 			}
 		}
 		personalBest = position.clone();
 		fitness = new HashMap <Integer, Double>();
+		setFitness();
 		velocities = new double[numberOfParticles][columns];
+		for(int i = 0; i < numberOfParticles; i++){
+			for(int k = 0; k < columns; k++){
+				velocities[i][k] = 0;
+			}
+		}
+		velocityUpdate.setVelocities(velocities);
+	}
+	
+	private void setFitness() {
+		for(int i = 0; i < numberOfParticles; i++){
+			double currentfitness = objectiveFunction.CalculateFitness(position[i]);
+			fitness.put(i, currentfitness);
+		}
+		
+	}
+
+	public double getUpperLimit() {
+		return upperLimit;
+	}
+
+	public void setUpperLimit(double upperLimit) {
+		this.upperLimit = upperLimit;
+	}
+
+	public double getLowerLimit() {
+		return lowerLimit;
+	}
+
+	public void setLowerLimit(double lowerLimit) {
+		this.lowerLimit = lowerLimit;
 	}
 
 }

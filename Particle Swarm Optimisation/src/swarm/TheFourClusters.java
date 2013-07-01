@@ -25,37 +25,38 @@ public class TheFourClusters implements Neighbourhood {
 		assert fitness != null;
 		neighbourhood.setMaximum(maximum);
 		int bottom = getBottomOfStar(particle);
-		neighbourhood.setSolutionFitness(getSubFitness(bottom, bottom + bottom));
-		int result = neighbourhood.neighbourhoodBest(particle);
+		neighbourhood.setSolutionFitness(getSubFitness(bottom, bottom + fitness.size() / 4));
+		int result = neighbourhood.neighbourhoodBest(particle) + bottom;
 		return getFitness(bottom, result, particle);
 	}
 	
 	private int getFitness(int bottom, int result, int particle) {
+		int segment = fitness.size() / 4;
 		if(bottom == 0){
 			if(particle == 1 || particle == 2 || particle == 3){
-				return compareFitness(result, particle + bottom);
+				return compareFitness(result, segment * particle);
 			}else{
 				return result;
 			}
-		}else if(bottom == fitness.size()){
+		}else if(bottom == segment){
 			if(particle == bottom){
-				return compareFitness(result, particle - bottom);
+				return compareFitness(result, 1);
 			}else if(particle == bottom + 2 || particle == bottom + 3){
-				return compareFitness(result, particle + bottom);
+				return compareFitness(result, (particle - bottom) * segment + 1);
 			}else{
 				return result;
 			}
-		}else if(bottom == fitness.size() * 2){
+		}else if(bottom == segment * 2){
 			if(particle == bottom || particle == bottom + 1){
-				return compareFitness(result, particle - bottom);
+				return compareFitness(result, (particle - bottom) * segment + 2);
 			}else if(particle == bottom + 3){
-				return compareFitness(result, particle + bottom);
+				return compareFitness(result, particle + segment);
 			}else{
 				return result;
 			}
 		}else{
 			if(particle == bottom || particle == bottom + 1 || particle == bottom + 2){
-				return compareFitness(result, particle - bottom);
+				return compareFitness(result, (particle - bottom) * segment + 3);
 			}else{
 				return result;
 			}
