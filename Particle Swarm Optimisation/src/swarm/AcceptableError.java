@@ -4,17 +4,11 @@ public class AcceptableError implements HaltingCriteria {
 	
 	private double solution;
 	private double error;
-	private boolean maximum = false;
 	private double gBest;
 	
 	public AcceptableError(double solution, double error){
 		this.solution = solution;
 		this.error = error;
-	}
-	
-	public AcceptableError(double solution, double error, boolean maximum){
-		this(solution, error);
-		this.maximum = maximum;
 	}
 
 	public double getSolution() {
@@ -33,17 +27,9 @@ public class AcceptableError implements HaltingCriteria {
 		this.error = error;
 	}
 
-	public boolean isMaximum() {
-		return maximum;
-	}
-
-	public void setMaximum(boolean maximum) {
-		this.maximum = maximum;
-	}
-
 	@Override
 	public void updateData(int gbest, double gbestFitness, int iteration) {
-		this.gBest = gbest;
+		this.gBest = gbestFitness;
 		
 	}
 

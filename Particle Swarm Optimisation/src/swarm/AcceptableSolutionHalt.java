@@ -1,14 +1,14 @@
 package swarm;
 
-public class AcceptableHalt implements HaltingCriteria {
+public class AcceptableSolutionHalt implements HaltingCriteria {
 
 	private boolean maximum = false;
 	private double acceptableSolution;
 	private double gBest;
 	
-	public AcceptableHalt(){}
+	public AcceptableSolutionHalt(){}
 	
-	public AcceptableHalt(boolean maximum){
+	public AcceptableSolutionHalt(boolean maximum){
 		this.maximum = maximum;
 	}
 	
