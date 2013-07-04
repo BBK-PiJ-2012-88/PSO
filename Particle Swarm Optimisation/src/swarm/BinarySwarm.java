@@ -1,29 +1,132 @@
 package swarm;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 public class BinarySwarm implements Swarm {
 
 	private Function objectiveFunction;
 	
-	private int [][] binaryPosition;
-	
-	private int [][] bestBinaryPosition;
+	private double [][] personalBest;
 	
 	private double [][] position;
-	
-	private double [][] personalBest;
 	
 	private double [][] velocities;
 	
 	private SigmoidFunction sigmoidfunction;
 	
+	private boolean maximum = false;
+	
+	private VelocityUpdate velocityUpdate;
+	
+	private int numberOfParticles = 20;
+	
+	private int globalBest;
+	
+	private HashMap<Integer, Double> fitness;
+	
+	private HaltingCriteria haltingCriteria;
+	
 	
 	@Override
 	public Vector<Double> optimise() {
-		// TODO Auto-generated method stub
-		return null;
+		assert objectiveFunction != null;
+		int iteration = 0;
+		do{
+			iteration++;
+			if(position == null){
+				initiateCandidateSolutions();
+			}else{
+				velocityUpdate.updateData(personalBest, position, fitness);
+				setVelocities(velocityUpdate.updateVelocities());
+				updateParticlePositions();
+			}
+			calculateFitness();
+			calculateGlobalBest();
+			haltingCriteria.updateData(fitness.get(globalBest), iteration);
+		}while(!haltingCriteria.halt());
+		Vector<Double> result = new Vector<Double>();
+		for(int i = 0; i < personalBest[globalBest].length; i++){
+			result.add(personalBest[globalBest][i]);
+		}
+		return result;
 	}
+
+	private void calculateGlobalBest() {
+		int best = 0;
+		if(maximum){
+			for(int i = 0; i < fitness.size(); i++){
+				if(fitness.get(i) > fitness.get(best)){
+					best = i;
+				}
+			}
+		}else{
+			for(int i = 0; i < fitness.size(); i++){
+				if(fitness.get(i) < fitness.get(best)){
+					best = i;
+				}
+			}
+		}
+		globalBest = best;
+	}
+
+	private void calculateFitness() {
+		for(int i = 0; i < numberOfParticles; i++){
+			double currentfitness = objectiveFunction.CalculateFitness(position[i]);
+			if(maximum){
+				if(currentfitness > fitness.get(i)){
+					fitness.put(i, currentfitness);
+					updatePersonalBest(i);
+				}
+			}else{
+				if(currentfitness < fitness.get(i)){
+					fitness.put(i, currentfitness);
+					updatePersonalBest(i);
+				}
+			}
+		}
+		
+	}
+
+	private void updatePersonalBest(int row) {
+		for(int k = 0; k < position[row].length; k++){
+			personalBest[row][k] = position[row][k];
+		}
+	}
+
+	private void updateParticlePositions() {
+		double random = Math.random();
+		for(int i = 0; i < position.length; i++){
+			for(int k = 0; k < position[i].length; k++){
+				if(sigmoidfunction.normalise(velocities[i][k]) > random){
+					position[i][k] = 1;
+				}else{
+					position[i][k] = 0;
+				}
+			}
+		}
+		
+	}
+
+	private void initiateCandidateSolutions() {
+		int columns = objectiveFunction.getVariables();
+		position = new double[numberOfParticles][columns];
+		velocities = new double[numberOfParticles][columns];
+		for(int i = 0; i < numberOfParticles; i++){
+			for(int k = 0; k < columns; k++){
+				velocities[i][k] = 0;
+				if(Math.random() >= 0.5){
+					position[i][k] = 0;
+				}else{
+					position[i][k] = 1;
+				}
+			}
+		}
+		personalBest = position.clone();
+	}
+	
+	
+
 
 	@Override
 	public Vector<Double> optimise(Function objectiveFunction) {
@@ -31,4 +134,7 @@ public class BinarySwarm implements Swarm {
 		return optimise();
 	}
 
+	private void setVelocities(double[][] velocities) {
+		this.velocities = velocities;
+	}
 }
