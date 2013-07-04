@@ -18,7 +18,7 @@ public class AcceptableErrorTest {
 	
 	@Test
 	public void testInRange() {
-		classUnderTest.updateData(0, 4.5, 0);
+		classUnderTest.updateData(4.5, 0);
 		boolean result  = classUnderTest.halt();
 		System.out.println(result);
 		assertTrue(result);
@@ -26,7 +26,7 @@ public class AcceptableErrorTest {
 	
 	@Test
 	public void testInRange2(){
-		classUnderTest.updateData(0, 6, 0);
+		classUnderTest.updateData(6, 0);
 		boolean result = classUnderTest.halt();
 		System.out.println(result);
 		assertTrue(result);
@@ -34,7 +34,7 @@ public class AcceptableErrorTest {
 	
 	@Test
 	public void testOutOfRange(){
-		classUnderTest.updateData(0, 3.9, 0);
+		classUnderTest.updateData(3.9, 0);
 		boolean result = classUnderTest.halt();
 		assertTrue(!result);
 	}

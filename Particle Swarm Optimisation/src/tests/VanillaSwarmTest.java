@@ -21,6 +21,7 @@ public class VanillaSwarmTest {
 	@Test
 	public void testDeJong1() {
 		function = new DeJong1();
+		velUpdate.setK(0.01);
 		classUnderTest = new VanillaSwarm(function, velUpdate, halt);
 		classUnderTest.setLowerLimit(-5.12);
 		classUnderTest.setUpperLimit(5.12);

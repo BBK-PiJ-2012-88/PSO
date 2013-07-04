@@ -12,7 +12,7 @@ public class IterationHalt implements HaltingCriteria {
 	public IterationHalt(){}
 	
 	@Override
-	public void updateData(int gbest, double gbestFitness, int iteration) {
+	public void updateData(double gbestFitness, int iteration) {
 		currentIteration = iteration;
 	}
 

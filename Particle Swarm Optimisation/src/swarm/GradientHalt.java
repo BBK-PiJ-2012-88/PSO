@@ -19,7 +19,7 @@ public class GradientHalt implements HaltingCriteria {
 	}
 
 	@Override
-	public void updateData(int gbest, double gbestFitness, int iteration) {
+	public void updateData(double gbestFitness, int iteration) {
 		previousGBest = currentGBest;
 		currentGBest = gbestFitness;
 	}

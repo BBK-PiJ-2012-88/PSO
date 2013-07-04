@@ -29,7 +29,7 @@ public class AcceptableSolutionHalt implements HaltingCriteria {
 	}
 
 	@Override
-	public void updateData(int gbest, double gbestFitness, int iteration) {
+	public void updateData(double gbestFitness, int iteration) {
 		gBest = gbestFitness;
 		
 	}

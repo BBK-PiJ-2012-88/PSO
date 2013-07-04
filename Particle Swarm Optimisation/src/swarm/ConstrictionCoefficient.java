@@ -157,4 +157,9 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 			this.K = K;
 			this.cognitiveConstant = cognitiveConstant;
 		}
+
+		public void setK(double K) {
+			assert K >= 0 && K <= 1;
+			this.K = K;       
+		}
 }

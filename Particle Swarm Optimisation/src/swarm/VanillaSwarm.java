@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 
-public class VanillaSwarm {
+public class VanillaSwarm implements Swarm {
 	
 	/* 
 	 * A matrix of candidate solutions
@@ -91,6 +91,10 @@ public class VanillaSwarm {
 	}
 	//going to need to sort out the null thing or it
 	//won't initiate solutions each time.
+	/* (non-Javadoc)
+	 * @see swarm.Swarm#optimise()
+	 */
+	@Override
 	public Vector<Double> optimise(){
 		assert objectiveFunction != null;
 		int iteration = 0;
@@ -105,7 +109,7 @@ public class VanillaSwarm {
 			}
 			calculateFitness();
 			calculateGlobalBest();
-			haltingCriteria.updateData(globalBest, fitness.get(globalBest), iteration);
+			haltingCriteria.updateData(fitness.get(globalBest), iteration);
 		}while(!haltingCriteria.halt());
 		Vector<Double> result = new Vector<Double>();
 		for(int i = 0; i < personalBest[globalBest].length; i++){
@@ -118,6 +122,10 @@ public class VanillaSwarm {
 		this.velocities = velocities;
 	}
 
+	/* (non-Javadoc)
+	 * @see swarm.Swarm#optimise(swarm.Function)
+	 */
+	@Override
 	public Vector<Double> optimise(Function objectiveFunction){
 		this.objectiveFunction = objectiveFunction;
 		return optimise();
