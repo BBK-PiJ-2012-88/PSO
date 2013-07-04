@@ -5,27 +5,27 @@ import java.util.Vector;
 
 public class BinarySwarm implements Swarm {
 
-	private Function objectiveFunction;
+	protected Function objectiveFunction;
 	
-	private double [][] personalBest;
+	protected double [][] personalBest;
 	
-	private double [][] position;
+	protected double [][] position;
 	
-	private double [][] velocities;
+	protected double [][] velocities;
 	
-	private SigmoidFunction sigmoidfunction;
+	protected SigmoidFunction sigmoidfunction;
 	
-	private boolean maximum = false;
+	protected boolean maximum = false;
 	
-	private VelocityUpdate velocityUpdate;
+	protected VelocityUpdate velocityUpdate;
 	
-	private int numberOfParticles = 20;
+	protected int numberOfParticles = 20;
 	
-	private int globalBest;
+	protected int globalBest;
 	
-	private HashMap<Integer, Double> fitness;
+	protected HashMap<Integer, Double> fitness;
 	
-	private HaltingCriteria haltingCriteria;
+	protected HaltingCriteria haltingCriteria;
 	
 	
 	@Override
@@ -52,7 +52,7 @@ public class BinarySwarm implements Swarm {
 		return result;
 	}
 
-	private void calculateGlobalBest() {
+	protected void calculateGlobalBest() {
 		int best = 0;
 		if(maximum){
 			for(int i = 0; i < fitness.size(); i++){
@@ -70,7 +70,7 @@ public class BinarySwarm implements Swarm {
 		globalBest = best;
 	}
 
-	private void calculateFitness() {
+	protected void calculateFitness() {
 		for(int i = 0; i < numberOfParticles; i++){
 			double currentfitness = objectiveFunction.CalculateFitness(position[i]);
 			if(maximum){
@@ -88,13 +88,13 @@ public class BinarySwarm implements Swarm {
 		
 	}
 
-	private void updatePersonalBest(int row) {
+	protected void updatePersonalBest(int row) {
 		for(int k = 0; k < position[row].length; k++){
 			personalBest[row][k] = position[row][k];
 		}
 	}
 
-	private void updateParticlePositions() {
+	protected void updateParticlePositions() {
 		double random = Math.random();
 		for(int i = 0; i < position.length; i++){
 			for(int k = 0; k < position[i].length; k++){
@@ -108,7 +108,7 @@ public class BinarySwarm implements Swarm {
 		
 	}
 
-	private void initiateCandidateSolutions() {
+	protected void initiateCandidateSolutions() {
 		int columns = objectiveFunction.getVariables();
 		position = new double[numberOfParticles][columns];
 		velocities = new double[numberOfParticles][columns];
@@ -134,7 +134,7 @@ public class BinarySwarm implements Swarm {
 		return optimise();
 	}
 
-	private void setVelocities(double[][] velocities) {
+	protected void setVelocities(double[][] velocities) {
 		this.velocities = velocities;
 	}
 }
