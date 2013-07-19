@@ -22,6 +22,7 @@ public class GeneticSwarm extends BinarySwarm implements Swarm {
 			if(position == null){
 				initiateCandidateSolutions();
 			}else{
+				//make genetic operator an object
 				crossover();
 				mutate();
 				velocityUpdate.updateData(personalBest, position, fitness);
