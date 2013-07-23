@@ -19,14 +19,14 @@ public class DeJong5 implements Function {
 	@Override
 	//need to check this
 	public double CalculateFitness(double[] candidateSolution) {
-		//assert candidateSolution.length == 2;
+		assert candidateSolution.length == 2;
 		double result = 0;
 		for(int i = 0; i < 25; i++){
 			double denominator = 0;
 			denominator = denominator + Math.pow(candidateSolution[0] - matrix [0][i], 6);
 			denominator = denominator + Math.pow(candidateSolution[0] - matrix [1][i], 6);
 			denominator = denominator + i + 1;
-			System.out.println("denominator =" + denominator + "result = " + result);
+			//System.out.println("denominator =" + denominator + "result = " + result);
 			result = result + 1 / denominator;
 		}
 		return 1 / (result + 0.002);
