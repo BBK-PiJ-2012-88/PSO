@@ -23,8 +23,7 @@ public class CuboidLattice implements Neighbourhood {
 		}
 		return false;
 	}
-	//do one layer method then just add the extra bits depending upon whether it's top,
-	// bottom or middle
+
 	@Override
 	public int neighbourhoodBest(int particle) {
 		int cubeRoot = getCubeRoot();
@@ -35,7 +34,7 @@ public class CuboidLattice implements Neighbourhood {
 			temp.add(particle);
 			temp.add(particle + cubeRoot * cubeRoot);
 			return getfittestParticle(temp);
-		}else if(particle > solutionFitness.size() - cubeRoot){
+		}else if(particle >= solutionFitness.size() - cubeRoot * cubeRoot){
 			Vector<Integer> temp = particlesOnPlane(particle, cubeRoot);
 			temp.add(particle);
 			temp.add(particle - cubeRoot * cubeRoot);
@@ -90,7 +89,7 @@ public class CuboidLattice implements Neighbourhood {
 	}
 
 	private boolean topEdge(int particle, int cubeRoot) {
-		for(int i = 1; i < cubeRoot; i++){
+		for(int i = 1; i < cubeRoot + 1; i++){
 			if(particle < i * cubeRoot * cubeRoot - 1 && particle > i * cubeRoot * cubeRoot - cubeRoot){
 				return true;
 			}
@@ -122,7 +121,7 @@ public class CuboidLattice implements Neighbourhood {
 
 	private boolean bottomEdge(int particle, int cubeRoot) {
 		for(int i = 0; i < cubeRoot; i++){
-			if(particle > i * cubeRoot * cubeRoot && particle < i * cubeRoot * cubeRoot + cubeRoot - 2){
+			if(particle > i * cubeRoot * cubeRoot && particle < i * cubeRoot * cubeRoot + cubeRoot - 1){
 				return true;
 			}
 		}
@@ -139,7 +138,7 @@ public class CuboidLattice implements Neighbourhood {
 	}
 
 	private boolean topLeftCorner(int particle, int cubeRoot) {
-		for(int i = 1; i < cubeRoot; i++){
+		for(int i = 1; i < cubeRoot + 1; i++){
 			if(particle == i * cubeRoot * cubeRoot - cubeRoot){
 				return true;
 			}
@@ -148,8 +147,8 @@ public class CuboidLattice implements Neighbourhood {
 	}
 
 	private boolean bottomRightCorner(int particle, int cubeRoot) {
-		for(int i = 1; i < cubeRoot; i++){
-			if(particle == cubeRoot * cubeRoot * i - 1){
+		for(int i = 0; i < cubeRoot; i++){
+			if(particle == cubeRoot * cubeRoot * i - 1 + cubeRoot){
 				return true;
 			}
 		}
@@ -189,6 +188,14 @@ public class CuboidLattice implements Neighbourhood {
 			}
 			return result;
 		}
+	}
+
+	public boolean isMaximum() {
+		return maximum;
+	}
+
+	public void setMaximum(boolean maximum) {
+		this.maximum = maximum;
 	}
 
 	private int getCubeRoot() {
