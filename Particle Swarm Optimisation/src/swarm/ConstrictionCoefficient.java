@@ -12,8 +12,14 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 		
 		private Neighbourhood neighbourhood = new TheRing();
 		
-		private HashMap<Integer, Double> fitness;
-		
+		public void setSocialConstant(double socialConstant) {
+			this.socialConstant = socialConstant;
+		}
+
+		public void setCognitiveConstant(double cognitiveConstant) {
+			this.cognitiveConstant = cognitiveConstant;
+		}
+
 		private double socialConstant = 2;
 		
 		private double cognitiveConstant = 2;
@@ -38,8 +44,7 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 		 */
 		@Override
 		public double[][] updateVelocities(){
-			assert(neighbourhood != null && velocities != null && position != null
-					&& fitness != null);
+			assert(neighbourhood != null && velocities != null && position != null);
 			double constrictionCoefficient = calculateConstrictionCoefficient();
 			calculateVelocities();
 			for(int i = 0; i < velocities.length; i++){
@@ -60,19 +65,8 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 			}
 			return numerator / denominator;
 		}
-
-		/* (non-Javadoc)
-		 * @see swarm.VelocityUpdater#updateData(double[][], double[][], java.util.HashMap)
-		 */
-		@Override
-		public void updateData(double[][] personalBest, double[][] position, HashMap<Integer, Double> fitness){
-			setPersonalBest(personalBest);
-			setPosition(position);
-			setFitness(fitness);
-		}
 		
 		private void calculateVelocities(){
-			neighbourhood.setSolutionFitness(fitness);
 			for(int i = 0; i < position.length; i++){
 				double[]cognitive = calculateCognitiveVelocity(i);
 				double[]social = calculateSocialVelocity(i);
@@ -129,14 +123,6 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 
 		public void setNeighbourhood(Neighbourhood neighbourhood) {
 			this.neighbourhood = neighbourhood;
-		}
-
-		public HashMap<Integer, Double> getFitness() {
-			return fitness;
-		}
-
-		public void setFitness(HashMap<Integer, Double> fitness) {
-			this.fitness = fitness;
 		}
 
 		public double getSocialConstant() {

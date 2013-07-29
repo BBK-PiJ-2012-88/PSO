@@ -1,6 +1,5 @@
 package swarm;
 
-import java.util.HashMap;
 
 public class VelocityClamping implements VelocityUpdate {
 
@@ -14,7 +13,6 @@ public class VelocityClamping implements VelocityUpdate {
 	
 	private Neighbourhood neighbourhood = new TheRing();
 	
-	private HashMap<Integer, Double> fitness;
 	
 	private double socialConstant = 2;
 	
@@ -56,7 +54,6 @@ public class VelocityClamping implements VelocityUpdate {
 	private void calculateVelocities() {
 		double r1 = Math.random();
 		double r2 = Math.random();
-		neighbourhood.setSolutionFitness(fitness);
 		for(int i = 0; i < position.length; i++){
 			double[]cognitive = calculateCognitiveVelocity(i, r1);
 			double[]social = calculateSocialVelocity(i, r2);
@@ -83,15 +80,6 @@ public class VelocityClamping implements VelocityUpdate {
 		}
 		return cognitiveVelocity;
 	}
-
-	@Override
-	public void updateData(double[][] personalBest, double[][] position,
-			HashMap<Integer, Double> fitness) {
-		this.personalBest = personalBest;
-		this.position = position;
-		this.fitness = fitness;
-	}
-
 
 	@Override
 	public double[][] getVelocities() {
@@ -142,33 +130,26 @@ public class VelocityClamping implements VelocityUpdate {
 		this.neighbourhood = neighbourhood;	
 	}
 
-
-	@Override
-	public HashMap<Integer, Double> getFitness() {
-		return fitness;
+	public double[] getMaxVelocity() {
+		return maxVelocity;
 	}
 
-
-	@Override
-	public void setFitness(HashMap<Integer, Double> fitness) {
-		this.fitness = fitness;
-		
+	public void setMaxVelocity(double[] maxVelocity) {
+		this.maxVelocity = maxVelocity;
 	}
 
+	public double getInertiaWeight() {
+		return inertiaWeight;
+	}
 
-	@Override
 	public double getSocialConstant() {
 		return socialConstant;
 	}
 
-
-	@Override
 	public double getCognitiveConstant() {
 		return cognitiveConstant;
 	}
 
-
-	@Override
 	public void setConstants(double cognitiveConstant, double socialConstant,
 			double inertiaWeight) {
 		setCognitiveConstant(cognitiveConstant);

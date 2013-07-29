@@ -19,13 +19,15 @@ public class GeneticSwarm extends BinarySwarm implements Swarm {
 		int iteration = 0;
 		do{
 			iteration++;
-			if(position == null){
+			if(iteration == 1){
 				initiateCandidateSolutions();
 			}else{
 				//make genetic operator an object
 				crossover();
 				mutate();
-				velocityUpdate.updateData(personalBest, position, fitness);
+				velocityUpdate.setPosition(position);
+				velocityUpdate.setPersonalBest(personalBest);
+				velocityUpdate.getNeighbourhood().setSolutionFitness(fitness);
 				setVelocities(velocityUpdate.updateVelocities());
 				updateParticlePositions();
 			}

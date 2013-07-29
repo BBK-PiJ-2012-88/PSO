@@ -100,10 +100,12 @@ public class VanillaSwarm implements Swarm {
 		int iteration = 0;
 		do{
 			iteration++;
-			if(position == null){
+			if(iteration == 1){
 				initiateCandidateSolutions();
 			}else{
-				velocityUpdate.updateData(personalBest, position, fitness);
+				velocityUpdate.setPosition(position);
+				velocityUpdate.setPersonalBest(personalBest);
+				velocityUpdate.getNeighbourhood().setSolutionFitness(fitness);
 				setVelocities(velocityUpdate.updateVelocities());
 				updateParticlePositions();
 			}

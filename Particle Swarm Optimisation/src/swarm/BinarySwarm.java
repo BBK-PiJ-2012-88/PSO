@@ -34,10 +34,12 @@ public class BinarySwarm implements Swarm {
 		int iteration = 0;
 		do{
 			iteration++;
-			if(position == null){
+			if(iteration == 1){
 				initiateCandidateSolutions();
 			}else{
-				velocityUpdate.updateData(personalBest, position, fitness);
+				velocityUpdate.setPosition(position);
+				velocityUpdate.setPersonalBest(personalBest);
+				velocityUpdate.getNeighbourhood().setSolutionFitness(fitness);
 				setVelocities(velocityUpdate.updateVelocities());
 				updateParticlePositions();
 			}
@@ -134,7 +136,7 @@ public class BinarySwarm implements Swarm {
 		return optimise();
 	}
 
-	protected void setVelocities(double[][] velocities) {
+	public void setVelocities(double[][] velocities) {
 		this.velocities = velocities;
 	}
 }
