@@ -104,6 +104,7 @@ public class GeneticSwarm extends BinarySwarm implements Swarm {
 		sortedFitness = new ArrayList<ParticleFitness>();
 		for(int i = 0; i < numberOfParticles; i++){
 			ParticleFitness p = new ParticleFitness(i, objectiveFunction.CalculateFitness(position[i]));
+			sortedFitness.add(p);
 		}
 	}
 
