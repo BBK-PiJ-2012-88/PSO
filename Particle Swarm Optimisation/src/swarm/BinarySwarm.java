@@ -27,6 +27,13 @@ public class BinarySwarm implements Swarm {
 	
 	protected HaltingCriteria haltingCriteria;
 	
+	public BinarySwarm(){}
+	
+	public BinarySwarm(Function objectiveFunction, HaltingCriteria haltingCriteria, VelocityUpdate velocityUpdate){
+		this.objectiveFunction = objectiveFunction;
+		this.haltingCriteria = haltingCriteria;
+		this.velocityUpdate = velocityUpdate;
+	}
 	
 	@Override
 	public Vector<Double> optimise() {
@@ -125,10 +132,72 @@ public class BinarySwarm implements Swarm {
 			}
 		}
 		personalBest = position.clone();
+		fitness = new HashMap<Integer, Double>();
+		setFitness();
 	}
 	
-	
+	protected void setFitness() {
+		for(int i = 0; i < numberOfParticles; i++){
+			double currentfitness = objectiveFunction.CalculateFitness(position[i]);
+			fitness.put(i, currentfitness);
+		}
+	}
 
+	public Function getObjectiveFunction() {
+		return objectiveFunction;
+	}
+
+	public void setObjectiveFunction(Function objectiveFunction) {
+		this.objectiveFunction = objectiveFunction;
+	}
+
+	public SigmoidFunction getSigmoidfunction() {
+		return sigmoidfunction;
+	}
+
+	public void setSigmoidfunction(SigmoidFunction sigmoidfunction) {
+		this.sigmoidfunction = sigmoidfunction;
+	}
+
+	public boolean isMaximum() {
+		return maximum;
+	}
+
+	public void setMaximum(boolean maximum) {
+		this.maximum = maximum;
+	}
+
+	public VelocityUpdate getVelocityUpdate() {
+		return velocityUpdate;
+	}
+
+	public void setVelocityUpdate(VelocityUpdate velocityUpdate) {
+		this.velocityUpdate = velocityUpdate;
+	}
+
+	public int getNumberOfParticles() {
+		return numberOfParticles;
+	}
+
+	public void setNumberOfParticles(int numberOfParticles) {
+		this.numberOfParticles = numberOfParticles;
+	}
+
+	public int getGlobalBest() {
+		return globalBest;
+	}
+
+	public void setGlobalBest(int globalBest) {
+		this.globalBest = globalBest;
+	}
+
+	public HaltingCriteria getHaltingCriteria() {
+		return haltingCriteria;
+	}
+
+	public void setHaltingCriteria(HaltingCriteria haltingCriteria) {
+		this.haltingCriteria = haltingCriteria;
+	}
 
 	@Override
 	public Vector<Double> optimise(Function objectiveFunction) {

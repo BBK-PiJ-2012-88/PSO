@@ -6,11 +6,15 @@ import swarm.Function;
 
 public class BinaryDeJong1 implements Function {
 	
-	private int variables;
+	private int variables = 32;
 	
 	private BinaryConverter binaryConverter = new BinaryConverter();
 	
 	private DeJong1 deJong1 = new DeJong1();
+	
+	public BinaryDeJong1(){
+		deJong1.setVariables(1);
+	}
 	
 	@Override
 	public int getVariables() {

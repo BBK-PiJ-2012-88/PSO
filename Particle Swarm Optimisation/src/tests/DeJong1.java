@@ -14,6 +14,10 @@ public class DeJong1 implements Function {
 		this.variables = variables;
 	}
 	
+	public void setVariables(int variables) {
+		this.variables = variables;
+	}
+
 	@Override
 	public int getVariables() {
 		return variables;

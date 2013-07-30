@@ -6,7 +6,7 @@ import swarm.Function;
 
 public class BinaryDeJong2 implements Function {
 	
-	private int variables;
+	private int variables = 32;
 	
 	private DeJong2 deJong2 = new DeJong2();
 	
