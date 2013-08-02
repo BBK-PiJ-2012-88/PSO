@@ -67,11 +67,55 @@ public class VanillaSwarm implements Swarm {
 	 */
 	private HaltingCriteria haltingCriteria;
 	
+	public VanillaSwarm(){
+		velocityUpdate = new ConstrictionCoefficient();
+		haltingCriteria = new IterationHalt();
+	}
+	
+	public Function getObjectiveFunction() {
+		return objectiveFunction;
+	}
+
+	public void setObjectiveFunction(Function objectiveFunction) {
+		this.objectiveFunction = objectiveFunction;
+	}
+
+	public int getNumberOfParticles() {
+		return numberOfParticles;
+	}
+
+	public void setNumberOfParticles(int numberOfParticles) {
+		this.numberOfParticles = numberOfParticles;
+	}
+
+	public boolean isMaximum() {
+		return maximum;
+	}
+
+	public void setMaximum(boolean maximum) {
+		this.maximum = maximum;
+	}
+
+	public VelocityUpdate getVelocityUpdate() {
+		return velocityUpdate;
+	}
+
+	public void setVelocityUpdate(VelocityUpdate velocityUpdate) {
+		this.velocityUpdate = velocityUpdate;
+	}
+
+	public HaltingCriteria getHaltingCriteria() {
+		return haltingCriteria;
+	}
+
+	public void setHaltingCriteria(HaltingCriteria haltingCriteria) {
+		this.haltingCriteria = haltingCriteria;
+	}
+
 	public VanillaSwarm(Function objectiveFunction, VelocityUpdate velocityUpdate, HaltingCriteria haltingCriteria){
 		this.objectiveFunction = objectiveFunction;
 		this.velocityUpdate = velocityUpdate;
 		this.haltingCriteria = haltingCriteria;
-	//	this.fitness = new HashMap <Integer, Double>();
 	}
 	
 	public VanillaSwarm(Function objectiveFunction, VelocityUpdate velocityUpdate, HaltingCriteria haltingCriteria, boolean maximum){

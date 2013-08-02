@@ -15,7 +15,7 @@ public class CombinatorialSwarm implements Swarm {
 	
 	private int numberOfParticles = 27;
 	
-	private HaltingCriteria haltingCriteria;
+	private HaltingCriteria haltingCriteria = new IterationHalt(4000);
 	
 	private HashMap<Integer, Double> fitness;
 	
@@ -25,14 +25,18 @@ public class CombinatorialSwarm implements Swarm {
 	
 	private boolean maximum = false;
 	
+	private double epsilon = 0.00001;
+
 	public void initiateCandidateSolutions(){
 		int columns = objectiveFunction.getVariables();
 		positions = new double[numberOfParticles][columns];
 		velocities = new double[numberOfParticles * 2][columns];
 		for(int i = 0; i < numberOfParticles * 2; i++){
 			for(int k = 0; k < columns; k++){
-				positions[i][k] = k;
 				velocities[i][k] = 0;
+				if(i < numberOfParticles){
+					positions[i][k] = k + 1;
+				}
 			}
 		}
 		shuffleParticles(positions);
@@ -145,10 +149,10 @@ public class CombinatorialSwarm implements Swarm {
 	private void updateParticlePositions() {
 		for(int i = 0; i < velocities.length / 2; i++){
 			for(int k = 0; k < velocities[i].length; k++){
-				if(velocities[i][k] == 1.0){
+				if(Math.abs(velocities[i][k] - 1.0) <= epsilon){
 					double exchange = personalBest[i][k];
 					for(int n = 0; n < positions[i].length; n++){
-						if(positions[i][n] == exchange){
+						if(Math.abs(positions[i][n] - exchange) <= epsilon){
 							double temp = positions[i][k];
 							positions[i][k] = positions[i][n];
 							positions[i][n] = temp;
@@ -159,7 +163,7 @@ public class CombinatorialSwarm implements Swarm {
 					int index = combinatorialVelocityUpdate.getNeighbourhood().neighbourhoodBest(i);
 					double exchange = personalBest[index][k];
 					for(int n = 0; n < positions[i].length; n++){
-						if(positions[i][n] == exchange){
+						if(Math.abs(positions[i][n] - exchange) <= epsilon){
 							double temp = positions[i][k];
 							positions[i][k] = positions[i][n];
 							positions[i][n] = temp;

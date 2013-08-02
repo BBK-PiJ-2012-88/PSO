@@ -13,7 +13,7 @@ public class BinarySwarm implements Swarm {
 	
 	protected double [][] velocities;
 	
-	protected SigmoidFunction sigmoidfunction;
+	protected SigmoidFunction sigmoidfunction = new SigmoidFunction();
 	
 	protected boolean maximum = false;
 	

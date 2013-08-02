@@ -1,7 +1,5 @@
 package swarm;
 
-import java.util.HashMap;
-
 public class ConstrictionCoefficient implements VelocityUpdate {
 
 		private double [][] velocities;

@@ -4,18 +4,18 @@ public class GradientHalt implements HaltingCriteria {
 
 	private double currentGBest;
 	private Double previousGBest;
-	private double error;
+	private double gradient;
 	
-	public GradientHalt(double error){
-		this.error = error;
+	public GradientHalt(double gradient){
+		this.gradient = gradient;
 	}
 	
 	public double getError() {
-		return error;
+		return gradient;
 	}
 
-	public void setError(double error) {
-		this.error = error;
+	public void setError(double gradient) {
+		this.gradient = gradient;
 	}
 
 	@Override
@@ -27,11 +27,11 @@ public class GradientHalt implements HaltingCriteria {
 	@Override
 	public boolean halt() {
 		if(previousGBest != null){
-			double gradient = (currentGBest - previousGBest) / currentGBest;
-			if(gradient < 0){
-				gradient = gradient * -1;
+			double currentGradient = (currentGBest - previousGBest) / currentGBest;
+			if(currentGradient < 0){
+				currentGradient = currentGradient * -1;
 			}
-			if(gradient <= error){
+			if(currentGradient <= gradient){
 				return true;
 			}else{
 				return false;

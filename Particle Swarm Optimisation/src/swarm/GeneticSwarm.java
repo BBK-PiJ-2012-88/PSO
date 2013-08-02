@@ -7,8 +7,7 @@ import java.util.Random;
 import java.util.Vector;
 
 public class GeneticSwarm extends BinarySwarm implements Swarm {
-	//Need to check if the other swarms need a current and overall best fitness hashmaps
-	//genetic swarm will need both.
+	
 	private double mutationProbability = 0.05;
 	
 	private List<ParticleFitness> sortedFitness;
@@ -27,12 +26,13 @@ public class GeneticSwarm extends BinarySwarm implements Swarm {
 				mutate();
 				velocityUpdate.setPosition(position);
 				velocityUpdate.setPersonalBest(personalBest);
+				velocityUpdate.setVelocities(velocities);
 				velocityUpdate.getNeighbourhood().setSolutionFitness(fitness);
 				setVelocities(velocityUpdate.updateVelocities());
 				updateParticlePositions();
 			}
 			calculateFitness();
-			//sort by fitness, global best is fittest.
+			calculateGlobalBest();
 			haltingCriteria.updateData(fitness.get(globalBest), iteration);
 		}while(!haltingCriteria.halt());
 		Vector<Double> result = new Vector<Double>();
@@ -88,7 +88,7 @@ public class GeneticSwarm extends BinarySwarm implements Swarm {
 				}
 			}
 		}else{
-			for(int i = sortedFitness.size(); i > sortedFitness.size() / 2; i--){
+			for(int i = sortedFitness.size() - 1; i > sortedFitness.size() / 2; i--){
 				int crossoverPoint = rand.nextInt(objectiveFunction.getVariables() + 1);
 				int particleIndex = sortedFitness.get(i).getIndex();
 				for(int k = 0; k < crossoverPoint; k++){
