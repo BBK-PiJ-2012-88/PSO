@@ -190,7 +190,7 @@ public class CuboidLattice implements Neighbourhood {
 		}
 	}
 
-	public boolean isMaximum() {
+	public boolean getMaximum() {
 		return maximum;
 	}
 
@@ -206,5 +206,12 @@ public class CuboidLattice implements Neighbourhood {
 		}
 		return 0;
 	}
-
+	
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("maximum: " + maximum);
+		return buff.toString();
+	}
 }

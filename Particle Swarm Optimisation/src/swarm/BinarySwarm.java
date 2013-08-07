@@ -17,7 +17,7 @@ public class BinarySwarm implements Swarm {
 	
 	protected boolean maximum = false;
 	
-	protected VelocityUpdate velocityUpdate;
+	protected VelocityUpdate velocityUpdate = new ConstrictionCoefficient();
 	
 	protected int numberOfParticles = 20;
 	
@@ -33,6 +33,12 @@ public class BinarySwarm implements Swarm {
 		this.objectiveFunction = objectiveFunction;
 		this.haltingCriteria = haltingCriteria;
 		this.velocityUpdate = velocityUpdate;
+	}
+	
+	public BinarySwarm(Function objectiveFunction, HaltingCriteria haltingCriteria, VelocityUpdate velocityUpdate, boolean maximum){
+		this(objectiveFunction, haltingCriteria, velocityUpdate);
+		this.maximum = maximum;
+		this.velocityUpdate.getNeighbourhood().setMaximum(maximum);
 	}
 	
 	@Override
@@ -159,12 +165,9 @@ public class BinarySwarm implements Swarm {
 		this.sigmoidfunction = sigmoidfunction;
 	}
 
-	public boolean isMaximum() {
-		return maximum;
-	}
-
 	public void setMaximum(boolean maximum) {
 		this.maximum = maximum;
+		velocityUpdate.getNeighbourhood().setMaximum(maximum);
 	}
 
 	public VelocityUpdate getVelocityUpdate() {
@@ -173,6 +176,7 @@ public class BinarySwarm implements Swarm {
 
 	public void setVelocityUpdate(VelocityUpdate velocityUpdate) {
 		this.velocityUpdate = velocityUpdate;
+		this.velocityUpdate.getNeighbourhood().setMaximum(maximum);
 	}
 
 	public int getNumberOfParticles() {
@@ -207,5 +211,28 @@ public class BinarySwarm implements Swarm {
 
 	public void setVelocities(double[][] velocities) {
 		this.velocities = velocities;
+	}
+
+	@Override
+	public boolean getMaximum() {
+		return maximum;
+	}
+
+	@Override
+	public void setNeighbourhood(Neighbourhood neighbourhood) {
+		getVelocityUpdate().setNeighbourhood(neighbourhood);
+	}
+	
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("Function: " + objectiveFunction.toString() + ", ");
+		buff.append("Velocity Updater: " + velocityUpdate.getClass().toString() + ", ");
+		buff.append("Neighbourhood: " + velocityUpdate.getNeighbourhood().getClass().toString() + ", ");
+		buff.append("Halting Criteria: " + haltingCriteria.getClass().toString() + ", ");
+		buff.append("Number of Particles: " + numberOfParticles + ", ");
+		buff.append("Maximum: " + maximum);
+		return buff.toString();
 	}
 }

@@ -4,10 +4,21 @@ import java.util.Vector;
 
 public interface Swarm {
 
-	//going to need to sort out the null thing or it
-	//won't initiate solutions each time.
 	public abstract Vector<Double> optimise();
 
 	public abstract Vector<Double> optimise(Function objectiveFunction);
-
+	
+	public abstract void setMaximum(boolean maximum);
+	
+	public abstract boolean getMaximum();
+	
+	public abstract void setHaltingCriteria(HaltingCriteria haltingCriteria);
+	
+	public abstract HaltingCriteria getHaltingCriteria();
+	
+	public abstract int getNumberOfParticles();
+	
+	public abstract void setNumberOfParticles(int numberOfParticles);
+	
+	public abstract void setNeighbourhood(Neighbourhood neighbourhood);
 }

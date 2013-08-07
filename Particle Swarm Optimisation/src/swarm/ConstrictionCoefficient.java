@@ -146,4 +146,15 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 			assert K >= 0 && K <= 1;
 			this.K = K;       
 		}
+		
+		@Override
+		public String toString(){
+			StringBuffer buff = new StringBuffer();
+			buff.append(this.getClass().toString() + ", ");
+			buff.append("neighbourhood: " + this.neighbourhood.getClass().toString() + ", ");
+			buff.append("social constant: " + socialConstant + ", ");
+			buff.append("cognitive constant: " + cognitiveConstant + ", ");
+			buff.append("K: " + K);
+			return buff.toString();
+		}
 }

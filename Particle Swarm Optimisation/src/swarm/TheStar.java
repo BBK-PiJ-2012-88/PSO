@@ -17,6 +17,10 @@ public class TheStar implements Neighbourhood {
 		this.maximum = maximum;
 	}
 	
+	public boolean getMaximum(){
+		return maximum;
+	}
+	
 	@Override
 	public void setSolutionFitness(HashMap<Integer, Double> solutionFitness) {
 		this.solutionFitness = solutionFitness;
@@ -38,5 +42,12 @@ public class TheStar implements Neighbourhood {
 		}
 		return best;
 	}
-
+	
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("maximum: " + maximum);
+		return buff.toString();
+	}
 }

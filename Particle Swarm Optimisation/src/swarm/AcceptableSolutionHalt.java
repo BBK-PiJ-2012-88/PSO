@@ -12,6 +12,15 @@ public class AcceptableSolutionHalt implements HaltingCriteria {
 		this.maximum = maximum;
 	}
 	
+	public AcceptableSolutionHalt(double acceptableSolution){
+		this.acceptableSolution = acceptableSolution;
+	}
+	
+	public AcceptableSolutionHalt(boolean maximum, double acceptableSolution){
+		this.maximum = maximum;
+		this.acceptableSolution = acceptableSolution;
+	}
+	
 	public boolean isMaximum() {
 		return maximum;
 	}
@@ -50,5 +59,13 @@ public class AcceptableSolutionHalt implements HaltingCriteria {
 			}
 		}
 	}
-
+	
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append("AcceptableSolutionHalt, ");
+		buff.append("acceptable solution = " + acceptableSolution);
+		buff.append(", maximum = " + maximum);
+		return buff.toString();
+	}
 }

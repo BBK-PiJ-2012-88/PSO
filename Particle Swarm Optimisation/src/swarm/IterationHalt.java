@@ -24,5 +24,13 @@ public class IterationHalt implements HaltingCriteria {
 			return false;
 		}
 	}
+	
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("max iterations: " + maxIterations);
+		return buff.toString();
+	}
 
 }

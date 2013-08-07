@@ -95,6 +95,14 @@ public class CombinatorialVelocityUpdate implements
 	public void setVelocities(double[][] velocities) {
 		this.velocities = velocities;
 	}
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("weight: " + weight + ", ");
+		buff.append("neighbourhood: " + neighbourhood.getClass().toString());
+		return buff.toString();
+	}
 		
 }
 

@@ -41,5 +41,13 @@ public class AcceptableError implements HaltingCriteria {
 			return false;
 		}
 	}
-
+	
+	@Override 
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append("AcceptableError, ");
+		buff.append("solution = " + solution);
+		buff.append(", error = " + error);
+		return buff.toString();
+	}
 }

@@ -168,5 +168,15 @@ public class VelocityClamping implements VelocityUpdate {
 	public void setCognitiveConstant(double cognitiveConstant) {
 		this.cognitiveConstant = cognitiveConstant;
 	}
-
+	
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("social constant: " + socialConstant + ", ");
+		buff.append("cognitive constant: " + cognitiveConstant + ", ");
+		buff.append("inertia weight: " + inertiaWeight + ", ");
+		buff.append("neighbourhood: " + neighbourhood.getClass().toString());
+		return buff.toString();
+	}
 }

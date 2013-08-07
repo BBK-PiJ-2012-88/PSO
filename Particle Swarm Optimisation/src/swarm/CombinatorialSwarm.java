@@ -186,4 +186,60 @@ public class CombinatorialSwarm implements Swarm {
 		this.objectiveFunction = objectiveFunction;
 		return optimise();
 	}
+
+	@Override
+	public void setMaximum(boolean maximum) {
+		this.maximum = maximum;
+		combinatorialVelocityUpdate.getNeighbourhood().setMaximum(maximum);
+		
+	}
+
+	@Override
+	public boolean getMaximum() {
+		return maximum;
+	}
+
+	@Override
+	public void setHaltingCriteria(HaltingCriteria haltingCriteria) {
+		this.haltingCriteria = haltingCriteria;
+		
+	}
+
+	@Override
+	public HaltingCriteria getHaltingCriteria() {
+		return haltingCriteria;
+	}
+
+	public CombinatorialVelocityUpdate getVelocityUpdate() {
+		return combinatorialVelocityUpdate;
+	}
+
+	@Override
+	public int getNumberOfParticles() {
+		return numberOfParticles;
+	}
+
+	@Override
+	public void setNumberOfParticles(int numberOfParticles) {
+		this.numberOfParticles = numberOfParticles;
+		
+	}
+
+	@Override
+	public void setNeighbourhood(Neighbourhood neighbourhood) {
+		getVelocityUpdate().setNeighbourhood(neighbourhood);
+	}
+	
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("Function: " + objectiveFunction.toString() + ", ");
+		buff.append("Velocity Updater: " + combinatorialVelocityUpdate.getClass().toString() + ", ");
+		buff.append("Neighbourhood: " + combinatorialVelocityUpdate.getNeighbourhood().getClass().toString() + ", ");
+		buff.append("Halting Criteria: " + haltingCriteria.getClass().toString() + ", ");
+		buff.append("Number of Particles: " + numberOfParticles + ", ");
+		buff.append("Maximum: " + maximum);
+		return buff.toString();
+	}
 }

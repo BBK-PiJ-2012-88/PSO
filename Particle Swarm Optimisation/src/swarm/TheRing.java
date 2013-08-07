@@ -72,4 +72,16 @@ public class TheRing implements Neighbourhood {
 	public void setMaximum(boolean maximum){
 		this.maximum = maximum;
 	}
+	
+	public boolean getMaximum(){
+		return maximum;
+	}
+	
+	@Override
+	public String toString(){
+		StringBuffer buff =  new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("maximum: " + maximum);
+		return buff.toString();
+	}
 }

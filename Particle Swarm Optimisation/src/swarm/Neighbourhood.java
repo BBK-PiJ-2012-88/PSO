@@ -8,5 +8,9 @@ public interface Neighbourhood {
 			HashMap<Integer, Double> solutionFitness);
 
 	public abstract int neighbourhoodBest(int particle);
+	
+	public abstract boolean getMaximum();
+	
+	public abstract void setMaximum(boolean maximum);
 
 }

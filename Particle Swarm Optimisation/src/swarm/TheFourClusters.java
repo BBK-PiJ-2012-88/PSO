@@ -12,6 +12,7 @@ public class TheFourClusters implements Neighbourhood {
 	
 	public TheFourClusters(boolean maximum){
 		this.maximum = maximum;
+		neighbourhood.setMaximum(maximum);
 	}
 	
 	@Override
@@ -101,6 +102,22 @@ public class TheFourClusters implements Neighbourhood {
 			bottom++;
 		}
 		return result;
+	}
+
+	public boolean getMaximum() {
+		return maximum;
+	}
+
+	public void setMaximum(boolean maximum) {
+		this.maximum = maximum;
+	}
+	
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("maximum: " + maximum);
+		return buff.toString();
 	}
 
 }

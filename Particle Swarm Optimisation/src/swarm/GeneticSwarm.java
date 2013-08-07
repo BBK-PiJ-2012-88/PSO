@@ -107,5 +107,18 @@ public class GeneticSwarm extends BinarySwarm implements Swarm {
 			sortedFitness.add(p);
 		}
 	}
+	
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("Function: " + objectiveFunction.toString() + ", ");
+		buff.append("Velocity Updater: " + velocityUpdate.getClass().toString() + ", ");
+		buff.append("Neighbourhood: " + velocityUpdate.getNeighbourhood().getClass().toString() + ", ");
+		buff.append("Halting Criteria: " + haltingCriteria.getClass().toString() + ", ");
+		buff.append("Number of Particles: " + numberOfParticles + ", ");
+		buff.append("Maximum: " + maximum);
+		return buff.toString();
+	}
 
 }

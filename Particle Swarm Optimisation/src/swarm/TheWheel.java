@@ -65,4 +65,12 @@ public class TheWheel implements Neighbourhood{
 	public void setWheel(int wheel){
 		this.wheel = wheel;
 	}
+	
+	@Override
+	public String toString(){
+		StringBuffer buff =  new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("maximum: " + maximum);
+		return buff.toString();
+	}
 }
