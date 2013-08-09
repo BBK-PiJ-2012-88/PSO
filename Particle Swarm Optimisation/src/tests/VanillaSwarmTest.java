@@ -33,5 +33,19 @@ public class VanillaSwarmTest {
 		System.out.println(result);
 		assertTrue(result <= acceptableSolution);
 	}
+	
+	@Test
+	public void testDeJong2() {
+		function = new DeJong1(1);
+		IterationHalt halt2 = new IterationHalt(100);
+		velUpdate.setK(0.01);
+		classUnderTest = new VanillaSwarm(function, velUpdate, halt2);
+		classUnderTest.setLowerLimit(-5.12);
+		classUnderTest.setUpperLimit(5.12);
+		Vector<Double> temp = classUnderTest.optimise();
+		double result = function.CalculateFitness(temp);
+		System.out.println(result);
+		assertTrue(result <= 2);
+	}
 
 }

@@ -21,7 +21,7 @@ public class BinarySwarmTest {
 	
 	@Test
 	public void test() {
-		double acceptableSolution = 1;
+		double acceptableSolution = 0.00001;
 		halt.setAcceptableSolution(acceptableSolution);
 		classUnderTest.setObjectiveFunction(function);
 		classUnderTest.setVelocityUpdate(velUp);

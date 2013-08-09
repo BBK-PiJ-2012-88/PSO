@@ -29,7 +29,7 @@ public class TestSwarmMaximums {
 		function = new DeJong1(10);
 		swarm = new VanillaSwarm();
 		((VanillaSwarm)swarm).setMaximum(true);
-		((AcceptableSolutionHalt) acceptableSolutionHalt).setAcceptableSolution(1000);
+		((AcceptableSolutionHalt) acceptableSolutionHalt).setAcceptableSolution(100);
 		((VanillaSwarm)swarm).setHaltingCriteria(acceptableSolutionHalt);
 		Vector<Double> resultVector = swarm.optimise(function);
 		double result = function.CalculateFitness(resultVector);
@@ -47,7 +47,7 @@ public class TestSwarmMaximums {
 		Vector<Double> resultVector = swarm.optimise(function);
 		double result = function.CalculateFitness(resultVector);
 		System.out.println(result);
-		assertTrue(result >= 100);
+		assertTrue(result >= 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0);
 	}
 	
 	@Test

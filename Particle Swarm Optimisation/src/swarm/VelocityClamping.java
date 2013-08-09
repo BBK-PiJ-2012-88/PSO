@@ -13,7 +13,6 @@ public class VelocityClamping implements VelocityUpdate {
 	
 	private Neighbourhood neighbourhood = new TheRing();
 	
-	
 	private double socialConstant = 2;
 	
 	private double cognitiveConstant = 2;

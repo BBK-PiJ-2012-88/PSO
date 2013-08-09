@@ -67,6 +67,12 @@ public class VanillaSwarm implements Swarm {
 	 */
 	private HaltingCriteria haltingCriteria;
 	
+	private VanillaInitialiser init = new VanillaInitialiser();
+	
+	private FitnessCalculator calc;
+	
+	private PositionUpdate positionUpdate = new VanillaPositionUpdate();
+	
 	public VanillaSwarm(){
 		velocityUpdate = new ConstrictionCoefficient();
 		haltingCriteria = new IterationHalt();
@@ -131,30 +137,34 @@ public class VanillaSwarm implements Swarm {
 		this.upperLimit = upperLimit;
 		this.lowerLimit = lowerLimit;
 	}
-	//going to need to sort out the null thing or it
-	//won't initiate solutions each time.
-	/* (non-Javadoc)
-	 * @see swarm.Swarm#optimise()
-	 */
+	
+	private void initiateSwarm(){
+		calc = new FitnessCalculatorImpl(getObjectiveFunction(), getMaximum());
+		init.setLowerLimit(getLowerLimit());
+		init.setUpperLimit(getUpperLimit());
+		init.initialiseMatrices(getObjectiveFunction(), getNumberOfParticles());
+		setPosition(init.getPositions());
+		setPersonalBest(getPosition().clone());
+		setVelocities(init.getVelocities());
+		getVelocityUpdate().setVelocities(getVelocities());
+		getVelocityUpdate().getNeighbourhood().setMaximum(getMaximum());
+		calc.setPositions(getPosition());
+		calc.initialCalculateFitness();
+		setFitness(calc.getFitness());
+		globalBest = calc.calculateGlobalBest();
+		haltingCriteria.updateData(fitness.get(globalBest), 0);
+	}
+	
 	@Override
 	public Vector<Double> optimise(){
 		assert objectiveFunction != null;
-		int iteration = 0;
-		do{
-			iteration++;
-			if(iteration == 1){
-				initiateCandidateSolutions();
-			}else{
-				velocityUpdate.setPosition(position);
-				velocityUpdate.setPersonalBest(personalBest);
-				velocityUpdate.getNeighbourhood().setSolutionFitness(fitness);
-				setVelocities(velocityUpdate.updateVelocities());
-				updateParticlePositions();
-			}
-			calculateFitness();
-			calculateGlobalBest();
-			haltingCriteria.updateData(fitness.get(globalBest), iteration);
-		}while(!haltingCriteria.halt());
+		initiateSwarm();
+		for(int i = 0; !haltingCriteria.halt(); i++){
+			updateVelocities();
+			updateParticlePositions();
+			updateFitnessInformation();
+			haltingCriteria.updateData(fitness.get(globalBest), i);
+		}
 		Vector<Double> result = new Vector<Double>();
 		for(int i = 0; i < personalBest[globalBest].length; i++){
 			result.add(personalBest[globalBest][i]);
@@ -162,6 +172,23 @@ public class VanillaSwarm implements Swarm {
 		return result;
 	}
 	
+	private void updateFitnessInformation() {
+		calc.setFitness(fitness);
+		calc.setPersonalBest(personalBest);
+		calc.setPositions(position);
+		calc.calculateFitness();
+		setFitness(calc.getFitness());
+		setPersonalBest(calc.getPersonalBest());
+		globalBest = calc.calculateGlobalBest();
+	}
+
+	private void updateVelocities() {
+		velocityUpdate.setPosition(position);
+		velocityUpdate.setPersonalBest(personalBest);
+		velocityUpdate.getNeighbourhood().setSolutionFitness(fitness);
+		setVelocities(velocityUpdate.updateVelocities());
+	}
+
 	public void setVelocities(double[][] velocities) {
 		this.velocities = velocities;
 	}
@@ -172,88 +199,76 @@ public class VanillaSwarm implements Swarm {
 	@Override
 	public Vector<Double> optimise(Function objectiveFunction){
 		this.objectiveFunction = objectiveFunction;
-		System.out.println(objectiveFunction.toString());
 		return optimise();
 	}
 	
 	private void updateParticlePositions() {
-		for(int i = 0; i < position.length; i++){
-			for(int k = 0; k < position[i].length; k++){
-				position[i][k] = position[i][k] + velocities[i][k];
-			}
-		}
+		positionUpdate.setPositions(getPosition());
+		positionUpdate.setVelocities(getVelocities());
+		positionUpdate.updatePositions();
+		setPosition(positionUpdate.getPositions());
 	}
 
-	private void calculateFitness(){
-		for(int i = 0; i < numberOfParticles; i++){
-			double currentfitness = objectiveFunction.CalculateFitness(position[i]);
-			if(maximum){
-				if(currentfitness > fitness.get(i)){
-					fitness.put(i, currentfitness);
-					updatePersonalBest(i);
-				}
-			}else{
-				if(currentfitness < fitness.get(i)){
-					fitness.put(i, currentfitness);
-					updatePersonalBest(i);
-				}
-			}
-		}
+	public double[][] getPersonalBest() {
+		return personalBest;
+	}
+
+	public void setPersonalBest(double[][] personalBest) {
+		this.personalBest = personalBest;
+	}
+
+	public double[][] getVelocities() {
+		return velocities;
+	}
+
+	public double[][] getPosition() {
+		return position;
+	}
+
+	public void setPosition(double[][] position) {
+		this.position = position;
+	}
+
+	public int getGlobalBest() {
+		return globalBest;
+	}
+
+	public void setGlobalBest(int globalBest) {
+		this.globalBest = globalBest;
+	}
+
+	public HashMap<Integer, Double> getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(HashMap<Integer, Double> fitness) {
+		this.fitness = fitness;
+	}
+
+	public Initialiser getInit() {
+		return init;
+	}
+
+	public void setInit(Initialiser init) {
+		this.init = (VanillaInitialiser)init;
+	}
+
+	public FitnessCalculator getCalc() {
+		return calc;
+	}
+
+	public void setCalc(FitnessCalculator calc) {
+		this.calc = calc;
+	}
+
+	public PositionUpdate getPositionUpdate() {
+		return positionUpdate;
+	}
+
+	public void setPositionUpdate(PositionUpdate positionUpdate) {
+		this.positionUpdate = positionUpdate;
 	}
 	
-	private void updatePersonalBest(int row){
-		for(int k = 0; k < position[row].length; k++){
-			personalBest[row][k] = position[row][k];
-		}
-	}
-	
-	private void calculateGlobalBest(){
-		int best = 0;
-		if(maximum){
-			for(int i = 0; i < fitness.size(); i++){
-				if(fitness.get(i) > fitness.get(best)){
-					best = i;
-				}
-			}
-		}else{
-			for(int i = 0; i < fitness.size(); i++){
-				if(fitness.get(i) < fitness.get(best)){
-					best = i;
-				}
-			}
-		}
-		globalBest = best;
-	}
-	
-	private void initiateCandidateSolutions() {
-		int columns = objectiveFunction.getVariables();
-		position = new double[numberOfParticles][columns];
-		double random = upperLimit - lowerLimit;
-		for(int i = 0; i < numberOfParticles; i++){
-			for(int k = 0; k < objectiveFunction.getVariables(); k++){
-				double d = lowerLimit + (Math.random() * random);
-				position[i][k] = d;
-			}
-		}
-		personalBest = position.clone();
-		fitness = new HashMap <Integer, Double>();
-		setFitness();
-		velocities = new double[numberOfParticles][columns];
-		for(int i = 0; i < numberOfParticles; i++){
-			for(int k = 0; k < columns; k++){
-				velocities[i][k] = 0;
-			}
-		}
-		velocityUpdate.setVelocities(velocities);
-	}
-	
-	private void setFitness() {
-		for(int i = 0; i < numberOfParticles; i++){
-			double currentfitness = objectiveFunction.CalculateFitness(position[i]);
-			fitness.put(i, currentfitness);
-		}
-		
-	}
 
 	public double getUpperLimit() {
 		return upperLimit;
