@@ -2,6 +2,11 @@ package swarm;
 
 public class ConstrictionCoefficient implements VelocityUpdate {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4171071871217312256L;
+
 		private double [][] velocities;
 		
 		private double [][] personalBest;
@@ -70,7 +75,7 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 				double[]social = calculateSocialVelocity(i);
 				for(int k = 0; k < position[i].length; k++){
 					velocities[i][k] = velocities[i][k] + cognitive[k] + social[k];
-				}
+ 				}
 			}
 		}
 		

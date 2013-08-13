@@ -5,6 +5,11 @@ import java.util.Vector;
 
 public class CombinatorialSwarm implements Swarm {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1179862233764569743L;
+
 	private double[][] positions;
 	
 	private double[][] personalBest;

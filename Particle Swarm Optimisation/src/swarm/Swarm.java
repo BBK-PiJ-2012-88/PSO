@@ -1,8 +1,9 @@
 package swarm;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public interface Swarm {
+public interface Swarm extends Serializable {
 
 	public abstract Vector<Double> optimise();
 

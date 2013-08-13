@@ -1,9 +1,15 @@
 package swarm;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
-public class BinarySwarm implements Swarm {
+public class BinarySwarm implements Swarm, GeneticSwarm {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3796636603226088760L;
 
 	private Function objectiveFunction;
 	
@@ -12,7 +18,7 @@ public class BinarySwarm implements Swarm {
 	private double [][] position;
 	
 	private double [][] velocities;
-	
+
 	private boolean maximum = false;
 	
 	private VelocityUpdate velocityUpdate = new ConstrictionCoefficient();
@@ -61,13 +67,13 @@ public class BinarySwarm implements Swarm {
 		calc = new FitnessCalculatorImpl(objectiveFunction, maximum);
 		init.initialiseMatrices(objectiveFunction, numberOfParticles);
 		setPosition(init.getPositions());
-		setPersonalBest(getPosition().clone());
+		setPersonalBest(init.getPersonalBest());
 		setVelocities(init.getVelocities());
 		calc.setPositions(getPosition());
 		calc.initialCalculateFitness();
 		setFitness(calc.getFitness());
 		globalBest = calc.calculateGlobalBest();
-		getVelocityUpdate().setVelocities(velocities);
+		getVelocityUpdate().setVelocities(getVelocities());
 		getVelocityUpdate().getNeighbourhood().setMaximum(getMaximum());
 		haltingCriteria.updateData(fitness.get(globalBest), 0);
 		if(geneticOptimisation){
@@ -95,14 +101,16 @@ public class BinarySwarm implements Swarm {
 		assert objectiveFunction != null;
 		initiateSwarm();
 		for(int i = 1; !haltingCriteria.halt(); i++){
-			if(geneticOptimisation == true){
-				genOp.setPositions(position);
+			if(geneticOptimisation){
+				genOp.setPositions(getPosition());
 				genOp.performGeneticOperations();
 				setPosition(genOp.getPositions());
+				updateFitnessInformation();
 			}
 			updateVelocities();
 			updateParticlePositions();
 			updateFitnessInformation();
+			System.out.println(fitness.get(globalBest));
 			haltingCriteria.updateData(fitness.get(globalBest), i);
 		}
 		Vector<Double> result = new Vector<Double>();
@@ -113,27 +121,45 @@ public class BinarySwarm implements Swarm {
 		return result;
 	}
 	
+	public boolean isGeneticOptimisation() {
+		return geneticOptimisation;
+	}
+
+	public void setGeneticOptimisation(boolean geneticOptimisation) {
+		this.geneticOptimisation = geneticOptimisation;
+	}
+
+	public PositionUpdate getPositionUpdate() {
+		return positionUpdate;
+	}
+
+	public void setPositionUpdate(PositionUpdate positionUpdate) {
+		this.positionUpdate = positionUpdate;
+	}
+
 	private void updateFitnessInformation() {
-		calc.setFitness(fitness);
-		calc.setPersonalBest(personalBest);
-		calc.setPositions(position);
+		calc.setFitness(getFitness());
+		calc.setPersonalBest(getPersonalBest());
+		calc.setPositions(getPosition());
 		calc.calculateFitness();
 		setFitness(calc.getFitness());
 		setPersonalBest(calc.getPersonalBest());
-		globalBest = calc.calculateGlobalBest();
+		setGlobalBest(calc.calculateGlobalBest());
 	}
 	
 	private void updateVelocities(){
-		velocityUpdate.setPosition(position);
-		velocityUpdate.setPersonalBest(personalBest);
-		velocityUpdate.getNeighbourhood().setSolutionFitness(fitness);
+		velocityUpdate.setVelocities(getVelocities());
+		velocityUpdate.setPosition(getPosition());
+		velocityUpdate.setPersonalBest(getPersonalBest());
+		velocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
 		setVelocities(velocityUpdate.updateVelocities());
 	}
 	
 	private void updateParticlePositions() {
-		positionUpdate.setVelocities(velocities);
-		positionUpdate.setPositions(position);
+		positionUpdate.setVelocities(getVelocities());
+		positionUpdate.setPositions(getPosition());
 		positionUpdate.updatePositions();
+		setVelocities(positionUpdate.getVelocities());
 		setPosition(positionUpdate.getPositions());		
 	}
 
@@ -200,7 +226,7 @@ public class BinarySwarm implements Swarm {
 
 	public void setVelocityUpdate(VelocityUpdate velocityUpdate) {
 		this.velocityUpdate = velocityUpdate;
-		this.velocityUpdate.getNeighbourhood().setMaximum(maximum);
+		this.velocityUpdate.getNeighbourhood().setMaximum(getMaximum());
 	}
 
 	public int getNumberOfParticles() {

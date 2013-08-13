@@ -1,5 +1,7 @@
 package swarm;
 
+import java.util.Random;
+
 public class BinaryPositionUpdate implements PositionUpdate {
 	
 	/**
@@ -37,14 +39,23 @@ public class BinaryPositionUpdate implements PositionUpdate {
 
 	@Override
 	public void updatePositions() {
-		double random = Math.random();
+		normaliseVelocities();
+		Random random = new Random();
 		for(int i = 0; i < positions.length; i++){
 			for(int k = 0; k < positions[i].length; k++){
-				if(sigmoidFunction.normalise(velocities[i][k]) > random){
+				if(velocities[i][k] > random.nextDouble()){
 					positions[i][k] = 1;
 				}else{
 					positions[i][k] = 0;
 				}
+			}
+		}
+	}
+
+	private void normaliseVelocities() {
+		for(int i = 0; i < velocities.length; i++){
+			for(int k = 0; k < velocities[i].length; k++){
+				velocities[i][k] = sigmoidFunction.normalise(velocities[i][k]);
 			}
 		}
 	}

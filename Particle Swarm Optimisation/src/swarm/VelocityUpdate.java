@@ -1,8 +1,8 @@
 package swarm;
 
-import java.util.HashMap;
+import java.io.Serializable;
 
-public interface VelocityUpdate {
+public interface VelocityUpdate extends Serializable {
 
 	double[][] updateVelocities();
 	

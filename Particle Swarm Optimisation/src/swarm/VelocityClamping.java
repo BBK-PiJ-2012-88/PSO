@@ -3,6 +3,11 @@ package swarm;
 
 public class VelocityClamping implements VelocityUpdate {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2172004309246432443L;
+
 	private double[]maxVelocity;
 	
 	private double [][] velocities;
@@ -46,9 +51,7 @@ public class VelocityClamping implements VelocityUpdate {
 		calculateVelocities();
 		limitVelocity();
 		return getVelocities();
-		
 	}
-
 
 	private void calculateVelocities() {
 		double r1 = Math.random();

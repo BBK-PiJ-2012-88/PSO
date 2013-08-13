@@ -10,10 +10,12 @@ public class BinaryDeJong1 implements Function {
 	
 	private BinaryConverter binaryConverter = new BinaryConverter();
 	
-	private DeJong1 deJong1 = new DeJong1();
+	private DeJong1 deJong1;
 	
 	public BinaryDeJong1(){
+		deJong1 = new DeJong1();
 		deJong1.setVariables(1);
+		//deJong1 = new DeJong1(variables);
 	}
 	
 	@Override

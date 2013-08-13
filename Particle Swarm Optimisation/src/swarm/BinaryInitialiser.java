@@ -11,18 +11,22 @@ public class BinaryInitialiser implements Initialiser {
 	
 	private double[][] velocities;
 	
+	private double[][] personalBest;
+	
 	@Override
 	public void initialiseMatrices(Function objectiveFunction, int numberOfParticles) {
 		int columns = objectiveFunction.getVariables();
 		position = new double[numberOfParticles][columns];
 		velocities = new double[numberOfParticles][columns];
+		personalBest = new double[numberOfParticles][columns];
 		for(int i = 0; i < numberOfParticles; i++){
 			for(int k = 0; k < columns; k++){
-				velocities[i][k] = 0;
 				if(Math.random() >= 0.5){
 					position[i][k] = 0;
+					personalBest[i][k] = 0;
 				}else{
 					position[i][k] = 1;
+					personalBest[i][k] = 1;
 				}
 			}
 		}
@@ -39,4 +43,15 @@ public class BinaryInitialiser implements Initialiser {
 		return velocities;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public double[][] getPosition() {
+		return position;
+	}
+
+	public double[][] getPersonalBest() {
+		return personalBest;
+	}
 }

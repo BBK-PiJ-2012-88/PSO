@@ -6,6 +6,11 @@ import java.util.Vector;
 
 public class VanillaSwarm implements Swarm {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2507732118651641415L;
+
 	/* 
 	 * A matrix of candidate solutions
 	 */
@@ -137,6 +142,14 @@ public class VanillaSwarm implements Swarm {
 		this.upperLimit = upperLimit;
 		this.lowerLimit = lowerLimit;
 	}
+	/*
+	private void printMatrix(double[][] matrix){
+		for(int i = 0; i < matrix.length; i++){
+			for(int k = 0; k < matrix[i].length; k++){
+				System.out.println(matrix[i][k]);
+			}
+		}
+	}*/
 	
 	private void initiateSwarm(){
 		calc = new FitnessCalculatorImpl(getObjectiveFunction(), getMaximum());
@@ -144,7 +157,7 @@ public class VanillaSwarm implements Swarm {
 		init.setUpperLimit(getUpperLimit());
 		init.initialiseMatrices(getObjectiveFunction(), getNumberOfParticles());
 		setPosition(init.getPositions());
-		setPersonalBest(getPosition().clone());
+		setPersonalBest(init.getPersonalBest());
 		setVelocities(init.getVelocities());
 		getVelocityUpdate().setVelocities(getVelocities());
 		getVelocityUpdate().getNeighbourhood().setMaximum(getMaximum());
@@ -179,7 +192,7 @@ public class VanillaSwarm implements Swarm {
 		calc.calculateFitness();
 		setFitness(calc.getFitness());
 		setPersonalBest(calc.getPersonalBest());
-		globalBest = calc.calculateGlobalBest();
+		setGlobalBest(calc.calculateGlobalBest());
 	}
 
 	private void updateVelocities() {

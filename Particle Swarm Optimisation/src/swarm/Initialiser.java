@@ -10,4 +10,6 @@ public interface Initialiser extends Serializable {
 	
 	public double[][] getVelocities();
 	
+	public double[][] getPersonalBest();
+	
 }
