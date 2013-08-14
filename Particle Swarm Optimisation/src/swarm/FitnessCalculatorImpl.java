@@ -64,7 +64,9 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 					updatePersonalBest(i);
 				}
 			}else{
+				//System.out.println(currentfitness + " cf " + fitness.get(i) + " " + i);
 				if(currentfitness < fitness.get(i)){
+					System.out.println(currentfitness + " " + i);
 					fitness.put(i, currentfitness);
 					updatePersonalBest(i);
 				}
@@ -73,6 +75,7 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 	}
 
 	private void updatePersonalBest(int row) {
+		System.out.println("update pb");
 		for(int k = 0; k < positions[row].length; k++){
 			personalBest[row][k] = positions[row][k];
 		}
@@ -101,6 +104,7 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 				if(fitness.get(i) < fitness.get(best)){
 					best = i;
 				}
+			//	System.out.println("best " + best + " i " + i);
 			}
 		}
 		return best;

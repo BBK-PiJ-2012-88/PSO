@@ -47,21 +47,22 @@ public class TestSwarmMaximums {
 		Vector<Double> resultVector = swarm.optimise(function);
 		double result = function.CalculateFitness(resultVector);
 		System.out.println(result);
+		//change to Math.E to the power 50.
 		assertTrue(result >= 1000000000000000000000000000000000000000000000000000000000000000000000000000.0);
 	}
-	/*
+	
 	@Test
 	public void testGeneticMaximum(){
 		function = new BinaryDeJong1();
-		swarm = new GeneticSwarm();
+		swarm = new BinarySwarm();
 		swarm.setMaximum(true);
 		((AcceptableSolutionHalt) acceptableSolutionHalt).setAcceptableSolution(1000);
-		((GeneticSwarm)swarm).setHaltingCriteria(acceptableSolutionHalt);
-		Vector<Double> resultVector = swarm.optimise(function);
+		((BinarySwarm)swarm).setHaltingCriteria(acceptableSolutionHalt);
+		Vector<Double> resultVector = ((BinarySwarm)swarm).geneticOptimise(function);
 		double result = function.CalculateFitness(resultVector);
 		System.out.println(result);
-		assertTrue(result >= 1000);
-	}*/
+		assertTrue(result >= 1000000000000000000000000000000000000000000000000000000000000000000000000000.0);
+	}
 	
 	@Test
 	public void testCombinatorialMaximum(){

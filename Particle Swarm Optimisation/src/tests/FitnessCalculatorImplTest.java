@@ -22,6 +22,13 @@ public class FitnessCalculatorImplTest {
 			{1, 2, 3, 4}
 	};
 	
+	private double[][] personalBest = new double[][]{
+			{0, 0, 0, 0},
+			{1, -1, 2, 4},
+			{3, 4, 5, 7},
+			{1, 2, 3, 4}
+	};
+	
 	private double[][]initialFitness = new double[][]{
 			{1, 0, 0, 0},
 			{2, -1, 2, 4},
@@ -40,9 +47,17 @@ public class FitnessCalculatorImplTest {
 	}
 	
 	@Test
+	public void testInitialCalculateFitness(){
+		classUnderTest.setPositions(position);
+		classUnderTest.initialCalculateFitness();
+		HashMap<Integer, Double> result = classUnderTest.getFitness();
+		assertEquals(fitness, result);
+	}
+	
+	@Test
 	public void test() {
 		classUnderTest.setPositions(position);
-		classUnderTest.setPersonalBest(position);
+		classUnderTest.setPersonalBest(personalBest);
 		classUnderTest.calculateFitness();
 		HashMap<Integer, Double> result = classUnderTest.getFitness();
 		assertEquals(result, fitness);
@@ -51,7 +66,7 @@ public class FitnessCalculatorImplTest {
 	@Test
 	public void test2(){
 		classUnderTest.setPositions(position);
-		classUnderTest.setPersonalBest(position);
+		classUnderTest.setPersonalBest(personalBest);
 		classUnderTest.setMaximum(true);
 		classUnderTest.calculateFitness();
 		HashMap<Integer, Double> result = classUnderTest.getFitness();

@@ -1,6 +1,5 @@
 package swarm;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -110,7 +109,6 @@ public class BinarySwarm implements Swarm, GeneticSwarm {
 			updateVelocities();
 			updateParticlePositions();
 			updateFitnessInformation();
-			System.out.println(fitness.get(globalBest));
 			haltingCriteria.updateData(fitness.get(globalBest), i);
 		}
 		Vector<Double> result = new Vector<Double>();

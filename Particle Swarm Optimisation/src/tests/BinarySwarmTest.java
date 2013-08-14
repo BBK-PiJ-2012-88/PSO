@@ -40,7 +40,6 @@ public class BinarySwarmTest {
 		double[] max = new double[function.getVariables()];
 		Arrays.fill(max, 5);
 		velUp = new VelocityClamping(max);
-		System.out.println("test 2");
 		IterationHalt itHalt = new IterationHalt(1000);
 		classUnderTest.setObjectiveFunction(function);
 		classUnderTest.setVelocityUpdate(velUp);
@@ -48,6 +47,35 @@ public class BinarySwarmTest {
 		Vector<Double> binaryString = classUnderTest.optimise();
 		double result = function.CalculateFitness(binaryString);
 		assertTrue(result < 10);
+	}
+	
+	@Test
+	public void testGeneticSwarm1(){
+		double[] max = new double[function.getVariables()];
+		Arrays.fill(max, 5);
+		velUp = new VelocityClamping(max);
+		classUnderTest.setGeneticOptimisation(true);
+		IterationHalt itHalt = new IterationHalt(1000);
+		classUnderTest.setObjectiveFunction(function);
+		classUnderTest.setVelocityUpdate(velUp);
+		classUnderTest.setHaltingCriteria(itHalt);
+		Vector<Double> binaryString = classUnderTest.geneticOptimise();
+		double result = function.CalculateFitness(binaryString);
+		assertTrue(result < 10);
+	}
+	
+	@Test
+	public void testGeneticSwarm2(){
+		double acceptableSolution = 0.00001;
+		halt.setAcceptableSolution(acceptableSolution);
+		classUnderTest.setObjectiveFunction(function);
+		classUnderTest.setGeneticOptimisation(true);
+		velUp = new ConstrictionCoefficient();
+		classUnderTest.setVelocityUpdate(velUp);
+		classUnderTest.setHaltingCriteria(halt);
+		Vector<Double> binaryString = classUnderTest.geneticOptimise();
+		double result = function.CalculateFitness(binaryString);
+		assertTrue(result <= acceptableSolution);
 	}
 
 }

@@ -1,5 +1,6 @@
 package swarm;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -16,15 +17,29 @@ public class CombinatorialSwarm implements Swarm {
 	
 	private double[][] velocities;
 	
+	private double[][] prevPos;
+	
+	private double[][] prevPB;
+	
+	private double[][] prevVel;
+	
 	private Function objectiveFunction;
 	
-	private int numberOfParticles = 27;
+	private int numberOfParticles = 4;
 	
-	private HaltingCriteria haltingCriteria = new IterationHalt(4000);
+	private HaltingCriteria haltingCriteria = new IterationHalt(6);
 	
 	private HashMap<Integer, Double> fitness;
 	
+	private HashMap<Integer, Double> prevFit;
+	
 	private CombinatorialVelocityUpdate combinatorialVelocityUpdate = new CombinatorialVelocityUpdate();
+	
+	private PositionUpdate positionUpdate = new CombinatorialPositionUpdate();
+	
+	private Initialiser init = new CombinatorialInitialiser();
+	
+	private FitnessCalculator calc;
 	
 	private int globalBest;
 	
@@ -51,6 +66,53 @@ public class CombinatorialSwarm implements Swarm {
 			fitness.put(i, objectiveFunction.CalculateFitness(positions[i]));
 		}
 	}
+	
+	private void initiateSwarm(){
+		calc = new FitnessCalculatorImpl(objectiveFunction, maximum);
+		init.initialiseMatrices(objectiveFunction, numberOfParticles);
+		setVelocities(init.getVelocities());
+		setPositions(init.getPositions());
+		setPersonalBest(init.getPersonalBest());
+		calc.setPositions(getPositions());
+		calc.initialCalculateFitness();
+		setFitness(calc.getFitness());
+		//System.out.println("initial print");
+	/*	for(int k = 0; k < positions[0].length; k++){
+			System.out.print( positions[0][k] + ", ");
+		}*/
+		/*
+		for(int i = 0; i < fitness.size(); i++){
+			System.out.println(i + " initial " + fitness.get(i));
+		}*/
+		globalBest = calc.calculateGlobalBest();
+		getVelocityUpdate().setVelocities(velocities);
+		getVelocityUpdate().getNeighbourhood().setMaximum(getMaximum());
+		haltingCriteria.updateData(fitness.get(globalBest), 0);
+	}
+
+	public HashMap<Integer, Double> getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(HashMap<Integer, Double> fitness) {
+		this.fitness = fitness;
+	}
+
+	public double[][] getPersonalBest() {
+		return personalBest;
+	}
+
+	public void setPersonalBest(double[][] personalBest) {
+		this.personalBest = personalBest;
+	}
+
+	public double[][] getPositions() {
+		return positions;
+	}
+
+	public void setPositions(double[][] positions) {
+		this.positions = positions;
+	}
 
 	private void shuffleParticles(double[][]particles) {
 		for(int i = 0; i < numberOfParticles; i++){
@@ -63,7 +125,143 @@ public class CombinatorialSwarm implements Swarm {
 		}
 		
 	}
+	
+	@Override
+	public Vector<Double> optimise() {
+		initiateSwarm();
+		for(int i = 1; !haltingCriteria.halt(); i++){
+			System.out.println("iteration: " + i);
+			setPreviousVelocity();
+			setPreviousPosition();
+			setPreviousPersonalBest();
+			setPreviousFitness();
+			updateVelocities();
+			updateParticlePositions();
+			updateFitnessInformation();
+			//System.out.println(i);
+			/*for(int k = 0; k < positions[0].length; k++){
+				System.out.print( positions[0][k] + ", ");
+			}*/
+		/*	for(int k = 0; k < fitness.size(); k++){
+				System.out.println(k + " " + fitness.get(k));
+			}*/
+	
+			check(i);
+			/*for(int n = 0; n < velocities.length; n++){
+				System.out.println(i);
+				for(int k = 0; k < velocities[n].length; k++){
+					System.out.print(velocities[n][k] + ", ");
+				}
+			}*/
+			haltingCriteria.updateData(fitness.get(globalBest), i);
+			System.out.println("gb value: " + fitness.get(globalBest));
+			System.out.println("gb: " + globalBest);
+		}
+		Vector<Double> result = new Vector<Double>();
+		for(int i = 0; i < personalBest[globalBest].length; i++){
+			result.add(personalBest[globalBest][i]);
+		}
+		return result;
+	}
+	
+	private void setPreviousFitness() {
+		prevFit = new HashMap<Integer, Double>();
+		for(int i = 0; i < fitness.size(); i++){
+			prevFit.put(i, fitness.get(i));
+		}
+		
+	}
 
+	private void check(int i) {
+		if(Arrays.deepEquals(prevPos, positions)){
+			System.out.println("positions " + i);
+		}
+		if(Arrays.deepEquals(prevVel, velocities)){
+			System.out.println("vel " + i);
+		}
+		if(Arrays.deepEquals(prevPB, personalBest)){
+			System.out.println("PB " + i);
+		}
+		if(prevFit.equals(fitness)){
+			System.out.println("fit " + i);
+		} 
+	}
+
+	private void setPreviousPersonalBest() {
+		prevPB = new double[numberOfParticles][objectiveFunction.getVariables()];
+		for(int i = 0; i < numberOfParticles; i++){
+			for(int k = 0; k < prevPB[i].length; k++){
+				prevPB[i][k] = personalBest[i][k];
+			}
+		}
+	}
+
+	private void setPreviousPosition() {
+		prevPos = new double[numberOfParticles][objectiveFunction.getVariables()];
+		for(int i = 0; i < numberOfParticles; i++){
+			for(int k = 0; k < prevPos[i].length; k++){
+				prevPos[i][k] = positions[i][k];
+			}
+		}
+	}
+
+	private void setPreviousVelocity() {
+		prevVel = new double[velocities.length][objectiveFunction.getVariables()];
+		for(int i = 0; i < velocities.length; i++){
+			//System.out.println();
+			for(int k = 0; k < velocities[i].length; k++){
+				prevVel[i][k] = velocities[i][k];
+				//System.out.print(velocities[i][k] + " ");
+			}
+		}	
+	}
+	
+	private void updateParticlePositions() {
+		positionUpdate.setPositions(positions);
+		positionUpdate.setVelocities(velocities);
+		((CombinatorialPositionUpdate)positionUpdate).setPersonalBest(personalBest);
+		((CombinatorialPositionUpdate)positionUpdate).setNeighbourhood(getVelocityUpdate().getNeighbourhood());
+		positionUpdate.updatePositions();
+		setPositions(positionUpdate.getPositions());
+		setVelocities(positionUpdate.getVelocities());
+	}
+	
+	private void updateFitnessInformation(){
+		calc.setFitness(getFitness());
+		calc.setPersonalBest(getPersonalBest());
+		calc.setPositions(getPositions());
+		calc.calculateFitness();
+		combinatorialVelocityUpdate.getNeighbourhood().setSolutionFitness(calc.getFitness());
+		setFitness(calc.getFitness());
+		setPersonalBest(calc.getPersonalBest());
+		setGlobalBest(calc.calculateGlobalBest());
+	}
+
+	public FitnessCalculator getCalc() {
+		return calc;
+	}
+
+	public void setCalc(FitnessCalculator calc) {
+		this.calc = calc;
+	}
+
+	public int getGlobalBest() {
+		return globalBest;
+	}
+
+	public void setGlobalBest(int globalBest) {
+		this.globalBest = globalBest;
+	}
+
+	private void updateVelocities(){
+		combinatorialVelocityUpdate.setVelocities(getVelocities());
+		combinatorialVelocityUpdate.setPosition(getPositions());
+		combinatorialVelocityUpdate.setPersonalBest(getPersonalBest());
+		combinatorialVelocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
+		setVelocities(combinatorialVelocityUpdate.updateVelocities());
+	}
+	
+	/*
 	@Override
 	public Vector<Double> optimise() {
 		assert objectiveFunction != null;
@@ -83,14 +281,27 @@ public class CombinatorialSwarm implements Swarm {
 			}
 			calculateFitness();
 			calculateGlobalBest();
+			System.out.println(globalBest + " " + fitness.get(globalBest));
 			haltingCriteria.updateData(fitness.get(globalBest), iteration);
+			}while(!haltingCriteria.halt());
 			Vector<Double> result = new Vector<Double>();
 			for(int i = 0; i < personalBest[globalBest].length; i++){
 				result.add(personalBest[globalBest][i]);
 			}
 			return result;
-		}while(!haltingCriteria.halt());
+	}*/
 
+	public CombinatorialVelocityUpdate getCombinatorialVelocityUpdate() {
+		return combinatorialVelocityUpdate;
+	}
+
+	public void setCombinatorialVelocityUpdate(
+			CombinatorialVelocityUpdate combinatorialVelocityUpdate) {
+		this.combinatorialVelocityUpdate = combinatorialVelocityUpdate;
+	}
+
+	public double[][] getVelocities() {
+		return velocities;
 	}
 
 	private void calculateGlobalBest(){
@@ -150,7 +361,8 @@ public class CombinatorialSwarm implements Swarm {
 		}
 		
 	}
-
+	
+	/*
 	private void updateParticlePositions() {
 		for(int i = 0; i < velocities.length / 2; i++){
 			for(int k = 0; k < velocities[i].length; k++){
@@ -179,7 +391,7 @@ public class CombinatorialSwarm implements Swarm {
 			}
 		}
 		
-	}
+	}*/
 
 	private void setVelocities(double[][] velocities) {
 		this.velocities = velocities;
