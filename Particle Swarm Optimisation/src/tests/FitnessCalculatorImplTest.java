@@ -3,6 +3,8 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +15,7 @@ public class FitnessCalculatorImplTest {
 	
 	private FitnessCalculatorImpl classUnderTest = new FitnessCalculatorImpl(new DeJong1(4));
 	
-	private HashMap<Integer, Double> fitness = new HashMap<Integer, Double>();
+	private Map<Integer, Double> fitness = new LinkedHashMap<Integer, Double>();
 	
 	private double[][] position = new double[][]{
 			{0, 0, 0, 0},
@@ -50,7 +52,7 @@ public class FitnessCalculatorImplTest {
 	public void testInitialCalculateFitness(){
 		classUnderTest.setPositions(position);
 		classUnderTest.initialCalculateFitness();
-		HashMap<Integer, Double> result = classUnderTest.getFitness();
+		Map<Integer, Double> result = classUnderTest.getFitness();
 		assertEquals(fitness, result);
 	}
 	
@@ -59,7 +61,7 @@ public class FitnessCalculatorImplTest {
 		classUnderTest.setPositions(position);
 		classUnderTest.setPersonalBest(personalBest);
 		classUnderTest.calculateFitness();
-		HashMap<Integer, Double> result = classUnderTest.getFitness();
+		Map<Integer, Double> result = classUnderTest.getFitness();
 		assertEquals(result, fitness);
 	}
 	
@@ -69,8 +71,8 @@ public class FitnessCalculatorImplTest {
 		classUnderTest.setPersonalBest(personalBest);
 		classUnderTest.setMaximum(true);
 		classUnderTest.calculateFitness();
-		HashMap<Integer, Double> result = classUnderTest.getFitness();
-		HashMap<Integer, Double> expected = new HashMap<Integer, Double>();
+		Map<Integer, Double> result = classUnderTest.getFitness();
+		Map<Integer, Double> expected = new HashMap<Integer, Double>();
 		expected.put(0, 1.0);
 		expected.put(1, 25.0);
 		expected.put(2, 106.0);

@@ -26,7 +26,7 @@ public class DeJong1 implements Function {
 	@Override
 	public double CalculateFitness(double[] candidateSolution) {
 		double result = 0;
-		for(int i = 0; i < variables; i++){
+		for(int i = 0; i < candidateSolution.length; i++){
 			result = result + (candidateSolution[i] * candidateSolution[i]);
 		}
 		return result;

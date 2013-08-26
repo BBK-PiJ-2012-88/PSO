@@ -24,6 +24,16 @@ public class VelocityClamping implements VelocityUpdate {
 	
 	private double inertiaWeight = 1;
 	
+	private boolean maximum = false;
+	
+	public boolean isMaximum() {
+		return maximum;
+	}
+
+	public void setMaximum(boolean maximum) {
+		this.maximum = maximum;
+	}
+
 	public VelocityClamping(double[] maxVelocity){
 		this.maxVelocity = maxVelocity;
 	}
@@ -32,17 +42,17 @@ public class VelocityClamping implements VelocityUpdate {
 		assert(velocities != null);
 		for(int i = 0; i < velocities.length; i++){
 			for(int k = 0; k < velocities[i].length; k++){
-				if(velocities[i][k] < 0 - maxVelocity[i]){
-					velocities[i][k] = 0 - maxVelocity[i];
-				}else if(velocities[i][k] > maxVelocity[i]){
-					velocities[i][k] = maxVelocity[i];
+				if(velocities[i][k] < 0 - maxVelocity[k]){
+					velocities[i][k] = 0 - maxVelocity[k];
+				}else if(velocities[i][k] > maxVelocity[k]){
+					velocities[i][k] = maxVelocity[k];
 				}
 			}
 		}
-
 	}
 
 	public double[][] updateVelocities() {
+		getNeighbourhood().setMaximum(maximum);
 		for(int i = 0; i < velocities.length; i++){
 			for(int k = 0; k < velocities[i].length; k++){
 				velocities[i][k] = velocities[i][k] * inertiaWeight;

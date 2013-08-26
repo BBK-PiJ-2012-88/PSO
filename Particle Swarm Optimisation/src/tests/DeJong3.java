@@ -6,7 +6,13 @@ import swarm.Function;
 
 public class DeJong3 implements Function{
 
-	private int variables;
+	private int variables = 5;
+	
+	public DeJong3(){}
+	
+	public void setVariables(int variables){
+		this.variables = variables;
+	}
 	
 	@Override
 	public int getVariables() {
@@ -15,13 +21,9 @@ public class DeJong3 implements Function{
 
 	@Override
 	public double CalculateFitness(double[] candidateSolution) {
-		double result = 0;
+		double result = 5 * variables;
 		for(int i = 0; i < candidateSolution.length; i++){
-			if(candidateSolution[i] < 0){
-				result = result + candidateSolution[i] * -1;
-			}else{
-				result = result + candidateSolution[i];
-			}
+			result = result + (int)candidateSolution[i];
 		}
 		return result;
 	}
@@ -34,6 +36,4 @@ public class DeJong3 implements Function{
 		}
 		return CalculateFitness(temp);
 	}
-	
-
 }

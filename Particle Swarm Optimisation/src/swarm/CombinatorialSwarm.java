@@ -2,9 +2,10 @@ package swarm;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
-public class CombinatorialSwarm implements Swarm {
+public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 	
 	/**
 	 * 
@@ -17,21 +18,39 @@ public class CombinatorialSwarm implements Swarm {
 	
 	private double[][] velocities;
 	
-	private double[][] prevPos;
-	
-	private double[][] prevPB;
-	
-	private double[][] prevVel;
+	private GeneticOperator genOp = new CombinatorialGeneticOperator();
 	
 	private Function objectiveFunction;
 	
-	private int numberOfParticles = 4;
+	private int numberOfParticles = 20;
 	
-	private HaltingCriteria haltingCriteria = new IterationHalt(6);
+	private HaltingCriteria haltingCriteria = new IterationHalt(100);
 	
-	private HashMap<Integer, Double> fitness;
-	
-	private HashMap<Integer, Double> prevFit;
+	public Function getObjectiveFunction() {
+		return objectiveFunction;
+	}
+
+	public void setObjectiveFunction(Function objectiveFunction) {
+		this.objectiveFunction = objectiveFunction;
+	}
+
+	public PositionUpdate getPositionUpdate() {
+		return positionUpdate;
+	}
+
+	public void setPositionUpdate(PositionUpdate positionUpdate) {
+		this.positionUpdate = positionUpdate;
+	}
+
+	public Initialiser getInit() {
+		return init;
+	}
+
+	public void setInit(Initialiser init) {
+		this.init = init;
+	}
+
+	private Map<Integer, Double> fitness;
 	
 	private CombinatorialVelocityUpdate combinatorialVelocityUpdate = new CombinatorialVelocityUpdate();
 	
@@ -45,28 +64,6 @@ public class CombinatorialSwarm implements Swarm {
 	
 	private boolean maximum = false;
 	
-	private double epsilon = 0.00001;
-
-	public void initiateCandidateSolutions(){
-		int columns = objectiveFunction.getVariables();
-		positions = new double[numberOfParticles][columns];
-		velocities = new double[numberOfParticles * 2][columns];
-		for(int i = 0; i < numberOfParticles * 2; i++){
-			for(int k = 0; k < columns; k++){
-				velocities[i][k] = 0;
-				if(i < numberOfParticles){
-					positions[i][k] = k + 1;
-				}
-			}
-		}
-		shuffleParticles(positions);
-		personalBest = positions.clone();
-		fitness = new HashMap<Integer, Double>();
-		for(int i = 0; i < numberOfParticles; i++){
-			fitness.put(i, objectiveFunction.CalculateFitness(positions[i]));
-		}
-	}
-	
 	private void initiateSwarm(){
 		calc = new FitnessCalculatorImpl(objectiveFunction, maximum);
 		init.initialiseMatrices(objectiveFunction, numberOfParticles);
@@ -76,25 +73,17 @@ public class CombinatorialSwarm implements Swarm {
 		calc.setPositions(getPositions());
 		calc.initialCalculateFitness();
 		setFitness(calc.getFitness());
-		//System.out.println("initial print");
-	/*	for(int k = 0; k < positions[0].length; k++){
-			System.out.print( positions[0][k] + ", ");
-		}*/
-		/*
-		for(int i = 0; i < fitness.size(); i++){
-			System.out.println(i + " initial " + fitness.get(i));
-		}*/
 		globalBest = calc.calculateGlobalBest();
 		getVelocityUpdate().setVelocities(velocities);
-		getVelocityUpdate().getNeighbourhood().setMaximum(getMaximum());
+		getVelocityUpdate().setMaximum(maximum);
 		haltingCriteria.updateData(fitness.get(globalBest), 0);
 	}
 
-	public HashMap<Integer, Double> getFitness() {
+	public Map<Integer, Double> getFitness() {
 		return fitness;
 	}
 
-	public void setFitness(HashMap<Integer, Double> fitness) {
+	public void setFitness(Map<Integer, Double> fitness) {
 		this.fitness = fitness;
 	}
 
@@ -113,107 +102,24 @@ public class CombinatorialSwarm implements Swarm {
 	public void setPositions(double[][] positions) {
 		this.positions = positions;
 	}
-
-	private void shuffleParticles(double[][]particles) {
-		for(int i = 0; i < numberOfParticles; i++){
-			for(int k = 0; k < particles[i].length; k++){
-				int index = i + (int)(Math.random() * ((particles.length - i) + 1));
-				double temp = particles[i][k];
-				particles[i][k] = particles[i][index];
-				particles[i][index] = temp;
-			}
-		}
-		
-	}
 	
 	@Override
 	public Vector<Double> optimise() {
 		initiateSwarm();
 		for(int i = 1; !haltingCriteria.halt(); i++){
-			System.out.println("iteration: " + i);
-			setPreviousVelocity();
-			setPreviousPosition();
-			setPreviousPersonalBest();
-			setPreviousFitness();
 			updateVelocities();
 			updateParticlePositions();
 			updateFitnessInformation();
-			//System.out.println(i);
-			/*for(int k = 0; k < positions[0].length; k++){
-				System.out.print( positions[0][k] + ", ");
-			}*/
-		/*	for(int k = 0; k < fitness.size(); k++){
-				System.out.println(k + " " + fitness.get(k));
-			}*/
-	
-			check(i);
-			/*for(int n = 0; n < velocities.length; n++){
-				System.out.println(i);
-				for(int k = 0; k < velocities[n].length; k++){
-					System.out.print(velocities[n][k] + ", ");
-				}
-			}*/
 			haltingCriteria.updateData(fitness.get(globalBest), i);
-			System.out.println("gb value: " + fitness.get(globalBest));
-			System.out.println("gb: " + globalBest);
+			System.out.println(i);
+			System.out.println("value " + fitness.get(globalBest));
+			System.out.println("index " + globalBest);
 		}
 		Vector<Double> result = new Vector<Double>();
 		for(int i = 0; i < personalBest[globalBest].length; i++){
 			result.add(personalBest[globalBest][i]);
 		}
 		return result;
-	}
-	
-	private void setPreviousFitness() {
-		prevFit = new HashMap<Integer, Double>();
-		for(int i = 0; i < fitness.size(); i++){
-			prevFit.put(i, fitness.get(i));
-		}
-		
-	}
-
-	private void check(int i) {
-		if(Arrays.deepEquals(prevPos, positions)){
-			System.out.println("positions " + i);
-		}
-		if(Arrays.deepEquals(prevVel, velocities)){
-			System.out.println("vel " + i);
-		}
-		if(Arrays.deepEquals(prevPB, personalBest)){
-			System.out.println("PB " + i);
-		}
-		if(prevFit.equals(fitness)){
-			System.out.println("fit " + i);
-		} 
-	}
-
-	private void setPreviousPersonalBest() {
-		prevPB = new double[numberOfParticles][objectiveFunction.getVariables()];
-		for(int i = 0; i < numberOfParticles; i++){
-			for(int k = 0; k < prevPB[i].length; k++){
-				prevPB[i][k] = personalBest[i][k];
-			}
-		}
-	}
-
-	private void setPreviousPosition() {
-		prevPos = new double[numberOfParticles][objectiveFunction.getVariables()];
-		for(int i = 0; i < numberOfParticles; i++){
-			for(int k = 0; k < prevPos[i].length; k++){
-				prevPos[i][k] = positions[i][k];
-			}
-		}
-	}
-
-	private void setPreviousVelocity() {
-		prevVel = new double[velocities.length][objectiveFunction.getVariables()];
-		for(int i = 0; i < velocities.length; i++){
-			//System.out.println();
-			for(int k = 0; k < velocities[i].length; k++){
-				prevVel[i][k] = velocities[i][k];
-				//System.out.print(velocities[i][k] + " ");
-			}
-		}	
 	}
 	
 	private void updateParticlePositions() {
@@ -231,8 +137,8 @@ public class CombinatorialSwarm implements Swarm {
 		calc.setPersonalBest(getPersonalBest());
 		calc.setPositions(getPositions());
 		calc.calculateFitness();
-		combinatorialVelocityUpdate.getNeighbourhood().setSolutionFitness(calc.getFitness());
 		setFitness(calc.getFitness());
+		combinatorialVelocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
 		setPersonalBest(calc.getPersonalBest());
 		setGlobalBest(calc.calculateGlobalBest());
 	}
@@ -260,36 +166,6 @@ public class CombinatorialSwarm implements Swarm {
 		combinatorialVelocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
 		setVelocities(combinatorialVelocityUpdate.updateVelocities());
 	}
-	
-	/*
-	@Override
-	public Vector<Double> optimise() {
-		assert objectiveFunction != null;
-		int iteration = 0;
-		do{
-			iteration++;
-			if(iteration == 1){
-				initiateCandidateSolutions();
-			}else{
-				combinatorialVelocityUpdate.setPosition(positions);
-				combinatorialVelocityUpdate.setPersonalBest(personalBest);
-				combinatorialVelocityUpdate.getNeighbourhood().setSolutionFitness(fitness);
-				combinatorialVelocityUpdate.setVelocities(velocities);
-				setVelocities(combinatorialVelocityUpdate.updateVelocities());
-				normaliseVelocities();
-				updateParticlePositions();
-			}
-			calculateFitness();
-			calculateGlobalBest();
-			System.out.println(globalBest + " " + fitness.get(globalBest));
-			haltingCriteria.updateData(fitness.get(globalBest), iteration);
-			}while(!haltingCriteria.halt());
-			Vector<Double> result = new Vector<Double>();
-			for(int i = 0; i < personalBest[globalBest].length; i++){
-				result.add(personalBest[globalBest][i]);
-			}
-			return result;
-	}*/
 
 	public CombinatorialVelocityUpdate getCombinatorialVelocityUpdate() {
 		return combinatorialVelocityUpdate;
@@ -304,96 +180,7 @@ public class CombinatorialSwarm implements Swarm {
 		return velocities;
 	}
 
-	private void calculateGlobalBest(){
-		int best = 0;
-		if(maximum){
-			for(int i = 0; i < fitness.size(); i++){
-				if(fitness.get(i) > fitness.get(best)){
-					best = i;
-				}
-			}
-		}else{
-			for(int i = 0; i < fitness.size(); i++){
-				if(fitness.get(i) < fitness.get(best)){
-					best = i;
-				}
-			}
-		}
-		globalBest = best;
-	}
-
-	private void updatePersonalBest(int row){
-		for(int k = 0; k < positions[row].length; k++){
-			personalBest[row][k] = positions[row][k];
-		}
-	}
-
-	private void calculateFitness() {
-		for(int i = 0; i < numberOfParticles; i++){
-			double currentfitness = objectiveFunction.CalculateFitness(positions[i]);
-			if(maximum){
-				if(currentfitness > fitness.get(i)){
-					fitness.put(i, currentfitness);
-					updatePersonalBest(i);
-				}
-			}else{
-				if(currentfitness < fitness.get(i)){
-					fitness.put(i, currentfitness);
-					updatePersonalBest(i);
-				}
-			}
-		}
-	}
-
-	private void normaliseVelocities() {
-		int rows = velocities.length / 2;
-		for(int i = 0; i < velocities.length / 2; i++){
-			for(int k = 0; k < velocities[i].length; k++){
-				double denominator = 0;
-				if(velocities[i][k] > velocities[i + rows][k]){
-					denominator = velocities[i][k];
-				}else{
-					denominator = velocities[i + rows][k];
-				}
-				velocities[i][k] = velocities[i][k] / denominator;
-				velocities[i + rows][k] = velocities[i + rows][k] / denominator;
-			}
-		}
-		
-	}
-	
-	/*
-	private void updateParticlePositions() {
-		for(int i = 0; i < velocities.length / 2; i++){
-			for(int k = 0; k < velocities[i].length; k++){
-				if(Math.abs(velocities[i][k] - 1.0) <= epsilon){
-					double exchange = personalBest[i][k];
-					for(int n = 0; n < positions[i].length; n++){
-						if(Math.abs(positions[i][n] - exchange) <= epsilon){
-							double temp = positions[i][k];
-							positions[i][k] = positions[i][n];
-							positions[i][n] = temp;
-						}
-					}
-					velocities[i][k] = 0;
-				}else{
-					int index = combinatorialVelocityUpdate.getNeighbourhood().neighbourhoodBest(i);
-					double exchange = personalBest[index][k];
-					for(int n = 0; n < positions[i].length; n++){
-						if(Math.abs(positions[i][n] - exchange) <= epsilon){
-							double temp = positions[i][k];
-							positions[i][k] = positions[i][n];
-							positions[i][n] = temp;
-						}
-					}
-					velocities[i + velocities.length / 2][k] = 0;
-				}
-			}
-		}
-		
-	}*/
-
-	private void setVelocities(double[][] velocities) {
+	public void setVelocities(double[][] velocities) {
 		this.velocities = velocities;
 		
 	}
@@ -458,5 +245,52 @@ public class CombinatorialSwarm implements Swarm {
 		buff.append("Number of Particles: " + numberOfParticles + ", ");
 		buff.append("Maximum: " + maximum);
 		return buff.toString();
+	}
+
+	@Override
+	public GeneticOperator getGenOp() {
+		return genOp;
+	}
+
+	@Override
+	public void setGenOp(GeneticOperator geneticOperator) {
+		this.genOp = geneticOperator;	
+	}
+
+	@Override
+	public Vector<Double> geneticOptimise() {
+		if(genOp == null){
+			genOp = new CombinatorialGeneticOperator();
+		}
+		initiateSwarm();
+		for(int i = 1; !haltingCriteria.halt(); i++){
+			updateVelocities();
+			updateParticlePositions();
+			performGeneticOperations();
+			updateFitnessInformation();
+			haltingCriteria.updateData(fitness.get(globalBest), i);
+			System.out.println(i);
+			System.out.println("value " + fitness.get(globalBest));
+			System.out.println("index " + globalBest);
+		}
+		Vector<Double> result = new Vector<Double>();
+		for(int i = 0; i < personalBest[globalBest].length; i++){
+			result.add(personalBest[globalBest][i]);
+		}
+		return result;
+	}
+	
+	
+
+	private void performGeneticOperations() {
+		genOp.setPositions(positions);
+		genOp.performGeneticOperations();
+		setPositions(genOp.getPositions());
+	}
+
+	@Override
+	public Vector<Double> geneticOptimise(Function objectiveFunction) {
+		setObjectiveFunction(objectiveFunction);
+		return geneticOptimise();
 	}
 }

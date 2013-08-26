@@ -12,7 +12,7 @@ public class IOManager {
 		System.out.println("write to file: " + content);
 		BufferedWriter writer = null;
 		try{
-			writer = new BufferedWriter(new FileWriter(file));
+			writer = new BufferedWriter(new FileWriter(file, true));
 			writer.write(content);
 			writer.newLine();
 		}catch(FileNotFoundException ex){
@@ -30,4 +30,17 @@ public class IOManager {
 			}
 		}
 	}
+	
+	public File createNewFile(String location){
+		try{
+			File file = new File(location);
+			file.createNewFile();
+			return file;
+		}catch(IOException ex){
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
+	
 }

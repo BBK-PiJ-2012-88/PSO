@@ -15,6 +15,8 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 		
 		private Neighbourhood neighbourhood = new TheRing();
 		
+		private boolean maximum = false;
+		
 		public void setSocialConstant(double socialConstant) {
 			this.socialConstant = socialConstant;
 		}
@@ -48,6 +50,7 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 		@Override
 		public double[][] updateVelocities(){
 			assert(neighbourhood != null && velocities != null && position != null);
+			getNeighbourhood().setMaximum(maximum);
 			double constrictionCoefficient = calculateConstrictionCoefficient();
 			calculateVelocities();
 			for(int i = 0; i < velocities.length; i++){
@@ -58,6 +61,14 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 			return getVelocities();
 		}
 		
+		public boolean isMaximum() {
+			return maximum;
+		}
+
+		public void setMaximum(boolean maximum) {
+			this.maximum = maximum;
+		}
+
 		private double calculateConstrictionCoefficient() {
 			assert(socialConstant + cognitiveConstant >= 4 && K >= 0 && K <= 1);
 			double numerator = 2 * K;

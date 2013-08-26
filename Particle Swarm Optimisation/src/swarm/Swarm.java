@@ -22,4 +22,8 @@ public interface Swarm extends Serializable {
 	public abstract void setNumberOfParticles(int numberOfParticles);
 	
 	public abstract void setNeighbourhood(Neighbourhood neighbourhood);
+	
+	public abstract Function getObjectiveFunction();
+	
+	public abstract void setObjectiveFunction(Function objectiveFunction);
 }

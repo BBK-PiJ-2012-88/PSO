@@ -47,5 +47,19 @@ public class VanillaSwarmTest {
 		System.out.println(result);
 		assertTrue(result <= 2);
 	}
+	
+	@Test
+	public void testConstrainedOptimisation(){
+		function = new DeJong3();
+		velUpdate.setK(0.01);
+		classUnderTest = new VanillaSwarm();
+		classUnderTest.setHaltingCriteria(new IterationHalt(100));
+		classUnderTest.setVelocityUpdate(velUpdate);
+		Vector<Double> temp = classUnderTest.constrainedOptimise(function, 5.12, -5.12);
+		double result = function.CalculateFitness(temp);
+		System.out.println(result);
+		assertTrue(result >= 0 && result <= 50);
+		
+	}
 
 }

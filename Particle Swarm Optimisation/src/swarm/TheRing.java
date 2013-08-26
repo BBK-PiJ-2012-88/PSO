@@ -1,10 +1,11 @@
 package swarm;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class TheRing implements Neighbourhood {
 	
-	private HashMap<Integer, Double> fitness;
+	private Map<Integer, Double> fitness;
 	private boolean maximum = false;
 	
 	public TheRing(){}
@@ -17,7 +18,7 @@ public class TheRing implements Neighbourhood {
 	 * @see swarm.Neighbourhood#setfitness(java.util.HashMap)
 	 */
 	@Override
-	public void setSolutionFitness(HashMap<Integer, Double> fitness){
+	public void setSolutionFitness(Map<Integer, Double> fitness){
 		this.fitness = fitness;
 	}
 	

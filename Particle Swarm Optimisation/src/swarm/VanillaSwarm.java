@@ -1,10 +1,11 @@
 package swarm;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Vector;
 
 
-public class VanillaSwarm implements Swarm {
+public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 	
 	/**
 	 * 
@@ -46,11 +47,15 @@ public class VanillaSwarm implements Swarm {
 	 * Lower limit used to generate initial candidate solutions. Default value is 0
 	 */
 	private double lowerLimit = 0;
+	
+	private double[] max;
+	
+	private double[] min;
 
 	/* The fitness measurement of the best solution found by each
 	 * particle
 	 */
-	private HashMap <Integer, Double> fitness;
+	private Map <Integer, Double> fitness;
 	
 	/*
 	 * The number of position in the Swarm. The default is 20.
@@ -71,6 +76,8 @@ public class VanillaSwarm implements Swarm {
 	 * An object that determines whether or halting conditions have been met.
 	 */
 	private HaltingCriteria haltingCriteria;
+	
+	private boolean constrainedOptimisation = true;
 	
 	private VanillaInitialiser init = new VanillaInitialiser();
 	
@@ -142,25 +149,36 @@ public class VanillaSwarm implements Swarm {
 		this.upperLimit = upperLimit;
 		this.lowerLimit = lowerLimit;
 	}
-	/*
-	private void printMatrix(double[][] matrix){
-		for(int i = 0; i < matrix.length; i++){
-			for(int k = 0; k < matrix[i].length; k++){
-				System.out.println(matrix[i][k]);
-			}
-		}
-	}*/
 	
 	private void initiateSwarm(){
 		calc = new FitnessCalculatorImpl(getObjectiveFunction(), getMaximum());
-		init.setLowerLimit(getLowerLimit());
-		init.setUpperLimit(getUpperLimit());
+		if(max == null){
+			max = new double[getObjectiveFunction().getVariables()];
+			Arrays.fill(max, upperLimit);
+			init.setMax(max);
+		}else{
+			init.setMax(max);
+		}
+		if(min == null){
+			min = new double[getObjectiveFunction().getVariables()];
+			Arrays.fill(min, lowerLimit);
+			init.setMin(min);
+		}else{
+			init.setMin(min);
+		}
+		if(constrainedOptimisation){
+			((VanillaPositionUpdate)getPositionUpdate()).setConstraints(constrainedOptimisation);
+			Constrainer constrainer = new VanillaConstrainer();
+			constrainer.setMaximum(max);
+			constrainer.setMinimum(min);
+			((VanillaPositionUpdate)getPositionUpdate()).setConstrainer(constrainer);
+		}
 		init.initialiseMatrices(getObjectiveFunction(), getNumberOfParticles());
 		setPosition(init.getPositions());
 		setPersonalBest(init.getPersonalBest());
 		setVelocities(init.getVelocities());
 		getVelocityUpdate().setVelocities(getVelocities());
-		getVelocityUpdate().getNeighbourhood().setMaximum(getMaximum());
+		getVelocityUpdate().setMaximum(maximum);
 		calc.setPositions(getPosition());
 		calc.initialCalculateFitness();
 		setFitness(calc.getFitness());
@@ -168,15 +186,93 @@ public class VanillaSwarm implements Swarm {
 		haltingCriteria.updateData(fitness.get(globalBest), 0);
 	}
 	
+	public void setInit(VanillaInitialiser init) {
+		this.init = init;
+	}
+
+	public double[] getMax() {
+		return max;
+	}
+
+	public void setMax(double[] max) {
+		this.max = max;
+	}
+
+	public double[] getMin() {
+		return min;
+	}
+
+	public void setMin(double[] min) {
+		this.min = min;
+	}
+	
+	public Vector<Double> constrainedOptimise(Function objectiveFunction, double[] max, double[] min){
+		this.min = min;
+		this.max = max;
+		this.objectiveFunction = objectiveFunction;
+		return constrainedOptimise();
+	}
+	
+	public Vector<Double> constrainedOptimise(Function objectiveFunction, double upperLimit, double lowerLimit){
+		max = null;
+		min = null;
+		this.lowerLimit = lowerLimit;
+		this.upperLimit = upperLimit;
+		this.objectiveFunction = objectiveFunction;
+		return constrainedOptimise();
+	}
+	
+	public Vector<Double> optimise(Function objectiveFunction, double upperLimit, double lowerLimit){
+		this.lowerLimit = lowerLimit;
+		this.upperLimit = upperLimit;
+		max = null;
+		min = null;
+		this.objectiveFunction = objectiveFunction;
+		return optimise();
+	}
+	
+	public Vector<Double> optimise(Function objectiveFunction, double[] max, double[] min){
+		this.objectiveFunction = objectiveFunction;
+		this.max = max;
+		this.min = min;
+		return optimise();
+	}
+	
+	
+	
 	@Override
 	public Vector<Double> optimise(){
 		assert objectiveFunction != null;
+		constrainedOptimisation = false;
 		initiateSwarm();
 		for(int i = 0; !haltingCriteria.halt(); i++){
 			updateVelocities();
 			updateParticlePositions();
 			updateFitnessInformation();
 			haltingCriteria.updateData(fitness.get(globalBest), i);
+			System.out.println(i);
+			System.out.println("value " + fitness.get(globalBest));
+			System.out.println("index " + globalBest);
+		}
+		Vector<Double> result = new Vector<Double>();
+		for(int i = 0; i < personalBest[globalBest].length; i++){
+			result.add(personalBest[globalBest][i]);
+		}
+		return result;
+	}
+	
+	public Vector<Double> constrainedOptimise(){
+		assert objectiveFunction != null;
+		constrainedOptimisation = true;
+		initiateSwarm();
+		for(int i = 0; !haltingCriteria.halt(); i++){
+			updateVelocities();
+			updateParticlePositions();
+			updateFitnessInformation();
+			haltingCriteria.updateData(fitness.get(globalBest), i);
+			System.out.println(i);
+			System.out.println("value " + fitness.get(globalBest));
+			System.out.println("index " + globalBest);
 		}
 		Vector<Double> result = new Vector<Double>();
 		for(int i = 0; i < personalBest[globalBest].length; i++){
@@ -250,11 +346,11 @@ public class VanillaSwarm implements Swarm {
 		this.globalBest = globalBest;
 	}
 
-	public HashMap<Integer, Double> getFitness() {
+	public Map<Integer, Double> getFitness() {
 		return fitness;
 	}
 
-	public void setFitness(HashMap<Integer, Double> fitness) {
+	public void setFitness(Map<Integer, Double> fitness) {
 		this.fitness = fitness;
 	}
 

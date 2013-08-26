@@ -1,8 +1,9 @@
 package swarm;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public interface Function {
+public interface Function extends Serializable{
 	
 	/*
 	 * Returns the number of variables in the objective function

@@ -1,10 +1,11 @@
 package swarm;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class TheFourClusters implements Neighbourhood {
 
-	private HashMap<Integer, Double> fitness;
+	private Map<Integer, Double> fitness;
 	private TheStar neighbourhood = new TheStar();
 	private boolean maximum = false;
 	
@@ -16,7 +17,7 @@ public class TheFourClusters implements Neighbourhood {
 	}
 	
 	@Override
-	public void setSolutionFitness(HashMap<Integer, Double> fitness) {
+	public void setSolutionFitness(Map<Integer, Double> fitness) {
 		assert(fitness.size() >= 16 && fitness.size() % 4 == 0);
 		this.fitness = fitness;
 	}

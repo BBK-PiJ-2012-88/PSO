@@ -3,6 +3,7 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class VelClampingTest {
 
 	@Test
 	public void test() {
-		HashMap<Integer, Double> fitness;
+		Map<Integer, Double> fitness;
 		fit.setPositions(position);
 		fit.initialCalculateFitness();
 		fitness = fit.getFitness();

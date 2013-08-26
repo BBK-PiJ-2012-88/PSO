@@ -6,7 +6,7 @@ import swarm.Function;
 
 public class DeJong5 implements Function {
 	
-	private int variables;
+	private int variables = 2;
 	
 	private int[][] matrix = {{-32, -16, 0, 16, 32, -32, -16, 0, 16, 32, -32, -16, 0, 16, 32, -32, -16, 0, 16, 32, -32, -16, 0, 16, 32,},
 							  {-32, -32, -32, -32, -32, -16, -16, -16, -16, -16, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 32, 32, 32, 32, 32} };
@@ -26,7 +26,6 @@ public class DeJong5 implements Function {
 			denominator = denominator + Math.pow(candidateSolution[0] - matrix [0][i], 6);
 			denominator = denominator + Math.pow(candidateSolution[0] - matrix [1][i], 6);
 			denominator = denominator + i + 1;
-			//System.out.println("denominator =" + denominator + "result = " + result);
 			result = result + 1 / denominator;
 		}
 		return 1 / (result + 0.002);

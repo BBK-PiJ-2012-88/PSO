@@ -1,9 +1,10 @@
 package swarm;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.Vector;
 
-public class BinarySwarm implements Swarm, GeneticSwarm {
+public class BinarySwarm implements Swarm, GeneticSwarm, ConstrainedOptimisation, ConstrainedGeneticOptimisation {
 
 	/**
 	 * 
@@ -17,6 +18,12 @@ public class BinarySwarm implements Swarm, GeneticSwarm {
 	private double [][] position;
 	
 	private double [][] velocities;
+	
+	private double[] upperLimit;
+	
+	private double[] lowerLimit;
+	
+	private boolean constrainedOptimisation = false;
 
 	private boolean maximum = false;
 	
@@ -26,9 +33,9 @@ public class BinarySwarm implements Swarm, GeneticSwarm {
 	
 	private int globalBest;
 	
-	private HashMap<Integer, Double> fitness;
+	private Map<Integer, Double> fitness;
 	
-	private HaltingCriteria haltingCriteria;
+	private HaltingCriteria haltingCriteria = new IterationHalt(100);
 	
 	private GeneticOperator genOp;
 	
@@ -36,10 +43,18 @@ public class BinarySwarm implements Swarm, GeneticSwarm {
 	
 	private FitnessCalculator calc;
 	
-	private boolean geneticOptimisation = false;
-	
 	private PositionUpdate positionUpdate = new BinaryPositionUpdate();
 	
+	private BinaryConverter binaryConverter = new BinaryConverterImpl();
+	
+	public BinaryConverter getBinaryConveter() {
+		return binaryConverter;
+	}
+
+	public void setBinaryConveter(BinaryConverter binaryConveter) {
+		this.binaryConverter = binaryConveter;
+	}
+
 	public BinarySwarm(){}
 	
 	public GeneticOperator getGenOp() {
@@ -64,6 +79,16 @@ public class BinarySwarm implements Swarm, GeneticSwarm {
 	
 	private void initiateSwarm(){
 		calc = new FitnessCalculatorImpl(objectiveFunction, maximum);
+		if(constrainedOptimisation){
+			((BinaryInitialiser)init).setBinaryConverter(getBinaryConveter());
+			((BinaryConstrainer) ((BinaryPositionUpdate)positionUpdate).getConstrainer()).setBinaryConverter(getBinaryConveter());
+			((BinaryInitialiser)init).setConstrainedInitialisation(constrainedOptimisation);
+			((BinaryInitialiser)init).setLowerLimit(lowerLimit);
+			((BinaryInitialiser)init).setUpperLimit(upperLimit);
+			((BinaryConstrainer) ((BinaryPositionUpdate)positionUpdate).getConstrainer()).setMaximum(upperLimit);
+			((BinaryConstrainer) ((BinaryPositionUpdate)positionUpdate).getConstrainer()).setMinimum(lowerLimit);
+			((BinaryPositionUpdate)positionUpdate).setConstraints(constrainedOptimisation);
+		}
 		init.initialiseMatrices(objectiveFunction, numberOfParticles);
 		setPosition(init.getPositions());
 		setPersonalBest(init.getPersonalBest());
@@ -73,58 +98,76 @@ public class BinarySwarm implements Swarm, GeneticSwarm {
 		setFitness(calc.getFitness());
 		globalBest = calc.calculateGlobalBest();
 		getVelocityUpdate().setVelocities(getVelocities());
-		getVelocityUpdate().getNeighbourhood().setMaximum(getMaximum());
-		haltingCriteria.updateData(fitness.get(globalBest), 0);
-		if(geneticOptimisation){
-			if(genOp == null){
-				genOp = new GeneticOperatorImpl(objectiveFunction);
-			}
-			genOp.setObjectiveFunction(objectiveFunction);
-		}
-		
+		getVelocityUpdate().setMaximum(maximum);
+		haltingCriteria.updateData(fitness.get(globalBest), 0);		
 	}
 	
 	public Vector<Double> geneticOptimise(){
-		geneticOptimisation = true;
-		return optimise();
+		constrainedOptimisation = false;
+		return geneticOptimisation();
 	}
-	
-	public Vector<Double> geneticOptimise(Function objectiveFunction){
-		geneticOptimisation = true;
-		setObjectiveFunction(objectiveFunction);
-		return optimise();
-	}
-	
-	@Override
-	public Vector<Double> optimise() {
-		assert objectiveFunction != null;
+
+	private Vector<Double> geneticOptimisation() {
+		if(genOp == null){
+			genOp = new GeneticOperatorImpl();
+		}
+		genOp.setObjectiveFunction(objectiveFunction);
 		initiateSwarm();
 		for(int i = 1; !haltingCriteria.halt(); i++){
-			if(geneticOptimisation){
-				genOp.setPositions(getPosition());
-				genOp.performGeneticOperations();
-				setPosition(genOp.getPositions());
-				updateFitnessInformation();
+			genOp.setPositions(getPosition());
+			((GeneticOperatorImpl) genOp).setGlobalBest(globalBest);
+			genOp.performGeneticOperations();
+			setPosition(genOp.getPositions());
+			if(constrainedOptimisation){
+				((BinaryPositionUpdate)getPositionUpdate()).getConstrainer().setPositions(position);
+				((BinaryPositionUpdate)getPositionUpdate()).getConstrainer().constrain();
+				setPosition(((BinaryPositionUpdate)getPositionUpdate()).getConstrainer().getPositions());
 			}
+			updateFitnessInformation();
 			updateVelocities();
 			updateParticlePositions();
 			updateFitnessInformation();
 			haltingCriteria.updateData(fitness.get(globalBest), i);
+			System.out.println(i);
+			System.out.println("value " + fitness.get(globalBest));
+			System.out.println("index " + globalBest);
 		}
 		Vector<Double> result = new Vector<Double>();
 		for(int i = 0; i < personalBest[globalBest].length; i++){
 			result.add(personalBest[globalBest][i]);
 		}
-		geneticOptimisation = false;
 		return result;
 	}
 	
-	public boolean isGeneticOptimisation() {
-		return geneticOptimisation;
+	public Vector<Double> geneticOptimise(Function objectiveFunction){
+		setObjectiveFunction(objectiveFunction);
+		constrainedOptimisation = false;
+		return geneticOptimisation();
 	}
-
-	public void setGeneticOptimisation(boolean geneticOptimisation) {
-		this.geneticOptimisation = geneticOptimisation;
+	
+	@Override
+	public Vector<Double> optimise(){
+		constrainedOptimisation = false;
+		return optimisation();
+	}
+	
+	private Vector<Double> optimisation() {
+		assert objectiveFunction != null;
+		initiateSwarm();
+		for(int i = 1; !haltingCriteria.halt(); i++){
+			updateVelocities();
+			updateParticlePositions();
+			updateFitnessInformation();
+			haltingCriteria.updateData(fitness.get(globalBest), i);
+			System.out.println(i);
+			System.out.println("value " + fitness.get(globalBest));
+			System.out.println("index " + globalBest);
+		}
+		Vector<Double> result = new Vector<Double>();
+		for(int i = 0; i < personalBest[globalBest].length; i++){
+			result.add(personalBest[globalBest][i]);
+		}
+		return result;
 	}
 
 	public PositionUpdate getPositionUpdate() {
@@ -177,11 +220,11 @@ public class BinarySwarm implements Swarm, GeneticSwarm {
 		this.position = position;
 	}
 
-	public HashMap<Integer, Double> getFitness() {
+	public Map<Integer, Double> getFitness() {
 		return fitness;
 	}
 
-	public void setFitness(HashMap<Integer, Double> fitness) {
+	public void setFitness(Map<Integer, Double> fitness) {
 		this.fitness = fitness;
 	}
 
@@ -254,7 +297,8 @@ public class BinarySwarm implements Swarm, GeneticSwarm {
 	@Override
 	public Vector<Double> optimise(Function objectiveFunction) {
 		this.objectiveFunction = objectiveFunction;
-		return optimise();
+		constrainedOptimisation = false;
+		return optimisation();
 	}
 
 	public void setVelocities(double[][] velocities) {
@@ -284,4 +328,48 @@ public class BinarySwarm implements Swarm, GeneticSwarm {
 		buff.append("Genetic operator" + genOp.toString());
 		return buff.toString();
 	}
+
+	@Override
+	public Vector<Double> constrainedGeneticOptmise(Function objectiveFunction,
+			double[] max, double[] min) {
+		upperLimit = max;
+		lowerLimit = min;
+		constrainedOptimisation = true;
+		this.objectiveFunction = objectiveFunction;
+		return geneticOptimisation();
+	}
+
+	@Override
+	public Vector<Double> constrainedGeneticOptimise(
+			Function objectiveFunction, double upperLimit, double lowerLimit) {
+		this.upperLimit = new double[objectiveFunction.getVariables() / binaryConverter.getBinaryEncoding()];
+		Arrays.fill(this.upperLimit, upperLimit);
+		this.lowerLimit = new double[objectiveFunction.getVariables() / binaryConverter.getBinaryEncoding()];
+		Arrays.fill(this.lowerLimit, lowerLimit);
+		constrainedOptimisation = true;
+		return geneticOptimisation();
+	}
+
+	@Override
+	public Vector<Double> constrainedOptimise(Function objectiveFunction,
+			double[] max, double[] min) {
+		upperLimit = max; 
+		lowerLimit = min;
+		this.objectiveFunction = objectiveFunction;
+		constrainedOptimisation = true;
+		return optimisation();
+	}
+
+	@Override
+	public Vector<Double> constrainedOptimise(Function objectiveFunction,
+			double upperLimit, double lowerLimit) {
+		this.upperLimit = new double[objectiveFunction.getVariables() / binaryConverter.getBinaryEncoding()];
+		Arrays.fill(this.upperLimit, upperLimit);
+		this.lowerLimit = new double[objectiveFunction.getVariables() / binaryConverter.getBinaryEncoding()];
+		Arrays.fill(this.lowerLimit, lowerLimit);
+		this.objectiveFunction = objectiveFunction;
+		constrainedOptimisation = true;
+		return optimisation();
+	}
+
 }

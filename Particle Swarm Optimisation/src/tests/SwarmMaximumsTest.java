@@ -16,7 +16,7 @@ import swarm.HaltingCriteria;
 import swarm.Swarm;
 import swarm.VanillaSwarm;
 
-public class TestSwarmMaximums {
+public class SwarmMaximumsTest {
 	
 	private Swarm swarm;
 	
@@ -48,7 +48,7 @@ public class TestSwarmMaximums {
 		double result = function.CalculateFitness(resultVector);
 		System.out.println(result);
 		//change to Math.E to the power 50.
-		assertTrue(result >= 1000000000000000000000000000000000000000000000000000000000000000000000000000.0);
+		assertTrue(result >= Math.pow(Math.E, 50));
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class TestSwarmMaximums {
 		Vector<Double> resultVector = ((BinarySwarm)swarm).geneticOptimise(function);
 		double result = function.CalculateFitness(resultVector);
 		System.out.println(result);
-		assertTrue(result >= 1000000000000000000000000000000000000000000000000000000000000000000000000000.0);
+		assertTrue(result >= Math.pow(Math.E, 50));
 	}
 	
 	@Test

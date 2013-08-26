@@ -1,21 +1,29 @@
 package tests;
 
+import java.util.Arrays;
 import java.util.Vector;
 
+import swarm.BinaryConverter;
+import swarm.BinaryConverterImpl;
 import swarm.Function;
 
 public class BinaryDeJong1 implements Function {
 	
-	private int variables = 32;
+	private int variables;
 	
-	private BinaryConverter binaryConverter = new BinaryConverter();
+	private BinaryConverter binaryConverter = new BinaryConverterImpl();
 	
 	private DeJong1 deJong1;
 	
+	public BinaryDeJong1(int variables){
+		deJong1 = new DeJong1(variables);
+		this.variables = variables * binaryConverter.getBinaryEncoding();
+	}
+	
 	public BinaryDeJong1(){
 		deJong1 = new DeJong1();
-		deJong1.setVariables(1);
-		//deJong1 = new DeJong1(variables);
+		deJong1.setVariables(10);
+		variables = deJong1.getVariables() * binaryConverter.getBinaryEncoding();
 	}
 	
 	@Override
@@ -25,14 +33,16 @@ public class BinaryDeJong1 implements Function {
 
 	@Override
 	public double CalculateFitness(double[] candidateSolution) {
-		int[] binarySolution = new int[candidateSolution.length];
-		for(int i = 0; i < candidateSolution.length; i++){
-			binarySolution[i] = (int)candidateSolution[i];
+		int length = candidateSolution.length / deJong1.getVariables();
+		double[] solution = new double[variables / binaryConverter.getBinaryEncoding()];
+		for(int i = 0, k = 0; i < candidateSolution.length; i = i + length, k++){
+			double [] temp = Arrays.copyOfRange(candidateSolution, i, i + length);
+			double realNumber = binaryConverter.convertBinaryToReal(temp);
+			solution[k] = realNumber;
 		}
-		double realNumber = binaryConverter.convertIEEE754ToReal(binarySolution);
-		double[] solution = {realNumber};
 		return deJong1.CalculateFitness(solution);
 	}
+
 
 	@Override
 	public double CalculateFitness(Vector<Double> candidateSolution) {

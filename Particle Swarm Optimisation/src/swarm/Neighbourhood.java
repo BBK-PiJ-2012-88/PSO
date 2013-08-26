@@ -1,11 +1,13 @@
 package swarm;
 
-import java.util.HashMap;
+import java.io.Serializable;
 
-public interface Neighbourhood {
+import java.util.Map;
+
+public interface Neighbourhood extends Serializable {
 
 	public abstract void setSolutionFitness(
-			HashMap<Integer, Double> solutionFitness);
+			Map<Integer, Double> solutionFitness);
 
 	public abstract int neighbourhoodBest(int particle);
 	

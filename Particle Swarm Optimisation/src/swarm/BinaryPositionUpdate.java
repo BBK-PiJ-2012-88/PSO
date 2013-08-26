@@ -15,6 +15,26 @@ public class BinaryPositionUpdate implements PositionUpdate {
 	
 	private SigmoidFunction sigmoidFunction = new SigmoidFunction();
 	
+	private Constrainer constrainer = new BinaryConstrainer();
+	
+	private boolean constraints = false;
+	
+	public Constrainer getConstrainer() {
+		return constrainer;
+	}
+
+	public void setConstrainer(Constrainer constrainer) {
+		this.constrainer = constrainer;
+	}
+
+	public boolean isConstraints() {
+		return constraints;
+	}
+
+	public void setConstraints(boolean constraints) {
+		this.constraints = constraints;
+	}
+	
 	@Override
 	public void setPositions(double[][] positions) {
 		this.positions = positions;
@@ -49,6 +69,11 @@ public class BinaryPositionUpdate implements PositionUpdate {
 					positions[i][k] = 0;
 				}
 			}
+		}
+		if(constraints){
+			constrainer.setPositions(positions);
+			constrainer.constrain();
+			positions = constrainer.getPositions();
 		}
 	}
 

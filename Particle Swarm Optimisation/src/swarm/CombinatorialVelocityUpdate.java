@@ -16,11 +16,27 @@ public class CombinatorialVelocityUpdate implements
 	private double[][] personalBest;
 	
 	private Neighbourhood neighbourhood = new TheRing();
+	
+	//need to add constants to this. Wonder if this will make a difference? 
+	
+	private double socialConstant = 2;
+	
+	private double cognitiveConstant = 2;
 
 	private double weight = 1;
 	
 	private double epsilon = 0.00001;
 	
+	private boolean maximum = false;
+	
+	public boolean isMaximum() {
+		return maximum;
+	}
+
+	public void setMaximum(boolean maximum) {
+		this.maximum = maximum;
+	}
+
 	public double[][] getPosition() {
 		return positions;
 	}
@@ -55,6 +71,7 @@ public class CombinatorialVelocityUpdate implements
 
 	@Override
 	public double[][] updateVelocities(){
+		getNeighbourhood().setMaximum(maximum);
 		updateSocialVelocity();
 		updateCognitiveVelocity();
 		normaliseVelocities();
@@ -89,7 +106,7 @@ public class CombinatorialVelocityUpdate implements
 			for(int k = 0; k < velocities[i].length; k++){
 				int socialBest = neighbourhood.neighbourhoodBest(i - rows);
 				double normDevDist = calculateNormalisedDeviationDistance(k, positions[i - rows][k], personalBest[socialBest]);
-				velocities[i][k] = weight * velocities[i][k] + normDevDist;
+				velocities[i][k] = weight * velocities[i][k] + socialConstant * normDevDist;
 			}
 		}
 	}
@@ -98,11 +115,27 @@ public class CombinatorialVelocityUpdate implements
 		for(int i = 0; i < velocities.length / 2; i++){
 			for(int k = 0; k < velocities[i].length; k++){
 				double normDevDist = calculateNormalisedDeviationDistance(k, positions[i][k], personalBest[i]);
-				velocities[i][k] = weight * velocities[i][k] + normDevDist;
+				velocities[i][k] = weight * velocities[i][k] + cognitiveConstant * normDevDist;
 			}
 		}
 	}
 	
+	public double getSocialConstant() {
+		return socialConstant;
+	}
+
+	public void setSocialConstant(double socialConstant) {
+		this.socialConstant = socialConstant;
+	}
+
+	public double getCognitiveConstant() {
+		return cognitiveConstant;
+	}
+
+	public void setCognitiveConstant(double cognitiveConstant) {
+		this.cognitiveConstant = cognitiveConstant;
+	}
+
 	private double calculateNormalisedDeviationDistance(int elementIndex, double element, double[] array){
 		double distance = 0;
 		for(int i = 0; i < array.length; i++){

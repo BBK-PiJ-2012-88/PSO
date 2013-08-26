@@ -1,21 +1,21 @@
 package swarm;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 public class CuboidLattice implements Neighbourhood {
 
-	private HashMap<Integer, Double> solutionFitness;
+	private Map<Integer, Double> solutionFitness;
 	private boolean maximum = false;
 	
 	@Override
-	public void setSolutionFitness(HashMap<Integer, Double> solutionFitness) {
+	public void setSolutionFitness(Map<Integer, Double> solutionFitness) {
 		assert isCuboid(solutionFitness);
 		this.solutionFitness = solutionFitness;
 
 	}
 
-	public boolean isCuboid(HashMap<Integer, Double> solutionFitness) {
+	public boolean isCuboid(Map<Integer, Double> solutionFitness) {
 		for(int i = 1; i < 11; i++){
 			if(i * i * i == solutionFitness.size()){
 				return true;

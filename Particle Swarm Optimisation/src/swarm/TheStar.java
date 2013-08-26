@@ -1,10 +1,11 @@
 package swarm;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class TheStar implements Neighbourhood {
 	
-	private HashMap<Integer, Double> solutionFitness;
+	private Map<Integer, Double> solutionFitness;
 	private boolean maximum = false;
 	
 	public TheStar(){}
@@ -22,7 +23,7 @@ public class TheStar implements Neighbourhood {
 	}
 	
 	@Override
-	public void setSolutionFitness(HashMap<Integer, Double> solutionFitness) {
+	public void setSolutionFitness(Map<Integer, Double> solutionFitness) {
 		this.solutionFitness = solutionFitness;
 	}
 

@@ -98,19 +98,19 @@ public class GeneticOperatorImpl implements GeneticOperator {
 		mutate();
 	}
 	
-	private void crossover(){
+	public void crossover(){
 		Random rand = new Random();
 		if(maximum){
 			for(int i = 0; i < sortedFitness.size() / 2; i++){
-				int crossoverPoint = rand.nextInt(objectiveFunction.getVariables() + 1);
+				int crossoverPoint = rand.nextInt(objectiveFunction.getVariables());
 				int particleIndex = sortedFitness.get(i).getIndex();
 				for(int k = 0; k < crossoverPoint; k++){
 					positions[particleIndex][k] = positions[globalBest][k];
 				}
 			}
 		}else{
-			for(int i = sortedFitness.size() - 1; i > sortedFitness.size() / 2; i--){
-				int crossoverPoint = rand.nextInt(objectiveFunction.getVariables() + 1);
+			for(int i = sortedFitness.size() - 1; i > sortedFitness.size() / 2 - 1; i--){
+				int crossoverPoint = rand.nextInt(objectiveFunction.getVariables());
 				int particleIndex = sortedFitness.get(i).getIndex();
 				for(int k = 0; k < crossoverPoint; k++){
 					positions[particleIndex][k] = positions[globalBest][k];
@@ -119,7 +119,7 @@ public class GeneticOperatorImpl implements GeneticOperator {
 		}
 	}
 	
-	private void mutate(){
+	public void mutate(){
 		for(int i = 0; i < positions.length; i++){
 			for(int k = 0; k < positions[i].length; k++){
 				if(Math.random() < mutationProbability){

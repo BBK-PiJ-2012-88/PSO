@@ -1,6 +1,7 @@
 package swarm;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class FitnessCalculatorImpl implements FitnessCalculator {
 
@@ -11,7 +12,7 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 	
 	private double[][] personalBest;
 	
-	private HashMap<Integer, Double> fitness;
+	private Map<Integer, Double> fitness;
 	
 	private double[][] positions;
 	
@@ -44,7 +45,7 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 		this.objectiveFunction = objectiveFunction;
 	}
 
-	public HashMap<Integer, Double> getFitness() {
+	public Map<Integer, Double> getFitness() {
 		return fitness;
 	}
 
@@ -64,9 +65,7 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 					updatePersonalBest(i);
 				}
 			}else{
-				//System.out.println(currentfitness + " cf " + fitness.get(i) + " " + i);
 				if(currentfitness < fitness.get(i)){
-					System.out.println(currentfitness + " " + i);
 					fitness.put(i, currentfitness);
 					updatePersonalBest(i);
 				}
@@ -75,14 +74,13 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 	}
 
 	private void updatePersonalBest(int row) {
-		System.out.println("update pb");
 		for(int k = 0; k < positions[row].length; k++){
 			personalBest[row][k] = positions[row][k];
 		}
 	}
 	
 	public void initialCalculateFitness(){
-		fitness = new HashMap<Integer, Double>();
+		fitness = new LinkedHashMap<Integer, Double>();
 		int numberOfParticles = positions.length;
 		for(int i = 0; i < numberOfParticles; i++){
 			fitness.put(i, objectiveFunction.CalculateFitness(positions[i]));
@@ -104,7 +102,6 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 				if(fitness.get(i) < fitness.get(best)){
 					best = i;
 				}
-			//	System.out.println("best " + best + " i " + i);
 			}
 		}
 		return best;
@@ -117,7 +114,7 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 	}
 
 	@Override
-	public void setFitness(HashMap<Integer, Double> fitness) {
+	public void setFitness(Map<Integer, Double> fitness) {
 		this.fitness = fitness;
 
 	}

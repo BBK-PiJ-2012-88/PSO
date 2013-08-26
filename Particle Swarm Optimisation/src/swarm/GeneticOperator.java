@@ -18,8 +18,4 @@ public interface GeneticOperator extends Serializable {
 	
 	public void setMutationProbability(double mutationProbability);
 	
-	public void setMaximum(boolean maximum);
-	
-	public boolean isMaximum();
-	
 }

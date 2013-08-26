@@ -1,10 +1,11 @@
 package swarm;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class TheWheel implements Neighbourhood{
 	
-	private HashMap<Integer, Double> fitness;
+	private Map<Integer, Double> fitness;
 	private boolean maximum = false;
 	private int wheel = 0;
 	
@@ -15,7 +16,7 @@ public class TheWheel implements Neighbourhood{
 	}
 	
 	@Override
-	public void setSolutionFitness(HashMap<Integer, Double> fitness) {
+	public void setSolutionFitness(Map<Integer, Double> fitness) {
 		this.fitness = fitness;
 	}
 

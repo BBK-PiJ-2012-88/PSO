@@ -21,5 +21,9 @@ public interface VelocityUpdate extends Serializable {
 	Neighbourhood getNeighbourhood();
 	
 	void setNeighbourhood(Neighbourhood neighbourhood);
+	
+	boolean isMaximum();
+	
+	void setMaximum(boolean maximum);
 
 }

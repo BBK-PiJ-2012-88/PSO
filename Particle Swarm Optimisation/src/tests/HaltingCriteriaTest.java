@@ -17,7 +17,7 @@ public class HaltingCriteriaTest {
 	
 	private VanillaSwarm vanillaSwarm = new VanillaSwarm();
 	
-	private Function function = new DeJong1();
+	private Function function = new DeJong1(2);
 	
 	private HaltingCriteria halt;
 	

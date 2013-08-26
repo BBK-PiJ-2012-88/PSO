@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -49,7 +50,7 @@ public class ConstrictionCoefficientTest {
 		classUnderTest.setVelocities(vel);
 		fit.setPositions(position);
 		fit.initialCalculateFitness();
-		HashMap<Integer, Double> fitness = fit.getFitness();
+		Map<Integer, Double> fitness = fit.getFitness();
 		classUnderTest.getNeighbourhood().setSolutionFitness(fitness);
 		vel = classUnderTest.updateVelocities();
 		assertTrue(Arrays.deepEquals(expected, vel));

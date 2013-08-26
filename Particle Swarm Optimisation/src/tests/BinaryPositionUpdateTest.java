@@ -7,6 +7,8 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import swarm.BinaryConverter;
+import swarm.BinaryConverterImpl;
 import swarm.BinaryPositionUpdate;
 
 public class BinaryPositionUpdateTest {
@@ -64,6 +66,37 @@ public class BinaryPositionUpdateTest {
 			}
 		}
 		assertTrue(result);
+	}
+	
+	@Test
+	public void testConstrainedPositionUpdateTest(){
+		double[] max = {5.12, 5.12};
+		double[] min = {-5.12, -5.12};
+		update.getConstrainer().setMaximum(max);
+		update.getConstrainer().setMinimum(min);
+		double[][] position = new double[][]{
+				{0,1,0,0,0,1,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+				{1,1,0,0,0,1,1,1,1,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0}
+		};
+		Random rand = new Random();
+		velocities = new double[2][position[0].length];
+		for(int i = 0; i < velocities.length; i++){
+			for(int k = 0; k < velocities[i].length; k++){
+				velocities[i][k] = rand.nextDouble();
+			}
+		}
+		update.setVelocities(velocities);
+		update.setPositions(position);
+		update.setConstraints(true);
+		update.updatePositions();
+		position = update.getPositions();
+		BinaryConverter bin = new BinaryConverterImpl();
+		int binaryEncoding = bin.getBinaryEncoding();
+		for(int i = 0; i < position.length; i++){
+			for(int k = 0; k < position[i].length; k = k + binaryEncoding){
+				assertTrue(bin.convertBinaryToReal(Arrays.copyOfRange(position[i], k, k + binaryEncoding)) >= -5.12 && bin.convertBinaryToReal(Arrays.copyOfRange(position[i], k, k + binaryEncoding)) <= 5.12);
+			}
+		}
 	}
 
 }

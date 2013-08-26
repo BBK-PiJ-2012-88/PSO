@@ -2,6 +2,7 @@ package swarm;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 public interface FitnessCalculator extends Serializable {
 	
@@ -9,7 +10,7 @@ public interface FitnessCalculator extends Serializable {
 	
 	public double[][] getPersonalBest();
 	
-	public HashMap<Integer, Double> getFitness();
+	public Map<Integer, Double> getFitness();
 	
 	public void calculateFitness();
 	
@@ -17,7 +18,7 @@ public interface FitnessCalculator extends Serializable {
 	
 	public void setPositions(double[][] positions);
 	
-	public void setFitness(HashMap<Integer, Double> fitness);
+	public void setFitness(Map<Integer, Double> fitness);
 	
 	public Function getObjectiveFunction();
 	
