@@ -108,6 +108,7 @@ public class BinaryInitialiser implements Initialiser {
 		return serialVersionUID;
 	}
 	
+	@Override
 	public double[][] getPersonalBest() {
 		return personalBest;
 	}

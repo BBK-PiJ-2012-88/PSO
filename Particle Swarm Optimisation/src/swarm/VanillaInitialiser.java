@@ -1,7 +1,5 @@
 package swarm;
 
-import java.util.Arrays;
-
 public class VanillaInitialiser implements Initialiser {
 
 	/**
@@ -50,6 +48,7 @@ public class VanillaInitialiser implements Initialiser {
 		}
 	}
 
+	@Override
 	public double[][] getPersonalBest() {
 		return personalBest;
 	}

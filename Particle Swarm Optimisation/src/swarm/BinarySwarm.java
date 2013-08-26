@@ -57,10 +57,12 @@ public class BinarySwarm implements Swarm, GeneticSwarm, ConstrainedOptimisation
 
 	public BinarySwarm(){}
 	
+	@Override
 	public GeneticOperator getGenOp() {
 		return genOp;
 	}
 
+	@Override
 	public void setGenOp(GeneticOperator genOp) {
 		this.genOp = genOp;
 	}
@@ -102,6 +104,7 @@ public class BinarySwarm implements Swarm, GeneticSwarm, ConstrainedOptimisation
 		haltingCriteria.updateData(fitness.get(globalBest), 0);		
 	}
 	
+	@Override
 	public Vector<Double> geneticOptimise(){
 		constrainedOptimisation = false;
 		return geneticOptimisation();
@@ -139,6 +142,7 @@ public class BinarySwarm implements Swarm, GeneticSwarm, ConstrainedOptimisation
 		return result;
 	}
 	
+	@Override
 	public Vector<Double> geneticOptimise(Function objectiveFunction){
 		setObjectiveFunction(objectiveFunction);
 		constrainedOptimisation = false;
@@ -248,14 +252,17 @@ public class BinarySwarm implements Swarm, GeneticSwarm, ConstrainedOptimisation
 		return velocities;
 	}
 
+	@Override
 	public Function getObjectiveFunction() {
 		return objectiveFunction;
 	}
 
+	@Override
 	public void setObjectiveFunction(Function objectiveFunction) {
 		this.objectiveFunction = objectiveFunction;
 	}
 
+	@Override
 	public void setMaximum(boolean maximum) {
 		this.maximum = maximum;
 		velocityUpdate.getNeighbourhood().setMaximum(maximum);
@@ -270,10 +277,12 @@ public class BinarySwarm implements Swarm, GeneticSwarm, ConstrainedOptimisation
 		this.velocityUpdate.getNeighbourhood().setMaximum(getMaximum());
 	}
 
+	@Override
 	public int getNumberOfParticles() {
 		return numberOfParticles;
 	}
 
+	@Override
 	public void setNumberOfParticles(int numberOfParticles) {
 		this.numberOfParticles = numberOfParticles;
 	}
@@ -286,10 +295,12 @@ public class BinarySwarm implements Swarm, GeneticSwarm, ConstrainedOptimisation
 		this.globalBest = globalBest;
 	}
 
+	@Override
 	public HaltingCriteria getHaltingCriteria() {
 		return haltingCriteria;
 	}
 
+	@Override
 	public void setHaltingCriteria(HaltingCriteria haltingCriteria) {
 		this.haltingCriteria = haltingCriteria;
 	}

@@ -4,14 +4,12 @@ import static org.junit.Assert.*;
 
 import java.util.Vector;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import swarm.AcceptableSolutionHalt;
 import swarm.BinarySwarm;
 import swarm.CombinatorialSwarm;
 import swarm.Function;
-import swarm.GeneticSwarm;
 import swarm.HaltingCriteria;
 import swarm.Swarm;
 import swarm.VanillaSwarm;

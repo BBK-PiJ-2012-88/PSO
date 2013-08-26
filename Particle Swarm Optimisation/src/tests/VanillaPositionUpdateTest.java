@@ -2,7 +2,6 @@ package tests;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import org.junit.Before;

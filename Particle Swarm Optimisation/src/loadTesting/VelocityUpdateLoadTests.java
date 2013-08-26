@@ -7,14 +7,8 @@ import java.util.List;
 import java.util.Vector;
 
 import swarm.ConstrictionCoefficient;
-import swarm.CuboidLattice;
 import swarm.HaltingCriteria;
 import swarm.IterationHalt;
-import swarm.Neighbourhood;
-import swarm.TheFourClusters;
-import swarm.TheRing;
-import swarm.TheStar;
-import swarm.TheWheel;
 import swarm.VanillaPositionUpdate;
 import swarm.VanillaSwarm;
 import swarm.Function;

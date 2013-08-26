@@ -9,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import swarm.AcceptableSolutionHalt;
-import swarm.BinaryConverterImpl;
-import swarm.BinaryPositionUpdate;
 import swarm.BinarySwarm;
 import swarm.ConstrictionCoefficient;
 import swarm.Function;

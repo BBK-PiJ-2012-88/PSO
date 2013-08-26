@@ -29,34 +29,42 @@ public class CombinatorialVelocityUpdate implements
 	
 	private boolean maximum = false;
 	
+	@Override
 	public boolean isMaximum() {
 		return maximum;
 	}
 
+	@Override
 	public void setMaximum(boolean maximum) {
 		this.maximum = maximum;
 	}
 
+	@Override
 	public double[][] getPosition() {
 		return positions;
 	}
 
+	@Override
 	public void setPosition(double[][] positions) {
 		this.positions = positions;
 	}
 
+	@Override
 	public double[][] getPersonalBest() {
 		return personalBest;
 	}
 
+	@Override
 	public void setPersonalBest(double[][] personalBest) {
 		this.personalBest = personalBest;
 	}
 
+	@Override
 	public Neighbourhood getNeighbourhood() {
 		return neighbourhood;
 	}
 
+	@Override
 	public void setNeighbourhood(Neighbourhood neighbourhood) {
 		this.neighbourhood = neighbourhood;
 	}

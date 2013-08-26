@@ -1,6 +1,5 @@
 package swarm;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class TheStar implements Neighbourhood {
@@ -14,10 +13,12 @@ public class TheStar implements Neighbourhood {
 		this.maximum = maximum;
 	}
 	
+	@Override
 	public void setMaximum(boolean maximum){
 		this.maximum = maximum;
 	}
 	
+	@Override
 	public boolean getMaximum(){
 		return maximum;
 	}

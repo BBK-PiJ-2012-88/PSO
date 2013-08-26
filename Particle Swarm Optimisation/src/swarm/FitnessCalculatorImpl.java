@@ -37,14 +37,17 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 		this.objectiveFunction = objectiveFunction;
 	}
 
+	@Override
 	public Function getObjectiveFunction() {
 		return objectiveFunction;
 	}
 
+	@Override
 	public void setObjectiveFunction(Function objectiveFunction) {
 		this.objectiveFunction = objectiveFunction;
 	}
 
+	@Override
 	public Map<Integer, Double> getFitness() {
 		return fitness;
 	}
@@ -79,6 +82,7 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 		}
 	}
 	
+	@Override
 	public void initialCalculateFitness(){
 		fitness = new LinkedHashMap<Integer, Double>();
 		int numberOfParticles = positions.length;
@@ -119,10 +123,12 @@ public class FitnessCalculatorImpl implements FitnessCalculator {
 
 	}
 
+	@Override
 	public double[][] getPersonalBest() {
 		return personalBest;
 	}
 
+	@Override
 	public void setPersonalBest(double[][] personalBest) {
 		this.personalBest = personalBest;
 	}

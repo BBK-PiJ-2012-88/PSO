@@ -12,8 +12,6 @@ import org.junit.Test;
 import swarm.CombinatorialInitialiser;
 import swarm.CombinatorialPositionUpdate;
 import swarm.CombinatorialVelocityUpdate;
-import swarm.FitnessCalculator;
-import swarm.FitnessCalculatorImpl;
 import swarm.Neighbourhood;
 import swarm.TheRing;
 

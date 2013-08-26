@@ -26,10 +26,12 @@ public class VelocityClamping implements VelocityUpdate {
 	
 	private boolean maximum = false;
 	
+	@Override
 	public boolean isMaximum() {
 		return maximum;
 	}
 
+	@Override
 	public void setMaximum(boolean maximum) {
 		this.maximum = maximum;
 	}
@@ -51,6 +53,7 @@ public class VelocityClamping implements VelocityUpdate {
 		}
 	}
 
+	@Override
 	public double[][] updateVelocities() {
 		getNeighbourhood().setMaximum(maximum);
 		for(int i = 0; i < velocities.length; i++){

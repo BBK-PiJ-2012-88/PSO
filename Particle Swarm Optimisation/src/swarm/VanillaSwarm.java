@@ -90,18 +90,22 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 		haltingCriteria = new IterationHalt();
 	}
 	
+	@Override
 	public Function getObjectiveFunction() {
 		return objectiveFunction;
 	}
 
+	@Override
 	public void setObjectiveFunction(Function objectiveFunction) {
 		this.objectiveFunction = objectiveFunction;
 	}
 
+	@Override
 	public int getNumberOfParticles() {
 		return numberOfParticles;
 	}
 
+	@Override
 	public void setNumberOfParticles(int numberOfParticles) {
 		this.numberOfParticles = numberOfParticles;
 	}
@@ -119,10 +123,12 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 		this.velocityUpdate.getNeighbourhood().setMaximum(maximum);
 	}
 
+	@Override
 	public HaltingCriteria getHaltingCriteria() {
 		return haltingCriteria;
 	}
 
+	@Override
 	public void setHaltingCriteria(HaltingCriteria haltingCriteria) {
 		this.haltingCriteria = haltingCriteria;
 	}
@@ -206,6 +212,7 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 		this.min = min;
 	}
 	
+	@Override
 	public Vector<Double> constrainedOptimise(Function objectiveFunction, double[] max, double[] min){
 		this.min = min;
 		this.max = max;
@@ -213,6 +220,7 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 		return constrainedOptimise();
 	}
 	
+	@Override
 	public Vector<Double> constrainedOptimise(Function objectiveFunction, double upperLimit, double lowerLimit){
 		max = null;
 		min = null;

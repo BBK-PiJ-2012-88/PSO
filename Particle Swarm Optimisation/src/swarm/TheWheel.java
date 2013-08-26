@@ -1,6 +1,5 @@
 package swarm;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class TheWheel implements Neighbourhood{
@@ -51,10 +50,12 @@ public class TheWheel implements Neighbourhood{
 		}
 	}
 	
+	@Override
 	public void setMaximum(boolean maximum){
 		this.maximum = maximum;
 	}
 	
+	@Override
 	public boolean getMaximum(){
 		return maximum;
 	}

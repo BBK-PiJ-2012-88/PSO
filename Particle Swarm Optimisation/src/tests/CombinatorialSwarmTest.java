@@ -6,9 +6,7 @@ import java.util.Vector;
 
 import org.junit.Test;
 
-import swarm.CombinatorialGeneticOperator;
 import swarm.CombinatorialSwarm;
-import swarm.CuboidLattice;
 import swarm.TheFourClusters;
 
 public class CombinatorialSwarmTest {

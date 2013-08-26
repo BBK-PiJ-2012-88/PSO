@@ -11,8 +11,6 @@ import org.junit.Test;
 
 import swarm.CombinatorialGeneticOperator;
 import swarm.CombinatorialInitialiser;
-import swarm.FitnessCalculator;
-import swarm.FitnessCalculatorImpl;
 import swarm.Function;
 import swarm.GeneticOperator;
 

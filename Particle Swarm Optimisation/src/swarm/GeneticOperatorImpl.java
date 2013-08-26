@@ -38,10 +38,12 @@ public class GeneticOperatorImpl implements GeneticOperator {
 		this.sortedFitness = sortedFitness;
 	}
 
+	@Override
 	public Function getObjectiveFunction() {
 		return objectiveFunction;
 	}
 
+	@Override
 	public void setObjectiveFunction(Function objectiveFunction) {
 		this.objectiveFunction = objectiveFunction;
 	}
@@ -54,10 +56,12 @@ public class GeneticOperatorImpl implements GeneticOperator {
 		this.maximum = maximum;
 	}
 
+	@Override
 	public double getMutationProbability() {
 		return mutationProbability;
 	}
 
+	@Override
 	public void setMutationProbability(double mutationProbability) {
 		this.mutationProbability = mutationProbability;
 	}

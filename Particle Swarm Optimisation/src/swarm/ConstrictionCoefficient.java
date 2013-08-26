@@ -61,10 +61,12 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 			return getVelocities();
 		}
 		
+		@Override
 		public boolean isMaximum() {
 			return maximum;
 		}
 
+		@Override
 		public void setMaximum(boolean maximum) {
 			this.maximum = maximum;
 		}
@@ -107,34 +109,42 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 			return socialVelocity;
 		}
 
+		@Override
 		public double[][] getVelocities() {
 			return velocities;
 		}
 
+		@Override
 		public void setVelocities(double[][] velocities) {
 			this.velocities = velocities;
 		}
 
+		@Override
 		public double[][] getPersonalBest() {
 			return personalBest;
 		}
 
+		@Override
 		public void setPersonalBest(double[][] personalBest) {
 			this.personalBest = personalBest;
 		}
 
+		@Override
 		public double[][] getPosition() {
 			return position;
 		}
 
+		@Override
 		public void setPosition(double[][] position) {
 			this.position = position;
 		}
 
+		@Override
 		public Neighbourhood getNeighbourhood() {
 			return neighbourhood;
 		}
 
+		@Override
 		public void setNeighbourhood(Neighbourhood neighbourhood) {
 			this.neighbourhood = neighbourhood;
 		}

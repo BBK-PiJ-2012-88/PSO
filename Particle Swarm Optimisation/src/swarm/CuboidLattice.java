@@ -190,10 +190,12 @@ public class CuboidLattice implements Neighbourhood {
 		}
 	}
 
+	@Override
 	public boolean getMaximum() {
 		return maximum;
 	}
 
+	@Override
 	public void setMaximum(boolean maximum) {
 		this.maximum = maximum;
 	}

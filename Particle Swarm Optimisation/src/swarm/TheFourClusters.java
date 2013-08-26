@@ -105,10 +105,12 @@ public class TheFourClusters implements Neighbourhood {
 		return result;
 	}
 
+	@Override
 	public boolean getMaximum() {
 		return maximum;
 	}
 
+	@Override
 	public void setMaximum(boolean maximum) {
 		this.maximum = maximum;
 	}

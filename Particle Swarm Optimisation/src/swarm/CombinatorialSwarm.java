@@ -1,7 +1,5 @@
 package swarm;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -26,10 +24,12 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 	
 	private HaltingCriteria haltingCriteria = new IterationHalt(100);
 	
+	@Override
 	public Function getObjectiveFunction() {
 		return objectiveFunction;
 	}
 
+	@Override
 	public void setObjectiveFunction(Function objectiveFunction) {
 		this.objectiveFunction = objectiveFunction;
 	}
