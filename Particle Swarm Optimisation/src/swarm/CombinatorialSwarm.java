@@ -24,35 +24,9 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 	
 	private HaltingCriteria haltingCriteria = new IterationHalt(100);
 	
-	@Override
-	public Function getObjectiveFunction() {
-		return objectiveFunction;
-	}
-
-	@Override
-	public void setObjectiveFunction(Function objectiveFunction) {
-		this.objectiveFunction = objectiveFunction;
-	}
-
-	public PositionUpdate getPositionUpdate() {
-		return positionUpdate;
-	}
-
-	public void setPositionUpdate(PositionUpdate positionUpdate) {
-		this.positionUpdate = positionUpdate;
-	}
-
-	public Initialiser getInit() {
-		return init;
-	}
-
-	public void setInit(Initialiser init) {
-		this.init = init;
-	}
-
 	private Map<Integer, Double> fitness;
 	
-	private CombinatorialVelocityUpdate combinatorialVelocityUpdate = new CombinatorialVelocityUpdate();
+	private VelocityUpdate velocityUpdate = new CombinatorialVelocityUpdate();
 	
 	private PositionUpdate positionUpdate = new CombinatorialPositionUpdate();
 	
@@ -64,44 +38,15 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 	
 	private boolean maximum = false;
 	
-	private void initiateSwarm(){
-		calc = new FitnessCalculatorImpl(objectiveFunction, maximum);
-		init.initialiseMatrices(objectiveFunction, numberOfParticles);
-		setVelocities(init.getVelocities());
-		setPositions(init.getPositions());
-		setPersonalBest(init.getPersonalBest());
-		calc.setPositions(getPositions());
-		calc.initialCalculateFitness();
-		setFitness(calc.getFitness());
-		globalBest = calc.calculateGlobalBest();
-		getVelocityUpdate().setVelocities(velocities);
-		getVelocityUpdate().setMaximum(maximum);
-		haltingCriteria.updateData(fitness.get(globalBest), 0);
+	
+	public CombinatorialSwarm(){}
+	
+	@Override
+	public Vector<Double> geneticOptimise(Function objectiveFunction) {
+		setObjectiveFunction(objectiveFunction);
+		return geneticOptimise();
 	}
 
-	public Map<Integer, Double> getFitness() {
-		return fitness;
-	}
-
-	public void setFitness(Map<Integer, Double> fitness) {
-		this.fitness = fitness;
-	}
-
-	public double[][] getPersonalBest() {
-		return personalBest;
-	}
-
-	public void setPersonalBest(double[][] personalBest) {
-		this.personalBest = personalBest;
-	}
-
-	public double[][] getPositions() {
-		return positions;
-	}
-
-	public void setPositions(double[][] positions) {
-		this.positions = positions;
-	}
 	
 	@Override
 	public Vector<Double> optimise() {
@@ -121,140 +66,11 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 		}
 		return result;
 	}
-	
-	private void updateParticlePositions() {
-		positionUpdate.setPositions(positions);
-		positionUpdate.setVelocities(velocities);
-		((CombinatorialPositionUpdate)positionUpdate).setPersonalBest(personalBest);
-		((CombinatorialPositionUpdate)positionUpdate).setNeighbourhood(getVelocityUpdate().getNeighbourhood());
-		positionUpdate.updatePositions();
-		setPositions(positionUpdate.getPositions());
-		setVelocities(positionUpdate.getVelocities());
-	}
-	
-	private void updateFitnessInformation(){
-		calc.setFitness(getFitness());
-		calc.setPersonalBest(getPersonalBest());
-		calc.setPositions(getPositions());
-		calc.calculateFitness();
-		setFitness(calc.getFitness());
-		combinatorialVelocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
-		setPersonalBest(calc.getPersonalBest());
-		setGlobalBest(calc.calculateGlobalBest());
-	}
-
-	public FitnessCalculator getCalc() {
-		return calc;
-	}
-
-	public void setCalc(FitnessCalculator calc) {
-		this.calc = calc;
-	}
-
-	public int getGlobalBest() {
-		return globalBest;
-	}
-
-	public void setGlobalBest(int globalBest) {
-		this.globalBest = globalBest;
-	}
-
-	private void updateVelocities(){
-		combinatorialVelocityUpdate.setVelocities(getVelocities());
-		combinatorialVelocityUpdate.setPosition(getPositions());
-		combinatorialVelocityUpdate.setPersonalBest(getPersonalBest());
-		combinatorialVelocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
-		setVelocities(combinatorialVelocityUpdate.updateVelocities());
-	}
-
-	public CombinatorialVelocityUpdate getCombinatorialVelocityUpdate() {
-		return combinatorialVelocityUpdate;
-	}
-
-	public void setCombinatorialVelocityUpdate(
-			CombinatorialVelocityUpdate combinatorialVelocityUpdate) {
-		this.combinatorialVelocityUpdate = combinatorialVelocityUpdate;
-	}
-
-	public double[][] getVelocities() {
-		return velocities;
-	}
-
-	public void setVelocities(double[][] velocities) {
-		this.velocities = velocities;
-		
-	}
 
 	@Override
 	public Vector<Double> optimise(Function objectiveFunction) {
 		this.objectiveFunction = objectiveFunction;
 		return optimise();
-	}
-
-	@Override
-	public void setMaximum(boolean maximum) {
-		this.maximum = maximum;
-		combinatorialVelocityUpdate.getNeighbourhood().setMaximum(maximum);
-		
-	}
-
-	@Override
-	public boolean getMaximum() {
-		return maximum;
-	}
-
-	@Override
-	public void setHaltingCriteria(HaltingCriteria haltingCriteria) {
-		this.haltingCriteria = haltingCriteria;
-		
-	}
-
-	@Override
-	public HaltingCriteria getHaltingCriteria() {
-		return haltingCriteria;
-	}
-
-	public CombinatorialVelocityUpdate getVelocityUpdate() {
-		return combinatorialVelocityUpdate;
-	}
-
-	@Override
-	public int getNumberOfParticles() {
-		return numberOfParticles;
-	}
-
-	@Override
-	public void setNumberOfParticles(int numberOfParticles) {
-		this.numberOfParticles = numberOfParticles;
-		
-	}
-
-	@Override
-	public void setNeighbourhood(Neighbourhood neighbourhood) {
-		getVelocityUpdate().setNeighbourhood(neighbourhood);
-	}
-	
-	@Override
-	public String toString(){
-		StringBuffer buff = new StringBuffer();
-		buff.append(this.getClass().toString() + ", ");
-		buff.append("Function: " + objectiveFunction.toString() + ", ");
-		buff.append("Velocity Updater: " + combinatorialVelocityUpdate.getClass().toString() + ", ");
-		buff.append("Neighbourhood: " + combinatorialVelocityUpdate.getNeighbourhood().getClass().toString() + ", ");
-		buff.append("Halting Criteria: " + haltingCriteria.getClass().toString() + ", ");
-		buff.append("Number of Particles: " + numberOfParticles + ", ");
-		buff.append("Maximum: " + maximum);
-		return buff.toString();
-	}
-
-	@Override
-	public GeneticOperator getGenOp() {
-		return genOp;
-	}
-
-	@Override
-	public void setGenOp(GeneticOperator geneticOperator) {
-		this.genOp = geneticOperator;	
 	}
 
 	@Override
@@ -280,17 +96,208 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 		return result;
 	}
 	
+	private void initiateSwarm(){
+		calc = new FitnessCalculatorImpl(objectiveFunction, maximum);
+		init.initialiseMatrices(objectiveFunction, numberOfParticles);
+		setVelocities(init.getVelocities());
+		setPositions(init.getPositions());
+		setPersonalBest(init.getPersonalBest());
+		calc.setPositions(getPositions());
+		calc.initialCalculateFitness();
+		setFitness(calc.getFitness());
+		globalBest = calc.calculateGlobalBest();
+		getVelocityUpdate().setVelocities(velocities);
+		getVelocityUpdate().setMaximum(maximum);
+		haltingCriteria.updateData(fitness.get(globalBest), 0);
+	}
 	
-
+	private void updateVelocities(){
+		velocityUpdate.setVelocities(getVelocities());
+		velocityUpdate.setPosition(getPositions());
+		velocityUpdate.setPersonalBest(getPersonalBest());
+		velocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
+		setVelocities(combinatorialVelocityUpdate.updateVelocities());
+	}
+	
 	private void performGeneticOperations() {
 		genOp.setPositions(positions);
 		genOp.performGeneticOperations();
 		setPositions(genOp.getPositions());
 	}
+	
+	
+	private void updateParticlePositions() {
+		positionUpdate.setPositions(positions);
+		positionUpdate.setVelocities(velocities);
+		((CombinatorialPositionUpdate)positionUpdate).setPersonalBest(personalBest);
+		((CombinatorialPositionUpdate)positionUpdate).setNeighbourhood(getVelocityUpdate().getNeighbourhood());
+		positionUpdate.updatePositions();
+		setPositions(positionUpdate.getPositions());
+		setVelocities(positionUpdate.getVelocities());
+	}
+	
+	private void updateFitnessInformation(){
+		calc.setFitness(getFitness());
+		calc.setPersonalBest(getPersonalBest());
+		calc.setPositions(getPositions());
+		calc.calculateFitness();
+		setFitness(calc.getFitness());
+		combinatorialVelocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
+		setPersonalBest(calc.getPersonalBest());
+		setGlobalBest(calc.calculateGlobalBest());
+	}
+	
+	public void setCombinatorialVelocityUpdate(
+			CombinatorialVelocityUpdate velocityUpdate) {
+		this.velocityUpdate = velocityUpdate;
+	}
+
+	public double[][] getVelocities() {
+		return velocities;
+	}
+
+	public void setVelocities(double[][] velocities) {
+		this.velocities = velocities;
+		
+	}
+	
+	public FitnessCalculator getFitnessCalculator() {
+		return calc;
+	}
+
+	public void setFitnessCalculator(FitnessCalculator calc) {
+		this.calc = calc;
+	}
+
+	public int getGlobalBest() {
+		return globalBest;
+	}
+
+	public void setGlobalBest(int globalBest) {
+		this.globalBest = globalBest;
+	}
 
 	@Override
-	public Vector<Double> geneticOptimise(Function objectiveFunction) {
-		setObjectiveFunction(objectiveFunction);
-		return geneticOptimise();
+	public GeneticOperator getGenOp() {
+		return genOp;
 	}
+
+	@Override
+	public void setGenOp(GeneticOperator geneticOperator) {
+		this.genOp = geneticOperator;	
+	}
+	
+	public Map<Integer, Double> getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(Map<Integer, Double> fitness) {
+		this.fitness = fitness;
+	}
+
+	public double[][] getPersonalBest() {
+		return personalBest;
+	}
+
+	public void setPersonalBest(double[][] personalBest) {
+		this.personalBest = personalBest;
+	}
+
+	public double[][] getPositions() {
+		return positions;
+	}
+
+	public void setPositions(double[][] positions) {
+		this.positions = positions;
+	}
+	
+	@Override
+	public void setVelocityUpdate(VelocityUpdate velocityUpdate) {
+		this.velocityUpdate = velocityUpdate;
+		
+	}
+
+	@Override
+	public VelocityUpdate getVelocityUpdate() {
+		return combinatorialVelocityUpdate;
+	}
+	
+
+	@Override
+	public void setMaximum(boolean maximum) {
+		this.maximum = maximum;
+		combinatorialVelocityUpdate.getNeighbourhood().setMaximum(maximum);
+		
+	}
+
+	@Override
+	public boolean getMaximum() {
+		return maximum;
+	}
+
+	@Override
+	public void setHaltingCriteria(HaltingCriteria haltingCriteria) {
+		this.haltingCriteria = haltingCriteria;
+		
+	}
+
+	@Override
+	public HaltingCriteria getHaltingCriteria() {
+		return haltingCriteria;
+	}
+
+	@Override
+	public int getNumberOfParticles() {
+		return numberOfParticles;
+	}
+
+	@Override
+	public void setNumberOfParticles(int numberOfParticles) {
+		this.numberOfParticles = numberOfParticles;
+		
+	}
+
+	@Override
+	public void setNeighbourhood(Neighbourhood neighbourhood) {
+		getVelocityUpdate().setNeighbourhood(neighbourhood);
+	}
+	
+	@Override
+	public Function getObjectiveFunction() {
+		return objectiveFunction;
+	}
+
+	@Override
+	public void setObjectiveFunction(Function objectiveFunction) {
+		this.objectiveFunction = objectiveFunction;
+	}
+
+	public PositionUpdate getPositionUpdate() {
+		return positionUpdate;
+	}
+
+	public void setPositionUpdate(PositionUpdate positionUpdate) {
+		this.positionUpdate = positionUpdate;
+	}
+
+	public Initialiser getInit() {
+		return init;
+	}
+
+	public void setInit(Initialiser init) {
+		this.init = init;
+	}
+	
+	@Override
+	public String toString(){
+		StringBuffer buff = new StringBuffer();
+		buff.append(this.getClass().toString() + ", ");
+		buff.append("Function: " + objectiveFunction.toString() + ", ");
+		buff.append("Velocity Updater: " + combinatorialVelocityUpdate.getClass().toString() + ", ");
+		buff.append("Neighbourhood: " + combinatorialVelocityUpdate.getNeighbourhood().getClass().toString() + ", ");
+		buff.append("Halting Criteria: " + haltingCriteria.getClass().toString() + ", ");
+		buff.append("Number of Particles: " + numberOfParticles + ", ");
+		buff.append("Maximum: " + maximum);
+		return buff.toString();
+	}	
 }

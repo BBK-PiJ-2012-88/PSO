@@ -15,5 +15,8 @@ public interface Function extends Serializable{
 	 */
 	double CalculateFitness(double[] candidateSolution);
 	
+	/*
+	 * Returns the Fitness of a candidate solution 
+	 */
 	double CalculateFitness(Vector<Double> candidateSolution);
 }

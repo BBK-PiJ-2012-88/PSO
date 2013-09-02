@@ -76,10 +76,7 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 			double numerator = 2 * K;
 			double temp = socialConstant + cognitiveConstant;
 			double denominator = 2 - temp - Math.sqrt(temp * (temp - 4));
-			if(denominator < 0){
-				denominator = denominator * - 1;
-			}
-			return numerator / denominator;
+			return numerator / Math.abs(denominator);
 		}
 		
 		private void calculateVelocities(){

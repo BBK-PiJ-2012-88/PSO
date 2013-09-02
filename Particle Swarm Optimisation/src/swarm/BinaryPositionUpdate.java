@@ -2,7 +2,7 @@ package swarm;
 
 import java.util.Random;
 
-public class BinaryPositionUpdate implements PositionUpdate {
+public class BinaryPositionUpdate implements ConstrainedPositionUpdate {
 	
 	/**
 	 * 
@@ -19,20 +19,20 @@ public class BinaryPositionUpdate implements PositionUpdate {
 	
 	private boolean constraints = false;
 	
-	public Constrainer getConstrainer() {
-		return constrainer;
-	}
-
-	public void setConstrainer(Constrainer constrainer) {
-		this.constrainer = constrainer;
-	}
-
 	public boolean isConstraints() {
 		return constraints;
 	}
 
 	public void setConstraints(boolean constraints) {
 		this.constraints = constraints;
+	}
+
+	public Constrainer getConstrainer() {
+		return constrainer;
+	}
+	
+	public void setConstrainer(Constrainer constrainer){
+		this.constrainer = constrainer;
 	}
 	
 	@Override
@@ -76,6 +76,7 @@ public class BinaryPositionUpdate implements PositionUpdate {
 			positions = constrainer.getPositions();
 		}
 	}
+	
 
 	private void normaliseVelocities() {
 		for(int i = 0; i < velocities.length; i++){
@@ -83,6 +84,28 @@ public class BinaryPositionUpdate implements PositionUpdate {
 				velocities[i][k] = sigmoidFunction.normalise(velocities[i][k]);
 			}
 		}
+	}
+
+	@Override
+	public double[] getMaximum() {
+		return getConstrainer().getMaximum();
+	}
+
+	@Override
+	public void setMaximum(double[] maximum) {
+		getConstrainer().setMaximum(maximum);
+		
+	}
+
+	@Override
+	public double[] getMinimum() {
+		return getConstrainer().getMinimum();
+	}
+
+	@Override
+	public void setMinimum(double[] minimum) {
+		getConstrainer().setMinimum(minimum);
+		
 	}
 
 }

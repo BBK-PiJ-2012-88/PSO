@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.junit.Test;
 
 import swarm.CombinatorialSwarm;
+import swarm.CombinatorialVelocityUpdate;
 import swarm.TheFourClusters;
 
 public class CombinatorialSwarmTest {
@@ -19,7 +20,8 @@ public class CombinatorialSwarmTest {
 	public void test() {
 		classUnderTest.setNumberOfParticles(20);
 		classUnderTest.setNeighbourhood(new TheFourClusters());
-		classUnderTest.getCombinatorialVelocityUpdate().setWeight(0.1);
+		CombinatorialVelocityUpdate v =(CombinatorialVelocityUpdate) classUnderTest.getVelocityUpdate();
+		v.setWeight(0.1);
 		Vector<Double> result = new Vector<Double>();
 		result = classUnderTest.optimise(a280);
 		double fitness = a280.CalculateFitness(result);
@@ -30,7 +32,8 @@ public class CombinatorialSwarmTest {
 	public void testGeneticUpdate() {
 		classUnderTest.setNumberOfParticles(20);
 		classUnderTest.setNeighbourhood(new TheFourClusters());
-		classUnderTest.getCombinatorialVelocityUpdate().setWeight(0.1);
+		CombinatorialVelocityUpdate v =(CombinatorialVelocityUpdate) classUnderTest.getVelocityUpdate();
+		v.setWeight(0.1);
 		Vector<Double> result = new Vector<Double>();
 		result = classUnderTest.geneticOptimise(a280);
 		double fitness = a280.CalculateFitness(result);

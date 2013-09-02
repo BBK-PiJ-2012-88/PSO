@@ -1,5 +1,7 @@
 package swarm;
-
+/*
+ * undocumented because will not be included in library.
+ */
 public class BinaryConverterImpl implements BinaryConverter {
 
 	private int binaryEncoding = 32;

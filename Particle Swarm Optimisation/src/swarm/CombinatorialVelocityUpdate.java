@@ -17,8 +17,6 @@ public class CombinatorialVelocityUpdate implements
 	
 	private Neighbourhood neighbourhood = new TheRing();
 	
-	//need to add constants to this. Wonder if this will make a difference? 
-	
 	private double socialConstant = 2;
 	
 	private double cognitiveConstant = 2;

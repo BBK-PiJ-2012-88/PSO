@@ -44,16 +44,15 @@ public class BinaryInitialiserTest {
 	
 	@Test
 	public void testConstrainedInitialisation(){
-		classUnderTest.setConstrainedInitialisation(true);
 		int binaryEncoding =  bin.getBinaryEncoding();
 		double[] max = new double[f.getVariables() /  binaryEncoding];
 		Arrays.fill(max, 17.236);
 		double[] min = new double[f.getVariables() / binaryEncoding];
 		Arrays.fill(min, -17.236);
-		classUnderTest.setLowerLimit(min);
-		classUnderTest.setUpperLimit(max);
+		classUnderTest.setMin(min);
+		classUnderTest.setMax(max);
 		boolean result = true;
-		classUnderTest.initialiseMatrices(f, 10);
+		classUnderTest.constrainedInitialiseMatrices(f, 10);
 		double[][] positions = classUnderTest.getPositions();
 		for(int  i = 0; i < positions.length; i++){
 			for(int k = 0; k < positions[i].length; k = k + binaryEncoding){
@@ -67,15 +66,14 @@ public class BinaryInitialiserTest {
 	}
 	@Test
 	public void checkPositionAndPBSameConstrained(){
-		classUnderTest.setConstrainedInitialisation(true);
 		int binaryEncoding =  bin.getBinaryEncoding();
 		double[] max = new double[f.getVariables() /  binaryEncoding];
 		Arrays.fill(max, 17.236);
 		double[] min = new double[f.getVariables() / binaryEncoding];
 		Arrays.fill(min, -17.236);
-		classUnderTest.setLowerLimit(min);
-		classUnderTest.setUpperLimit(max);
-		classUnderTest.initialiseMatrices(f, 10);
+		classUnderTest.setMin(min);
+		classUnderTest.setMax(max);
+		classUnderTest.constrainedInitialiseMatrices(f, 10);
 		double[][] positions = classUnderTest.getPositions();
 		double[][] pB = classUnderTest.getPersonalBest();
 		assertTrue(Arrays.deepEquals(positions, pB));

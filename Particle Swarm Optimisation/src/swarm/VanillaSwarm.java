@@ -38,16 +38,6 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 	 */
 	private Function objectiveFunction; 
 	
-	/*
-	 * Upper limit used to generate initial candidate solutions
-	 */
-	private double upperLimit = 1;
-	
-	/*
-	 * Lower limit used to generate initial candidate solutions. Default value is 0
-	 */
-	private double lowerLimit = 0;
-	
 	private double[] max;
 	
 	private double[] min;
@@ -70,70 +60,25 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 	/*
 	 * Mechanism to limit the velocity of position
 	 */
-	private VelocityUpdate velocityUpdate;
+	private VelocityUpdate velocityUpdate = new ConstrictionCoefficient();
 	
 	/*
 	 * An object that determines whether or halting conditions have been met.
 	 */
-	private HaltingCriteria haltingCriteria;
+	private HaltingCriteria haltingCriteria = new IterationHalt(100);
 	
 	private boolean constrainedOptimisation = true;
 	
-	private VanillaInitialiser init = new VanillaInitialiser();
+	private ConstrainedInitialiser init = new VanillaInitialiser();
 	
 	private FitnessCalculator calc;
 	
-	private PositionUpdate positionUpdate = new VanillaPositionUpdate();
+	private ConstrainedPositionUpdate positionUpdate = new VanillaPositionUpdate();
 	
-	public VanillaSwarm(){
-		velocityUpdate = new ConstrictionCoefficient();
-		haltingCriteria = new IterationHalt();
-	}
+	public VanillaSwarm(){}
 	
-	@Override
-	public Function getObjectiveFunction() {
-		return objectiveFunction;
-	}
-
-	@Override
-	public void setObjectiveFunction(Function objectiveFunction) {
-		this.objectiveFunction = objectiveFunction;
-	}
-
-	@Override
-	public int getNumberOfParticles() {
-		return numberOfParticles;
-	}
-
-	@Override
-	public void setNumberOfParticles(int numberOfParticles) {
-		this.numberOfParticles = numberOfParticles;
-	}
-
-	public boolean isMaximum() {
-		return maximum;
-	}
-
-	public VelocityUpdate getVelocityUpdate() {
-		return velocityUpdate;
-	}
-
-	public void setVelocityUpdate(VelocityUpdate velocityUpdate) {
-		this.velocityUpdate = velocityUpdate;
-		this.velocityUpdate.getNeighbourhood().setMaximum(maximum);
-	}
-
-	@Override
-	public HaltingCriteria getHaltingCriteria() {
-		return haltingCriteria;
-	}
-
-	@Override
-	public void setHaltingCriteria(HaltingCriteria haltingCriteria) {
-		this.haltingCriteria = haltingCriteria;
-	}
-
 	public VanillaSwarm(Function objectiveFunction, VelocityUpdate velocityUpdate, HaltingCriteria haltingCriteria){
+		this();
 		this.objectiveFunction = objectiveFunction;
 		this.velocityUpdate = velocityUpdate;
 		this.haltingCriteria = haltingCriteria;
@@ -143,73 +88,6 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 		this(objectiveFunction, velocityUpdate, haltingCriteria);
 		this.maximum = maximum;
 		velocityUpdate.getNeighbourhood().setMaximum(maximum);
-	}
-	
-	public VanillaSwarm(Function objectiveFunction, VelocityUpdate velocityUpdate, HaltingCriteria haltingCriteria, boolean maximum, int numberOfParticles){
-		this(objectiveFunction, velocityUpdate, haltingCriteria, maximum);
-		this.numberOfParticles = numberOfParticles;
-	}
-	
-	public VanillaSwarm(Function objectiveFunction, VelocityUpdate velocityUpdate, HaltingCriteria haltingCriteria, boolean maximum, int numberOfParticles, int upperLimit, int lowerLimit){
-		this(objectiveFunction, velocityUpdate, haltingCriteria, maximum, numberOfParticles);
-		this.upperLimit = upperLimit;
-		this.lowerLimit = lowerLimit;
-	}
-	
-	private void initiateSwarm(){
-		calc = new FitnessCalculatorImpl(getObjectiveFunction(), getMaximum());
-		if(max == null){
-			max = new double[getObjectiveFunction().getVariables()];
-			Arrays.fill(max, upperLimit);
-			init.setMax(max);
-		}else{
-			init.setMax(max);
-		}
-		if(min == null){
-			min = new double[getObjectiveFunction().getVariables()];
-			Arrays.fill(min, lowerLimit);
-			init.setMin(min);
-		}else{
-			init.setMin(min);
-		}
-		if(constrainedOptimisation){
-			((VanillaPositionUpdate)getPositionUpdate()).setConstraints(constrainedOptimisation);
-			Constrainer constrainer = new VanillaConstrainer();
-			constrainer.setMaximum(max);
-			constrainer.setMinimum(min);
-			((VanillaPositionUpdate)getPositionUpdate()).setConstrainer(constrainer);
-		}
-		init.initialiseMatrices(getObjectiveFunction(), getNumberOfParticles());
-		setPosition(init.getPositions());
-		setPersonalBest(init.getPersonalBest());
-		setVelocities(init.getVelocities());
-		getVelocityUpdate().setVelocities(getVelocities());
-		getVelocityUpdate().setMaximum(maximum);
-		calc.setPositions(getPosition());
-		calc.initialCalculateFitness();
-		setFitness(calc.getFitness());
-		globalBest = calc.calculateGlobalBest();
-		haltingCriteria.updateData(fitness.get(globalBest), 0);
-	}
-	
-	public void setInit(VanillaInitialiser init) {
-		this.init = init;
-	}
-
-	public double[] getMax() {
-		return max;
-	}
-
-	public void setMax(double[] max) {
-		this.max = max;
-	}
-
-	public double[] getMin() {
-		return min;
-	}
-
-	public void setMin(double[] min) {
-		this.min = min;
 	}
 	
 	@Override
@@ -222,19 +100,19 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 	
 	@Override
 	public Vector<Double> constrainedOptimise(Function objectiveFunction, double upperLimit, double lowerLimit){
-		max = null;
-		min = null;
-		this.lowerLimit = lowerLimit;
-		this.upperLimit = upperLimit;
 		this.objectiveFunction = objectiveFunction;
+		max = new double[getObjectiveFunction().getVariables()];
+		Arrays.fill(max, upperLimit);
+		min = new double[getObjectiveFunction().getVariables()];
+		Arrays.fill(min, lowerLimit);
 		return constrainedOptimise();
 	}
 	
 	public Vector<Double> optimise(Function objectiveFunction, double upperLimit, double lowerLimit){
-		this.lowerLimit = lowerLimit;
-		this.upperLimit = upperLimit;
-		max = null;
-		min = null;
+		max = new double[getObjectiveFunction().getVariables()];
+		Arrays.fill(max, upperLimit);
+		min = new double[getObjectiveFunction().getVariables()];
+		Arrays.fill(min, lowerLimit);
 		this.objectiveFunction = objectiveFunction;
 		return optimise();
 	}
@@ -246,7 +124,11 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 		return optimise();
 	}
 	
-	
+	@Override
+	public Vector<Double> optimise(Function objectiveFunction){
+		this.objectiveFunction = objectiveFunction;
+		return optimise();
+	}
 	
 	@Override
 	public Vector<Double> optimise(){
@@ -288,6 +170,13 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 		}
 		return result;
 	}
+
+	private void updateParticlePositions() {
+		positionUpdate.setPositions(getPosition());
+		positionUpdate.setVelocities(getVelocities());
+		positionUpdate.updatePositions();
+		setPosition(positionUpdate.getPositions());
+	}
 	
 	private void updateFitnessInformation() {
 		calc.setFitness(fitness);
@@ -305,25 +194,104 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 		velocityUpdate.getNeighbourhood().setSolutionFitness(fitness);
 		setVelocities(velocityUpdate.updateVelocities());
 	}
+	
+	private void initiateSwarm(){
+		calc = new FitnessCalculatorImpl(getObjectiveFunction(), getMaximum());
+		if(max == null){
+			
+			init.setMax(max);
+		}else{
+			init.setMax(max);
+		}
+		if(min == null){
+			
+			init.setMin(min);
+		}else{
+			init.setMin(min);
+		}
+		positionUpdate.setConstraints(constrainedOptimisation);
+		if(constrainedOptimisation){
+			positionUpdate.setMaximum(max);
+			positionUpdate.setMinimum(min);
+		}
+		init.constrainedInitialiseMatrices(getObjectiveFunction(), getNumberOfParticles());
+		setPosition(init.getPositions());
+		setPersonalBest(init.getPersonalBest());
+		setVelocities(init.getVelocities());
+		getVelocityUpdate().setVelocities(getVelocities());
+		getVelocityUpdate().setMaximum(maximum);
+		calc.setPositions(getPosition());
+		calc.initialCalculateFitness();
+		setFitness(calc.getFitness());
+		globalBest = calc.calculateGlobalBest();
+		haltingCriteria.updateData(fitness.get(globalBest), 0);
+	}
+	
+	@Override
+	public Function getObjectiveFunction() {
+		return objectiveFunction;
+	}
+ 
+	@Override
+	public void setObjectiveFunction(Function objectiveFunction) {
+		this.objectiveFunction = objectiveFunction;
+	}
+
+	@Override
+	public int getNumberOfParticles() {
+		return numberOfParticles;
+	}
+
+	@Override
+	public void setNumberOfParticles(int numberOfParticles) {
+		this.numberOfParticles = numberOfParticles;
+	}
+
+	public boolean isMaximum() {
+		return maximum;
+	}
+
+	public VelocityUpdate getVelocityUpdate() {
+		return velocityUpdate;
+	}
+
+	public void setVelocityUpdate(VelocityUpdate velocityUpdate) {
+		this.velocityUpdate = velocityUpdate;
+		this.velocityUpdate.getNeighbourhood().setMaximum(maximum);
+	}
+
+	@Override
+	public HaltingCriteria getHaltingCriteria() {
+		return haltingCriteria;
+	}
+
+	@Override
+	public void setHaltingCriteria(HaltingCriteria haltingCriteria) {
+		this.haltingCriteria = haltingCriteria;
+	}
+	
+	public void setInit(VanillaInitialiser init) {
+		this.init = init;
+	}
+
+	public double[] getMax() {
+		return max;
+	}
+
+	public void setMax(double[] max) {
+		this.max = max;
+	}
+
+	public double[] getMin() {
+		return min;
+	}
+
+	public void setMin(double[] min) {
+		this.min = min;
+	}
 
 	public void setVelocities(double[][] velocities) {
 		this.velocities = velocities;
-	}
-
-	/* (non-Javadoc)
-	 * @see swarm.Swarm#optimise(swarm.Function)
-	 */
-	@Override
-	public Vector<Double> optimise(Function objectiveFunction){
-		this.objectiveFunction = objectiveFunction;
-		return optimise();
-	}
-	
-	private void updateParticlePositions() {
-		positionUpdate.setPositions(getPosition());
-		positionUpdate.setVelocities(getVelocities());
-		positionUpdate.updatePositions();
-		setPosition(positionUpdate.getPositions());
 	}
 
 	public double[][] getPersonalBest() {
@@ -370,11 +338,11 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 		this.init = (VanillaInitialiser)init;
 	}
 
-	public FitnessCalculator getCalc() {
+	public FitnessCalculator getFitnessCalculator() {
 		return calc;
 	}
 
-	public void setCalc(FitnessCalculator calc) {
+	public void setFitnessCalculator(FitnessCalculator calc) {
 		this.calc = calc;
 	}
 
@@ -382,7 +350,7 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 		return positionUpdate;
 	}
 
-	public void setPositionUpdate(PositionUpdate positionUpdate) {
+	public void setPositionUpdate(ConstrainedPositionUpdate positionUpdate) {
 		this.positionUpdate = positionUpdate;
 	}
 	

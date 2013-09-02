@@ -1,6 +1,6 @@
 package swarm;
 
-public class VanillaInitialiser implements Initialiser {
+public class VanillaInitialiser implements ConstrainedInitialiser {
 
 	/**
 	 * 
@@ -61,6 +61,11 @@ public class VanillaInitialiser implements Initialiser {
 	@Override
 	public double[][] getVelocities() {
 		return velocities;
+	}
+
+	@Override
+	public void constrainedInitialiseMatrices(Function objectiveFunction, int numberOfParticles) {
+		initialiseMatrices(objectiveFunction, numberOfParticles);
 	}
 
 }

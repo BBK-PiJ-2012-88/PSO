@@ -16,7 +16,7 @@ public class CuboidLattice implements Neighbourhood {
 	}
 
 	public boolean isCuboid(Map<Integer, Double> solutionFitness) {
-		for(int i = 1; i < 11; i++){
+		for(int i = 1; i < solutionFitness.size(); i++){
 			if(i * i * i == solutionFitness.size()){
 				return true;
 			}
@@ -201,7 +201,7 @@ public class CuboidLattice implements Neighbourhood {
 	}
 
 	private int getCubeRoot() {
-		for(int i = 1; i < 11; i ++){
+		for(int i = 1; i < solutionFitness.size(); i ++){
 			if(i * i * i == solutionFitness.size()){
 				return i;
 			}

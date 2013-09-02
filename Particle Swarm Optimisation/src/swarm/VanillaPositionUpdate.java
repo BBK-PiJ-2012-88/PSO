@@ -1,6 +1,6 @@
 package swarm;
 
-public class VanillaPositionUpdate implements PositionUpdate {
+public class VanillaPositionUpdate implements ConstrainedPositionUpdate {
 	
 	private double[][] positions;
 	
@@ -66,5 +66,25 @@ public class VanillaPositionUpdate implements PositionUpdate {
 			constrainer.constrain();
 			setPositions(constrainer.getPositions());
 		}
+	}
+
+	@Override
+	public double[] getMaximum() {
+		return getConstrainer().getMaximum();
+	}
+
+	@Override
+	public void setMaximum(double[] maximum) {
+		getConstrainer().setMaximum(maximum);
+	}
+
+	@Override
+	public double[] getMinimum() {
+		return getConstrainer().getMinimum();
+	}
+
+	@Override
+	public void setMinimum(double[] minimum) {
+		getConstrainer().setMinimum(minimum);
 	}
 }

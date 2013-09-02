@@ -26,4 +26,12 @@ public interface Swarm extends Serializable {
 	public abstract Function getObjectiveFunction();
 	
 	public abstract void setObjectiveFunction(Function objectiveFunction);
+	
+	public abstract VelocityUpdate getVelocityUpdate();
+	
+	public abstract void setVelocityUpdate(VelocityUpdate velocityUpdate);
+	
+	public abstract FitnessCalculator getFitnessCalculator();
+	
+	public abstract void setFitnessCalculator(FitnessCalculator fitnessCalculator);
 }
