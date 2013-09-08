@@ -28,10 +28,7 @@ public class GradientHalt implements HaltingCriteria {
 	public boolean halt() {
 		if(previousGBest != null){
 			double currentGradient = (currentGBest - previousGBest) / currentGBest;
-			if(currentGradient < 0){
-				currentGradient = currentGradient * -1;
-			}
-			if(currentGradient <= gradient){
+			if(Math.abs(currentGradient) <= Math.abs(gradient)){
 				return true;
 			}else{
 				return false;

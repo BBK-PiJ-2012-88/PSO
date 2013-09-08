@@ -59,11 +59,10 @@ public class BinaryPositionUpdate implements ConstrainedPositionUpdate {
 
 	@Override
 	public void updatePositions() {
-		normaliseVelocities();
 		Random random = new Random();
 		for(int i = 0; i < positions.length; i++){
 			for(int k = 0; k < positions[i].length; k++){
-				if(velocities[i][k] > random.nextDouble()){
+				if(sigmoidFunction.normalise(velocities[i][k]) > random.nextDouble()){
 					positions[i][k] = 1;
 				}else{
 					positions[i][k] = 0;
@@ -74,15 +73,6 @@ public class BinaryPositionUpdate implements ConstrainedPositionUpdate {
 			constrainer.setPositions(positions);
 			constrainer.constrain();
 			positions = constrainer.getPositions();
-		}
-	}
-	
-
-	private void normaliseVelocities() {
-		for(int i = 0; i < velocities.length; i++){
-			for(int k = 0; k < velocities[i].length; k++){
-				velocities[i][k] = sigmoidFunction.normalise(velocities[i][k]);
-			}
 		}
 	}
 

@@ -31,8 +31,6 @@ public class CombinatorialVelocityUpdateTest {
 	
 	private CombinatorialPositionUpdate combPosUpdate = new CombinatorialPositionUpdate();
 	
-	private CombinatorialInitialiser combInit = new CombinatorialInitialiser();
-	
 	@Before
 	public void setUp(){
 		fitness.put(0, 4.0);

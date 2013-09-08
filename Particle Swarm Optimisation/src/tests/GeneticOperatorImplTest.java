@@ -77,6 +77,7 @@ public class GeneticOperatorImplTest {
 	
 	@Test
 	public void testCrossOver(){
+		//tests that only four of the particles remain the same
 		double[][] previous = copyArray(binaryString);
 		((GeneticOperatorImpl) classUnderTest).initiateSortedFitness();
 		((GeneticOperatorImpl)classUnderTest).crossover();
@@ -89,6 +90,28 @@ public class GeneticOperatorImplTest {
 				}
 			}
 		}
+		assertTrue(counter == 4);
+	}
+	
+	@Test
+	public void testCrossOver2(){
+		double[][] previous = copyArray(binaryString);
+		((GeneticOperatorImpl) classUnderTest).initiateSortedFitness();
+		List<ParticleFitness> sortedFitness = ((GeneticOperatorImpl) classUnderTest).getSortedFitness();
+		((GeneticOperatorImpl)classUnderTest).crossover();
+		binaryString = classUnderTest.getPositions();
+		int counter = 0;
+		int best = ((GeneticOperatorImpl)classUnderTest).getGlobalBest();
+		for(int i = sortedFitness.size() / 2; i < sortedFitness.size(); i++){
+			int current = sortedFitness.get(i).getIndex();
+			for(int k = 0; k < binaryString[current].length; k++){
+				if(Arrays.equals(Arrays.copyOfRange(previous[best], 0, k), Arrays.copyOfRange(binaryString[current], 0, k))){
+					counter++;
+					break;
+				}
+			}
+		}
+		System.out.println(counter);
 		assertTrue(counter == 4);
 	}
 	

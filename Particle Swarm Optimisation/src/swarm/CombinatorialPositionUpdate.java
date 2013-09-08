@@ -78,7 +78,7 @@ public class CombinatorialPositionUpdate implements PositionUpdate {
 							positions[i][n] = temp;
 						}
 					}
-					velocities[i + rows][k] = 0;
+					//velocities[i + rows][k] = 0;
 				}
 			}
 		}

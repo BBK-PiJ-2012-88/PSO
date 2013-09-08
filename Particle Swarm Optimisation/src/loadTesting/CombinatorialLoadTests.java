@@ -3,6 +3,7 @@ package loadTesting;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import swarm.CombinatorialSwarm;
@@ -46,10 +47,10 @@ public class CombinatorialLoadTests {
 		comb.setNumberOfParticles(27);
 		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/a280.tsp");
 		testFunction(f, "a280");
-		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/ali535.tsp");
-		testFunction(f, "ali535.tsp");
-		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/att48.tsp");
-		testFunction(f, "att48.tsp");
+		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/kroA150.tsp");
+		testFunction(f, "kroA150.tsp");
+		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/eil51.tsp");
+		testFunction(f, "eil51.tsp");
 		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/eil101.tsp");
 		testFunction(f, "eil101.tsp");
 		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/kroA100.tsp");
@@ -57,10 +58,10 @@ public class CombinatorialLoadTests {
 		ioManager.writeTofile("Genetic", file);
 		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/a280.tsp");
 		testGeneticFunction(f, "a280");
-		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/ali535.tsp");
-		testGeneticFunction(f, "ali535.tsp");
-		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/att48.tsp");
-		testGeneticFunction(f, "att48.tsp");
+		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/kroA150.tsp");
+		testGeneticFunction(f, "kroA150.tsp");
+		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/eil51.tsp");
+		testGeneticFunction(f, "eil51.tsp");
 		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/eil101.tsp");
 		testGeneticFunction(f, "eil101.tsp");
 		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/kroA100.tsp");

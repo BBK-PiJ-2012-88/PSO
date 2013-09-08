@@ -17,11 +17,11 @@ public class CombinatorialVelocityUpdate implements
 	
 	private Neighbourhood neighbourhood = new TheRing();
 	
-	private double socialConstant = 2;
+	private double socialConstant = 2.025;
 	
-	private double cognitiveConstant = 2;
+	private double cognitiveConstant = 2.025;
 
-	private double weight = 1;
+	private double weight = 0.8;
 	
 	private double epsilon = 0.00001;
 	
@@ -35,6 +35,7 @@ public class CombinatorialVelocityUpdate implements
 	@Override
 	public void setMaximum(boolean maximum) {
 		this.maximum = maximum;
+		neighbourhood.setMaximum(maximum);
 	}
 
 	@Override
@@ -88,10 +89,10 @@ public class CombinatorialVelocityUpdate implements
 		int rows = velocities.length / 2;
 		for(int i = 0; i < rows; i++){
 			for(int k = 0; k < velocities[i].length; k++){
-				if(velocities[i][k] + velocities[i + rows][k] == 0){
+				/*if(velocities[i][k] + velocities[i + rows][k] == 0){
 					velocities[i][k] = Math.random();
 					velocities[i + rows][k] = Math.random();
-				}
+				}*/
 				double denominator = velocities[i + rows][k];
 				if(velocities[i][k] > velocities[i + rows][k]){
 					denominator = velocities[i][k];

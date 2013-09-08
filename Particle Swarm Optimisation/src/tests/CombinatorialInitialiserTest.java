@@ -89,5 +89,11 @@ public class CombinatorialInitialiserTest {
 		assertTrue(result);
 	}
 	
-	
+	@Test
+	public void testPositionsEqualsPB(){
+		classUnderTest.initialiseMatrices(f, 4);
+		double [][] positions = classUnderTest.getPositions();
+		double [][] pB = classUnderTest.getPersonalBest();
+		assertTrue(Arrays.deepEquals(positions, pB));
+	}
 }

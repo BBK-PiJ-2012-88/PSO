@@ -19,7 +19,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		SwarmMaximumsTest.class, TheFourClustersTest.class, TheRingTest.class,
 		TheStarTest.class, TheWheelTest.class, VanillaInitialiserTest.class,
 		VanillaPositionUpdateTest.class, VanillaSwarmTest.class,
-		VelClampingTest.class })
+		VelClampingTest.class, GradientHaltTest.class, VanillaConstrainerTest.class })
 public class AllTests {
 
 }

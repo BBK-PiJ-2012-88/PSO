@@ -46,29 +46,6 @@ public class BinaryPositionUpdateTest {
 	}
 	
 	@Test
-	public void testVelocitiesAreNormalised(){
-		Random rand = new Random();
-		for(int i = 0; i < velocities.length; i++){
-			for(int k = 0; k < velocities[i].length; k++){
-				velocities[i][k] = rand.nextDouble() * 10;
-			}
-		}
-		update.setPositions(position);
-		update.setVelocities(velocities);
-		update.updatePositions();
-		velocities = update.getVelocities();
-		boolean result = true;
-		for(int i = 0; i < velocities.length; i++){
-			for(int k = 0; k < velocities[i].length; k++){
-				if(velocities[i][k] < 0 || velocities[i][k] > 1){
-					result = false;
-				}
-			}
-		}
-		assertTrue(result);
-	}
-	
-	@Test
 	public void testConstrainedPositionUpdateTest(){
 		double[] max = {5.12, 5.12};
 		double[] min = {-5.12, -5.12};

@@ -63,8 +63,6 @@ public class VanillaLoadTesting {
 	}
 	
 	private void testFunction(double upperLimit, double lowerLimit, Function function){
-		vanilla.setLowerLimit(lowerLimit);
-		vanilla.setUpperLimit(upperLimit);
 		double[] max = new double[function.getVariables()];
 		Arrays.fill(max, upperLimit);
 		double min[] = new double[function.getVariables()];

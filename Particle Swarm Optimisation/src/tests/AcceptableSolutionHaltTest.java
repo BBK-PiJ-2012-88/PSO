@@ -25,7 +25,14 @@ public class AcceptableSolutionHaltTest {
 	}
 	
 	@Test
-	public void test3() {
+	public void test3(){
+		classUnderTest.setAcceptableSolution(10);
+		classUnderTest.updateData(10.0, 0);
+		assertTrue(classUnderTest.halt());
+	}
+	
+	@Test
+	public void test4() {
 		classUnderTest.setAcceptableSolution(10);
 		classUnderTest.updateData(11, 0);
 		classUnderTest.setMaximum(true);
@@ -33,11 +40,20 @@ public class AcceptableSolutionHaltTest {
 	}
 	
 	@Test
-	public void test4() {
+	public void test5() {
 		classUnderTest.setAcceptableSolution(10);
 		classUnderTest.updateData(9.9, 0);
 		classUnderTest.setMaximum(true);
 		assertTrue(!classUnderTest.halt());
+
+	}
+	
+	@Test
+	public void test6(){
+		classUnderTest.setAcceptableSolution(10);
+		classUnderTest.updateData(10.0, 0);
+		classUnderTest.setMaximum(true);
+		assertTrue(classUnderTest.halt());
 	}
 
 }

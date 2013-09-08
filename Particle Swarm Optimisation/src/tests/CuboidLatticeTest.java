@@ -241,4 +241,41 @@ public class CuboidLatticeTest {
 		int result = classUnderTest.neighbourhoodBest(25);
 		assertEquals(expected, result);
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testNonCuboidParticles(){
+		fitness.clear();
+		for(int i = 0; i < 12; i++){
+			fitness.put(i, (double)i);
+		}
+		classUnderTest.setSolutionFitness(fitness);
+	}
+	
+	@Test
+	public void testIsCuboid1(){
+		fitness.clear();
+		fitness.put(1, 2.0);
+		boolean result = classUnderTest.isCuboid(fitness);
+		assertTrue(result);		
+	}
+	
+	@Test
+	public void testIsCuboid2(){
+		boolean result = classUnderTest.isCuboid(fitness);
+		assertTrue(result);
+	}
+	
+	@Test
+	public void testIsCuboid3(){
+		for(int i = 0; i < 1728; i++){
+			fitness.put(i, (double)i);
+		}
+		assertTrue(classUnderTest.isCuboid(fitness));
+	}
+	
+	@Test
+	public void testIsCuboidNotCube(){
+		fitness.remove(5);
+		assertTrue(classUnderTest.isCuboid(fitness) == false);
+	}
 }

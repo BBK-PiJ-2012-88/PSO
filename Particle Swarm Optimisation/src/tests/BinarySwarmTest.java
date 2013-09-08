@@ -18,7 +18,7 @@ import swarm.VelocityUpdate;
 
 public class BinarySwarmTest {
 
-	private BinarySwarm classUnderTest = new BinarySwarm();
+	private BinarySwarm classUnderTest;
 	private AcceptableSolutionHalt halt = new AcceptableSolutionHalt();
 	private Function function = new BinaryDeJong1(1);
 	private Function f = new BinaryDeJong3();
@@ -32,6 +32,7 @@ public class BinarySwarmTest {
 		Arrays.fill(upperLimit, 5.12);
 		lowerLimit = new double[f.getVariables()];
 		Arrays.fill(lowerLimit, -5.12);
+		classUnderTest = new BinarySwarm();
 	}
 	
 	@Test
@@ -50,14 +51,7 @@ public class BinarySwarmTest {
 	
 	@Test
 	public void test2(){
-		double[] max = new double[function.getVariables()];
-		Arrays.fill(max, 5);
-		velUp = new VelocityClamping(max);
-		IterationHalt itHalt = new IterationHalt(100);
-		classUnderTest.setObjectiveFunction(function);
-		classUnderTest.setVelocityUpdate(velUp);
-		classUnderTest.setHaltingCriteria(itHalt);
-		Vector<Double> binaryString = classUnderTest.optimise();
+		Vector<Double> binaryString = classUnderTest.optimise(function);
 		double result = function.CalculateFitness(binaryString);
 		assertTrue(result < 50);
 	}
@@ -95,7 +89,7 @@ public class BinarySwarmTest {
 		Vector<Double> binaryString = classUnderTest.constrainedOptimise(f, upperLimit, lowerLimit);
 		double result = f.CalculateFitness(binaryString);
 		System.out.println(result);
-		assertTrue(result >= 0);
+		assertTrue(result >= 0 && result <= 50);
 	}
 	
 	@Test
@@ -105,7 +99,7 @@ public class BinarySwarmTest {
 		Vector<Double> binaryString = classUnderTest.constrainedGeneticOptmise(f, upperLimit, lowerLimit);
 		double result = f.CalculateFitness(binaryString);
 		System.out.println(result);
-		assertTrue(result >= 0);
+		assertTrue(result >= 0 && result <= 50);
 	}
 	
 }

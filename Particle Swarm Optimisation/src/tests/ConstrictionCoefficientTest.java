@@ -44,6 +44,7 @@ public class ConstrictionCoefficientTest {
 				{0, 1, 2, -1},
 				{0, 0, 0, 2},
 		};
+		classUnderTest.setConstants(2, 2, 0.5);
 		classUnderTest.setPersonalBest(pB);
 		classUnderTest.setPosition(position);
 		classUnderTest.setVelocities(vel);

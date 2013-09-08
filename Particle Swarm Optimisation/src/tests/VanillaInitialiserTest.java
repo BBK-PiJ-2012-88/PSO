@@ -80,4 +80,18 @@ public class VanillaInitialiserTest {
 		}
 		assertTrue(result);
 	}
+	
+	@Test
+	public void test4(){
+		double[] upperLimit = new double[f.getVariables()];
+		Arrays.fill(upperLimit, 5.12);
+		double[] lowerLimit = new double[f.getVariables()];
+		Arrays.fill(lowerLimit, -5.12);
+		classUnderTest.setMax(upperLimit);
+		classUnderTest.setMin(lowerLimit);
+		classUnderTest.initialiseMatrices(f, numberOfParticles);
+		double[][] position = classUnderTest.getPositions();
+		double[][] personalBest = classUnderTest.getPersonalBest();
+		assertTrue(Arrays.deepEquals(position, personalBest));
+	}
 }

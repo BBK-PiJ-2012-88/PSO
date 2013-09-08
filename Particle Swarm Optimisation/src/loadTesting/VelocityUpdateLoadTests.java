@@ -62,8 +62,6 @@ public class VelocityUpdateLoadTests {
 				double[] max;
 				double[] min;
 				if(f instanceof DeJong1 || f instanceof DeJong3){
-					vanilla.setLowerLimit(-5.12);
-					vanilla.setUpperLimit(5.12);
 					max = new double[f.getVariables()];
 					Arrays.fill(max, 5.12);
 					min = new double[f.getVariables()];
@@ -71,8 +69,6 @@ public class VelocityUpdateLoadTests {
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMaximum(max);
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMinimum(min);
 				}else if(f instanceof DeJong2){
-					vanilla.setLowerLimit(-2.048);
-					vanilla.setUpperLimit(2.048);
 					max = new double[f.getVariables()];
 					Arrays.fill(max, 2.048);
 					min = new double[f.getVariables()];
@@ -86,8 +82,6 @@ public class VelocityUpdateLoadTests {
 					Arrays.fill(min, -1.28);
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMaximum(max);
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMinimum(min);
-					vanilla.setLowerLimit(-1.28);
-					vanilla.setUpperLimit(1.28);
 				}else{
 					max = new double[f.getVariables()];
 					Arrays.fill(max, 65.536);
@@ -97,8 +91,6 @@ public class VelocityUpdateLoadTests {
 					vanilla.setMin(min);
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMaximum(max);
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMinimum(min);
-					vanilla.setLowerLimit(-65.536);
-					vanilla.setUpperLimit(65.536);
 					double[] maxVel = {5,5};
 					if(v instanceof VelocityClamping){
 						((VelocityClamping) v).setMaxVelocity(maxVel);
@@ -130,7 +122,7 @@ public class VelocityUpdateLoadTests {
 	private void generateFunctions() {
 		functions.add(new DeJong1(10));
 		functions.add(new DeJong2());
-		functions.add(new DeJong3());
+		functions.add(new DeJong3( ));
 		functions.add(new DeJong4());
 		functions.add(new DeJong5());
 		

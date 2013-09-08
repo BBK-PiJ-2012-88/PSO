@@ -54,28 +54,17 @@ public class NeighbourhoodLoadTests {
 	public void run(){
 		generateNeighbourhoods();
 		generateFunctions();
-		vanilla.setLowerLimit(-5.12);
-		vanilla.setUpperLimit(5.12);
 		vanilla.setHaltingCriteria(halt);
 		((VanillaPositionUpdate)vanilla.getPositionUpdate()).setConstraints(true);
 		file = ioManager.createNewFile(location);
+		vanilla.setNumberOfParticles(64);
 		for(Neighbourhood n: neighbourhoods){
-			if(n instanceof CuboidLattice){
-				vanilla.setNumberOfParticles(27);
-			}else if(n instanceof TheFourClusters){
-				vanilla.setNumberOfParticles(24);
-			}else{
-				vanilla.setNumberOfParticles(24);
-			}
-			vanilla.setNeighbourhood(n);
 			best = 0.0;
 			worst = 0.0;
 			for(Function f: functions){
 				double[] max;
 				double[] min;
 				if(f instanceof DeJong1 || f instanceof DeJong3){
-					vanilla.setLowerLimit(-5.12);
-					vanilla.setUpperLimit(5.12);
 					max = new double[f.getVariables()];
 					Arrays.fill(max, 5.12);
 					min = new double[f.getVariables()];
@@ -83,8 +72,6 @@ public class NeighbourhoodLoadTests {
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMaximum(max);
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMinimum(min);
 				}else if(f instanceof DeJong2){
-					vanilla.setLowerLimit(-2.048);
-					vanilla.setUpperLimit(2.048);
 					max = new double[f.getVariables()];
 					Arrays.fill(max, 2.048);
 					min = new double[f.getVariables()];
@@ -92,8 +79,6 @@ public class NeighbourhoodLoadTests {
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMaximum(max);
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMinimum(min);
 				}else if(f instanceof DeJong4){
-					vanilla.setLowerLimit(-1.28);
-					vanilla.setUpperLimit(1.28);
 					max = new double[f.getVariables()];
 					Arrays.fill(max, 1.28);
 					min = new double[f.getVariables()];
@@ -101,8 +86,6 @@ public class NeighbourhoodLoadTests {
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMaximum(max);
 					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMinimum(min);
 				}else{
-					vanilla.setLowerLimit(-65.536);
-					vanilla.setUpperLimit(65.536);
 					max = new double[f.getVariables()];
 					Arrays.fill(max, 65.536);
 					min = new double[f.getVariables()];

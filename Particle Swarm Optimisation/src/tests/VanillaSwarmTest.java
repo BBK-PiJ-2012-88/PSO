@@ -26,9 +26,7 @@ public class VanillaSwarmTest {
 		halt.setAcceptableSolution(acceptableSolution);
 		velUpdate.setK(0.01);
 		classUnderTest = new VanillaSwarm(function, velUpdate, halt);
-		classUnderTest.setLowerLimit(-5.12);
-		classUnderTest.setUpperLimit(5.12);
-		Vector<Double> temp = classUnderTest.optimise();
+		Vector<Double> temp = classUnderTest.optimise(function, 5.12, -5.12);
 		double result = function.CalculateFitness(temp);
 		System.out.println(result);
 		assertTrue(result <= acceptableSolution);
@@ -40,9 +38,7 @@ public class VanillaSwarmTest {
 		IterationHalt halt2 = new IterationHalt(100);
 		velUpdate.setK(0.01);
 		classUnderTest = new VanillaSwarm(function, velUpdate, halt2);
-		classUnderTest.setLowerLimit(-5.12);
-		classUnderTest.setUpperLimit(5.12);
-		Vector<Double> temp = classUnderTest.optimise();
+		Vector<Double> temp = classUnderTest.optimise(function, 5.12, -5.12);
 		double result = function.CalculateFitness(temp);
 		System.out.println(result);
 		assertTrue(result <= 2);

@@ -69,6 +69,7 @@ public class ConstrictionCoefficient implements VelocityUpdate {
 		@Override
 		public void setMaximum(boolean maximum) {
 			this.maximum = maximum;
+			neighbourhood.setMaximum(maximum);
 		}
 
 		private double calculateConstrictionCoefficient() {

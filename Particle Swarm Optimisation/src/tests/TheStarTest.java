@@ -30,46 +30,24 @@ public class TheStarTest {
 	
 	@Test
 	public void testNeighbourhoodBestMaximum() {
+		boolean result = true;
 		classUnderTest.setMaximum(true);
-		int result = classUnderTest.neighbourhoodBest(5);
-		int expected = 19;
-		assertEquals(expected, result);
-	}
-	
-	@Test
-	public void testNeighbourhoodBest2Maximum(){
-		classUnderTest.setMaximum(true);
-		int result = classUnderTest.neighbourhoodBest(0);
-		int expected = 19;
-		assertEquals(expected, result);
-	}
-
-	@Test
-	public void testNeighbourhoodBest3Maximum(){
-		classUnderTest.setMaximum(true);
-		int result = classUnderTest.neighbourhoodBest(19);
-		int expected = 19;
-		assertEquals(expected, result);
+		for(int i = 0; i < testSolutions.size(); i++){
+			if(classUnderTest.neighbourhoodBest(i) != 19){
+				result = false;
+			}
+		}
+		assertTrue(result);
 	}
 	
 	@Test
 	public void testNeighbourhoodBestMinimum(){
-		int result = classUnderTest.neighbourhoodBest(0);
-		int expected = 0;
-		assertEquals(expected, result);
-	}
-	
-	@Test
-	public void testNeighbourhoodBestMinimum2(){
-		int result = classUnderTest.neighbourhoodBest(5);
-		int expected = 0;
-		assertEquals(expected, result);
-	}
-	
-	@Test
-	public void testNeighbourhoodBestMinimum3(){
-		int result = classUnderTest.neighbourhoodBest(19);
-		int expected = 0;
-		assertEquals(expected, result);
+		boolean result = true;
+		for(int i = 0; i < testSolutions.size(); i++){
+			if(classUnderTest.neighbourhoodBest(i) != 0){
+				result = false;
+			}
+		}
+		assertTrue(result);
 	}
 }

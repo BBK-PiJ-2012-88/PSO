@@ -10,13 +10,19 @@ public class CuboidLattice implements Neighbourhood {
 	
 	@Override
 	public void setSolutionFitness(Map<Integer, Double> solutionFitness) {
-		assert isCuboid(solutionFitness);
-		this.solutionFitness = solutionFitness;
+		if(isCuboid(solutionFitness)){
+			this.solutionFitness = solutionFitness;
+		}else{
+			throw new IllegalArgumentException("solution fitness is not cuboid");
+		}
 
 	}
 
 	public boolean isCuboid(Map<Integer, Double> solutionFitness) {
-		for(int i = 1; i < solutionFitness.size(); i++){
+		if(solutionFitness.size() == 1){
+			return true;
+		}
+		for(int i = 1; i < solutionFitness.size() / 2; i++){
 			if(i * i * i == solutionFitness.size()){
 				return true;
 			}

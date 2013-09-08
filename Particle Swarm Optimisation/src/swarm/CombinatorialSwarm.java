@@ -116,7 +116,7 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 		velocityUpdate.setPosition(getPositions());
 		velocityUpdate.setPersonalBest(getPersonalBest());
 		velocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
-		setVelocities(combinatorialVelocityUpdate.updateVelocities());
+		setVelocities(velocityUpdate.updateVelocities());
 	}
 	
 	private void performGeneticOperations() {
@@ -142,7 +142,7 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 		calc.setPositions(getPositions());
 		calc.calculateFitness();
 		setFitness(calc.getFitness());
-		combinatorialVelocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
+		velocityUpdate.getNeighbourhood().setSolutionFitness(getFitness());
 		setPersonalBest(calc.getPersonalBest());
 		setGlobalBest(calc.calculateGlobalBest());
 	}
@@ -219,14 +219,14 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 
 	@Override
 	public VelocityUpdate getVelocityUpdate() {
-		return combinatorialVelocityUpdate;
+		return velocityUpdate;
 	}
 	
 
 	@Override
 	public void setMaximum(boolean maximum) {
 		this.maximum = maximum;
-		combinatorialVelocityUpdate.getNeighbourhood().setMaximum(maximum);
+		velocityUpdate.getNeighbourhood().setMaximum(maximum);
 		
 	}
 
@@ -293,8 +293,8 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 		StringBuffer buff = new StringBuffer();
 		buff.append(this.getClass().toString() + ", ");
 		buff.append("Function: " + objectiveFunction.toString() + ", ");
-		buff.append("Velocity Updater: " + combinatorialVelocityUpdate.getClass().toString() + ", ");
-		buff.append("Neighbourhood: " + combinatorialVelocityUpdate.getNeighbourhood().getClass().toString() + ", ");
+		buff.append("Velocity Updater: " + velocityUpdate.getClass().toString() + ", ");
+		buff.append("Neighbourhood: " + velocityUpdate.getNeighbourhood().getClass().toString() + ", ");
 		buff.append("Halting Criteria: " + haltingCriteria.getClass().toString() + ", ");
 		buff.append("Number of Particles: " + numberOfParticles + ", ");
 		buff.append("Maximum: " + maximum);

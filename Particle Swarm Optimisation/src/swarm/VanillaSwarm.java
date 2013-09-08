@@ -198,13 +198,14 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 	private void initiateSwarm(){
 		calc = new FitnessCalculatorImpl(getObjectiveFunction(), getMaximum());
 		if(max == null){
-			
+			max = new double[getObjectiveFunction().getVariables()];
+			Arrays.fill(max, 1);
 			init.setMax(max);
 		}else{
 			init.setMax(max);
 		}
 		if(min == null){
-			
+			min = new double[getObjectiveFunction().getVariables()];
 			init.setMin(min);
 		}else{
 			init.setMin(min);
@@ -353,23 +354,7 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 	public void setPositionUpdate(ConstrainedPositionUpdate positionUpdate) {
 		this.positionUpdate = positionUpdate;
 	}
-	
 
-	public double getUpperLimit() {
-		return upperLimit;
-	}
-
-	public void setUpperLimit(double upperLimit) {
-		this.upperLimit = upperLimit;
-	}
-
-	public double getLowerLimit() {
-		return lowerLimit;
-	}
-
-	public void setLowerLimit(double lowerLimit) {
-		this.lowerLimit = lowerLimit;
-	}
 
 	@Override
 	public boolean getMaximum() {
@@ -379,7 +364,7 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 	@Override
 	public void setMaximum(boolean maximum){
 		this.maximum = maximum;
-		velocityUpdate.getNeighbourhood().setMaximum(maximum);
+		velocityUpdate.setMaximum(maximum);
 	}
 
 	@Override
