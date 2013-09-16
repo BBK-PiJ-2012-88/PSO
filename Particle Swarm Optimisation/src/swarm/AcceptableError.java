@@ -83,7 +83,6 @@ public class AcceptableError implements HaltingCriteria {
 	@Override
 	public void updateData(double gbestFitness, int iteration) {
 		this.gBest = gbestFitness;
-		
 	}
 
 	/**

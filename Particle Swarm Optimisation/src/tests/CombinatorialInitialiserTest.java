@@ -96,4 +96,19 @@ public class CombinatorialInitialiserTest {
 		double [][] pB = classUnderTest.getPersonalBest();
 		assertTrue(Arrays.deepEquals(positions, pB));
 	}
+	
+	@Test
+	public void testVelocitiesInRange(){
+		classUnderTest.initialiseMatrices(f, 5);
+		double[][] velocities = classUnderTest.getVelocities();
+		boolean result = true;
+		for(int i = 0; i < velocities.length; i++){
+			for(int k = 0; k < velocities[i].length; k++){
+				if(velocities[i][k] > 1 || velocities[i][k] < 0){
+					result = false;
+				}
+			}
+		}
+		assertTrue(result);
+	}
 }

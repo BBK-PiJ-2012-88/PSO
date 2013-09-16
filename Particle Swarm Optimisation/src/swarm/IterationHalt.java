@@ -15,10 +15,14 @@ public class IterationHalt implements HaltingCriteria {
 	public void updateData(double gbestFitness, int iteration) {
 		currentIteration = iteration;
 	}
-
+	
+	private void reset(){
+		currentIteration = 0;
+	}
 	@Override
 	public boolean halt() {
 		if(currentIteration == maxIterations){
+			reset();
 			return true;
 		}else{
 			return false;

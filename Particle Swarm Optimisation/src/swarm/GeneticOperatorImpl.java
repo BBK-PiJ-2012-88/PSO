@@ -22,8 +22,6 @@ public class GeneticOperatorImpl implements GeneticOperator {
 	
 	private double mutationProbability = 0.05;
 	
-	private int globalBest;
-	
 	public GeneticOperatorImpl(){}
 	
 	public GeneticOperatorImpl(Function objectiveFunction){
@@ -66,14 +64,6 @@ public class GeneticOperatorImpl implements GeneticOperator {
 		this.mutationProbability = mutationProbability;
 	}
 
-	public int getGlobalBest() {
-		return globalBest;
-	}
-
-	public void setGlobalBest(int globalBest) {
-		this.globalBest = globalBest;
-	}
-
 	@Override
 	public double[][] getPositions() {
 		return positions;
@@ -105,19 +95,21 @@ public class GeneticOperatorImpl implements GeneticOperator {
 	public void crossover(){
 		Random rand = new Random();
 		if(maximum){
+			int best = sortedFitness.get(sortedFitness.size() - 1).getIndex();
 			for(int i = 0; i < sortedFitness.size() / 2; i++){
 				int crossoverPoint = rand.nextInt(objectiveFunction.getVariables());
 				int particleIndex = sortedFitness.get(i).getIndex();
 				for(int k = 0; k < crossoverPoint; k++){
-					positions[particleIndex][k] = positions[globalBest][k];
+					positions[particleIndex][k] = positions[best][k];
 				}
 			}
 		}else{
+			int best = sortedFitness.get(0).getIndex();
 			for(int i = sortedFitness.size() - 1; i > sortedFitness.size() / 2 - 1; i--){
 				int crossoverPoint = rand.nextInt(objectiveFunction.getVariables());
 				int particleIndex = sortedFitness.get(i).getIndex();
 				for(int k = 0; k < crossoverPoint; k++){
-					positions[particleIndex][k] = positions[globalBest][k];
+					positions[particleIndex][k] = positions[best][k];
 				}
 			}
 		}

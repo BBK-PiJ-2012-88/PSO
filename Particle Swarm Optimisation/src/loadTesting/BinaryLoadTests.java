@@ -30,9 +30,9 @@ public class BinaryLoadTests {
 	
 	private Function f;
 	
-	private HaltingCriteria halt = new IterationHalt(200);
+	private HaltingCriteria halt = new IterationHalt(1000);
 	
-	private String location = "/Users/williamhogarth/Documents/ComSci/Project/Results/BinaryLoad.txt";
+	private String location = "/Users/williamhogarth/Documents/ComSci/Project/Results/BinaryLoad64.txt";
 	
 	private File file;
 	
@@ -47,7 +47,7 @@ public class BinaryLoadTests {
 		file = ioManager.createNewFile(location);
 		binary.setHaltingCriteria(halt);
 		binary.setNeighbourhood(neighbourhood);
-		binary.setNumberOfParticles(27);
+		binary.setNumberOfParticles(64);
 		((BinaryPositionUpdate)binary.getPositionUpdate()).setConstraints(true);
 		f = new BinaryDeJong1();
 		testFunction(f, 5.12, -5.12);

@@ -121,6 +121,6 @@ public class DataAnalyser {
 	}
 	
 	private double fitnessImprovement(List<Double> fitness){
-		return fitness.get(0) - fitness.get(fitness.size() - 1);
+		return Math.abs(fitness.get(0) - fitness.get(fitness.size() - 1));
 	}
 }

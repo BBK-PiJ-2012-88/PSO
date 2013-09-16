@@ -15,7 +15,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		ConstrictionCoefficientTest.class, CuboidLatticeTest.class,
 		DeJongFunctionsTest.class,
 		FitnessCalculatorImplTest.class, GeneticOperatorImplTest.class,
-		HaltingCriteriaTest.class, SigmoidFunctionTest.class,
+		SigmoidFunctionTest.class,
 		SwarmMaximumsTest.class, TheFourClustersTest.class, TheRingTest.class,
 		TheStarTest.class, TheWheelTest.class, VanillaInitialiserTest.class,
 		VanillaPositionUpdateTest.class, VanillaSwarmTest.class,

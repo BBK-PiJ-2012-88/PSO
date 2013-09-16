@@ -25,7 +25,7 @@ public class Controller {
 	
 	private Logger log = Logger.aspectOf();
 	
-	private String fileLocation  = "/Users/williamhogarth/Documents/ComSci/Project/Results/AspectJResults/data.txt";
+	private String fileLocation  = "/Users/williamhogarth/Documents/ComSci/Project/Results/AspectJResults/geneticbinary.txt";
 	
 	private CombinatorialSwarm comb = new CombinatorialSwarm();
 	
@@ -49,6 +49,7 @@ public class Controller {
 	}
 	
 	private void runCombinatorial(){
+		file = ioManager.createNewFile(fileLocation);
 		comb.setHaltingCriteria(halt);
 		comb.setNeighbourhood(neighbourhood);
 		comb.setNumberOfParticles(27);
@@ -74,7 +75,7 @@ public class Controller {
 		testGeneticFunction(f, "eil101.tsp");
 		f = new CombinatorialFunction("/Users/williamhogarth/Downloads/kroA100.tsp");
 		testGeneticFunction(f, "kroA100.tsp");
-		LoadTestRunner.main(null);
+		
 	}
 
 	public void runVanilla() {
@@ -97,6 +98,7 @@ public class Controller {
 	}
 
 	private void runBinary() {
+		file = ioManager.createNewFile(fileLocation);
 		bin.setHaltingCriteria(halt);
 		bin.setNeighbourhood(neighbourhood);
 		bin.setNumberOfParticles(27);
@@ -108,11 +110,11 @@ public class Controller {
 		f = new BinaryDeJong3();
 		testBinaryFunction(f, 5.12, -5.12);
 		f = new BinaryDeJong4();
-		testBinaryFunction(f, 5.12, -5.12);
+		testBinaryFunction(f, 1.28, -1.28);
 		f = new BinaryDeJong5();
 		testBinaryFunction(f, 65.536, -65.536);
 		ioManager.writeTofile("Genetic", file);
-		f = new BinaryDeJong1();
+		f = new BinaryDeJong1(); 
 		genTestFunction(f, 5.12, -5.12);
 		f = new BinaryDeJong2();
 		genTestFunction(f, 2.048, -2.048);

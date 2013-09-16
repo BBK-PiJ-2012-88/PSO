@@ -140,9 +140,9 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 			updateParticlePositions();
 			updateFitnessInformation();
 			haltingCriteria.updateData(fitness.get(globalBest), i);
-			System.out.println(i);
+			/*System.out.println(i);
 			System.out.println("value " + fitness.get(globalBest));
-			System.out.println("index " + globalBest);
+			System.out.println("index " + globalBest);*/
 		}
 		Vector<Double> result = new Vector<Double>();
 		for(int i = 0; i < personalBest[globalBest].length; i++){
@@ -160,9 +160,9 @@ public class VanillaSwarm implements Swarm, ConstrainedOptimisation {
 			updateParticlePositions();
 			updateFitnessInformation();
 			haltingCriteria.updateData(fitness.get(globalBest), i);
-			System.out.println(i);
+			/*System.out.println(i);
 			System.out.println("value " + fitness.get(globalBest));
-			System.out.println("index " + globalBest);
+			System.out.println("index " + globalBest);*/
 		}
 		Vector<Double> result = new Vector<Double>();
 		for(int i = 0; i < personalBest[globalBest].length; i++){

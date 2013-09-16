@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import swarm.CombinatorialSwarm;
 import swarm.CombinatorialVelocityUpdate;
+import swarm.IterationHalt;
 import swarm.TheFourClusters;
 
 public class CombinatorialSwarmTest {
@@ -20,23 +21,23 @@ public class CombinatorialSwarmTest {
 	public void test() {
 		classUnderTest.setNumberOfParticles(20);
 		classUnderTest.setNeighbourhood(new TheFourClusters());
-		CombinatorialVelocityUpdate v =(CombinatorialVelocityUpdate) classUnderTest.getVelocityUpdate();
-		v.setWeight(0.1);
+		IterationHalt halt = new IterationHalt(1000);
+		classUnderTest.setHaltingCriteria(halt);
 		Vector<Double> result = new Vector<Double>();
 		result = classUnderTest.optimise(a280);
 		double fitness = a280.CalculateFitness(result);
-		assertTrue(fitness < 10000);
+		assertTrue(fitness < 50000);
 	}
 
 	@Test
 	public void testGeneticUpdate() {
 		classUnderTest.setNumberOfParticles(20);
 		classUnderTest.setNeighbourhood(new TheFourClusters());
-		CombinatorialVelocityUpdate v =(CombinatorialVelocityUpdate) classUnderTest.getVelocityUpdate();
-		v.setWeight(0.1);
+		IterationHalt halt = new IterationHalt(1000);
+		classUnderTest.setHaltingCriteria(halt);
 		Vector<Double> result = new Vector<Double>();
 		result = classUnderTest.geneticOptimise(a280);
 		double fitness = a280.CalculateFitness(result);
-		assertTrue(fitness < 10000);
+		assertTrue(fitness < 50000);
 	}
 }

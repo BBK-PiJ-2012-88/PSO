@@ -18,6 +18,7 @@ public class GradientHaltTest {
 	
 	@Test
 	public void test1() {
+		classUnderTest.setIterations(1);
 		classUnderTest.updateData(2, 1);
 		classUnderTest.updateData(4, 2);
 		boolean result = classUnderTest.halt();
@@ -26,10 +27,23 @@ public class GradientHaltTest {
 	
 	@Test
 	public void test2(){
+		classUnderTest.setIterations(1);
 		classUnderTest.updateData(4, 1);
 		classUnderTest.updateData(2.5, 2);
 		boolean result = classUnderTest.halt();
 		assertTrue(result);
+	}
+	
+	@Test
+	public void testGradientHalt(){
+		GradientHalt halt = new GradientHalt(0.6);
+		halt.updateData(2, 1);
+		halt.halt();
+		halt.updateData(4, 2);
+		halt.halt();
+		halt.updateData(3.9, 3);
+		halt.halt();
+		assertTrue(halt.halt());
 	}
 	
 	@Test

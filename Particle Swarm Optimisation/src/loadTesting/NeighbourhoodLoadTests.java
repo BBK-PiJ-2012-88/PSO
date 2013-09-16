@@ -30,7 +30,7 @@ public class NeighbourhoodLoadTests {
 	
 	private VanillaSwarm vanilla = new VanillaSwarm();
 	
-	private HaltingCriteria halt = new IterationHalt(200);
+	private HaltingCriteria halt = new IterationHalt(1000);
 	
 	private String location = "/Users/williamhogarth/Documents/ComSci/Project/Results/neighbourhood.txt";
 	
@@ -69,29 +69,21 @@ public class NeighbourhoodLoadTests {
 					Arrays.fill(max, 5.12);
 					min = new double[f.getVariables()];
 					Arrays.fill(min, -5.12);
-					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMaximum(max);
-					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMinimum(min);
 				}else if(f instanceof DeJong2){
 					max = new double[f.getVariables()];
 					Arrays.fill(max, 2.048);
 					min = new double[f.getVariables()];
 					Arrays.fill(min, -2.048);
-					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMaximum(max);
-					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMinimum(min);
 				}else if(f instanceof DeJong4){
 					max = new double[f.getVariables()];
 					Arrays.fill(max, 1.28);
 					min = new double[f.getVariables()];
 					Arrays.fill(min, -1.28);
-					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMaximum(max);
-					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMinimum(min);
 				}else{
 					max = new double[f.getVariables()];
 					Arrays.fill(max, 65.536);
 					min = new double[f.getVariables()];
 					Arrays.fill(min, -65.536);
-					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMaximum(max);
-					//((VanillaPositionUpdate)vanilla.getPositionUpdate()).getConstrainer().setMinimum(min);
 				}
 				for(int i = 0; i < 100; i++){
 					Vector<Double> solution = vanilla.constrainedOptimise(f, max, min);

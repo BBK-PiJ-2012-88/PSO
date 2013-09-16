@@ -2,52 +2,135 @@ package swarm;
 
 import java.util.Map;
 import java.util.Vector;
-
+/**
+ * A controller class that manages its components to search combinatorial solution spaces
+ * using the particle swarm algorithm. The combinatorial swarm does not have methods to search constrained 
+ * solution spaces. It can use genetic operators in its search of the solution space.
+ * 
+ * @author williamhogarth
+ *
+ */
 public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1179862233764569743L;
-
+	/**
+	 * The particles' current positions
+	 */
 	private double[][] positions;
 	
+	/**
+	 * The best solution found by each particle
+	 */
 	private double[][] personalBest;
 	
+	/**
+	 * The particles' velocities. Each particles' cognitive velocity is at the particle's index
+	 * Its social velocity is at its index + number of particles
+	 */
 	private double[][] velocities;
 	
+	/**
+	 * Genetic Operator that performs the genetic operations. The GeneticOperatorImpl cannot be used instead
+	 * here.
+	 */
 	private GeneticOperator genOp = new CombinatorialGeneticOperator();
 	
+	/**
+	 * the Function being opitmised
+	 */
 	private Function objectiveFunction;
 	
-	private int numberOfParticles = 20;
+	/**
+	 * The number of particles, default is 27.
+	 */
+	private int numberOfParticles = 27;
 	
+	/**
+	 * The HaltingCriteria. The default is an Iteration halt set to run for 100 iterations
+	 */
 	private HaltingCriteria haltingCriteria = new IterationHalt(100);
 	
+	/**
+	 * Map mapping the particle index to the fitness of the best solution that it has found thus far.
+	 */
 	private Map<Integer, Double> fitness;
 	
+	/**
+	 * VelocityUpdate responsible for updating the particles' velocities. VelocityClamping or 
+	 * ConstrictionCoefficient cannot be used here.
+	 */
 	private VelocityUpdate velocityUpdate = new CombinatorialVelocityUpdate();
 	
+	/**
+	 * PositionUpdate responsible for updating the positions of the particles
+	 */
 	private PositionUpdate positionUpdate = new CombinatorialPositionUpdate();
 	
+	/**
+	 * Initialiser that initialises the particles' velocities, positions and personal best
+	 */
 	private Initialiser init = new CombinatorialInitialiser();
 	
+	/**
+	 * Calculates the fitness of the solution found by the swarm. Initialised when the optimisation process
+	 * begins.
+	 */
 	private FitnessCalculator calc;
 	
+	/**
+	 * Index of the particle that has found the best solution thus far
+	 */
 	private int globalBest;
 	
+	/**
+	 * boolean indicating whether a maximum or a minimum is being sought.
+	 */
 	private boolean maximum = false;
 	
-	
+	/**
+	 * The combinatorial swarm only has a no arguments constructor.
+	 */
 	public CombinatorialSwarm(){}
 	
+	/**
+	 * An unconstrained genetic optimisation process that returns a Vector containing the best permutation found by the swarm.
+	 * <p>
+	 * The method sets the objective function and then returns the private method geneticOptimise() 
+	 * 
+	 * @param Function objectiveFunction
+	 * @return Vector<Double>
+	 */
 	@Override
 	public Vector<Double> geneticOptimise(Function objectiveFunction) {
 		setObjectiveFunction(objectiveFunction);
 		return geneticOptimise();
 	}
-
 	
+	/**
+	 * An unconstrained optimisation process that returns a vector of the best permutation found by the 
+	 * swarm.
+	 * <p>
+	 * The method sets the objective function and then returns the private method optimise()
+	 */
+	@Override
+	public Vector<Double> optimise(Function objectiveFunction) {
+		this.objectiveFunction = objectiveFunction;
+		return optimise();
+	}
+
+	/**
+	 * 
+	 * Calls the private method initiateSwarm(). Enters an optimisation loop using the boolean condition
+	 * HaltingCriteria.halt(). Inside the loop the private methods updateVelocities(), 
+	 * updateParticlePositions() and updateFitnessInformation() are called. The HaltingCriteria's data is
+	 * then updated. Returns a Vector which is the best permutation found by the swarm.
+	 * 
+	 * @return Vector<Double>
+	 * 
+	 */
 	@Override
 	public Vector<Double> optimise() {
 		initiateSwarm();
@@ -56,9 +139,6 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 			updateParticlePositions();
 			updateFitnessInformation();
 			haltingCriteria.updateData(fitness.get(globalBest), i);
-			System.out.println(i);
-			System.out.println("value " + fitness.get(globalBest));
-			System.out.println("index " + globalBest);
 		}
 		Vector<Double> result = new Vector<Double>();
 		for(int i = 0; i < personalBest[globalBest].length; i++){
@@ -67,12 +147,14 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 		return result;
 	}
 
-	@Override
-	public Vector<Double> optimise(Function objectiveFunction) {
-		this.objectiveFunction = objectiveFunction;
-		return optimise();
-	}
-
+	/**
+	 * If the genetic operator is null it is initialised. The private method initiate swarm is called. Enters an 
+	 * optimisation loop using the boolean condition HaltingCriteria.halt(). Inside the loop the private methods
+	 * updateVelocities(), updateParticlePositions(), performGeneticOperations() and updateFitnessInformation()
+	 * are called. The HaltingCriteria's data is then updated. A vector of the best permutation found is returned.
+	 * 
+	 * @return Vector<Double>
+	 */
 	@Override
 	public Vector<Double> geneticOptimise() {
 		if(genOp == null){
@@ -85,9 +167,6 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 			performGeneticOperations();
 			updateFitnessInformation();
 			haltingCriteria.updateData(fitness.get(globalBest), i);
-			System.out.println(i);
-			System.out.println("value " + fitness.get(globalBest));
-			System.out.println("index " + globalBest);
 		}
 		Vector<Double> result = new Vector<Double>();
 		for(int i = 0; i < personalBest[globalBest].length; i++){
@@ -96,6 +175,13 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 		return result;
 	}
 	
+	/**
+	 * Initiates the swarm
+	 * <p>
+	 * Creates a new FitnessCalculator and intialises the particle matrices. The fitness calculator performs
+	 * an initial calculate fitness, and also calculates the index of the global best particle. The HaltingCriteria
+	 * data is updated.
+	 */
 	private void initiateSwarm(){
 		calc = new FitnessCalculatorImpl(objectiveFunction, maximum);
 		init.initialiseMatrices(objectiveFunction, numberOfParticles);
@@ -111,6 +197,10 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 		haltingCriteria.updateData(fitness.get(globalBest), 0);
 	}
 	
+	/**
+	 * updates the velocities of the particles.
+	 * 
+	 */
 	private void updateVelocities(){
 		velocityUpdate.setVelocities(getVelocities());
 		velocityUpdate.setPosition(getPositions());
@@ -119,13 +209,18 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 		setVelocities(velocityUpdate.updateVelocities());
 	}
 	
+	/**
+	 * Performs genetic operations on the particles
+	 */
 	private void performGeneticOperations() {
 		genOp.setPositions(positions);
 		genOp.performGeneticOperations();
 		setPositions(genOp.getPositions());
 	}
 	
-	
+	/**
+	 * updates the particles' positions
+	 */
 	private void updateParticlePositions() {
 		positionUpdate.setPositions(positions);
 		positionUpdate.setVelocities(velocities);
@@ -136,6 +231,9 @@ public class CombinatorialSwarm implements Swarm, GeneticSwarm {
 		setVelocities(positionUpdate.getVelocities());
 	}
 	
+	/**
+	 * Updates the fitness map, personal best of the particles and the global best index
+	 */
 	private void updateFitnessInformation(){
 		calc.setFitness(getFitness());
 		calc.setPersonalBest(getPersonalBest());

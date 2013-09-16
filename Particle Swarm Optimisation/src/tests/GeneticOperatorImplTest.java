@@ -45,7 +45,6 @@ public class GeneticOperatorImplTest {
 		int globalBest = calc.calculateGlobalBest();
 		classUnderTest.setObjectiveFunction(f);
 		classUnderTest.setPositions(binaryString);
-		((GeneticOperatorImpl) classUnderTest).setGlobalBest(globalBest);
 	}
 	
 	private double[][] copyArray(double[][] array){
@@ -101,7 +100,7 @@ public class GeneticOperatorImplTest {
 		((GeneticOperatorImpl)classUnderTest).crossover();
 		binaryString = classUnderTest.getPositions();
 		int counter = 0;
-		int best = ((GeneticOperatorImpl)classUnderTest).getGlobalBest();
+		int best = sortedFitness.get(0).getIndex();
 		for(int i = sortedFitness.size() / 2; i < sortedFitness.size(); i++){
 			int current = sortedFitness.get(i).getIndex();
 			for(int k = 0; k < binaryString[current].length; k++){

@@ -27,7 +27,7 @@ public class VelocityUpdateLoadTests {
 	
 	private VanillaSwarm vanilla = new VanillaSwarm();
 	
-	private HaltingCriteria halt = new IterationHalt(200);
+	private HaltingCriteria halt = new IterationHalt(1000);
 	
 	private String location = "/Users/williamhogarth/Documents/ComSci/Project/Results/velocityUpdate.txt";
 	

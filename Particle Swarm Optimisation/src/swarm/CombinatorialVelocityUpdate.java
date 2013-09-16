@@ -1,6 +1,13 @@
 package swarm;
 
-
+/**
+ * Updates the velocities of the particles in the combinatorial swarm.
+ * <p>
+ * Particle velocities are limited to the range [0,1]. Each particle has a social and cognitive velocity,
+ * and either the social velocity = 1 or the cognitive velocity = 1.
+ * @author williamhogarth
+ *
+ */
 public class CombinatorialVelocityUpdate implements
 		VelocityUpdate {
 
@@ -75,7 +82,11 @@ public class CombinatorialVelocityUpdate implements
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
-
+	/**
+	 * Control method that updates the particles' velocities.
+	 * <p>
+	 * @return double[][], the updated particle velocities.
+	 */
 	@Override
 	public double[][] updateVelocities(){
 		getNeighbourhood().setMaximum(maximum);
@@ -84,15 +95,15 @@ public class CombinatorialVelocityUpdate implements
 		normaliseVelocities();
 		return getVelocities();
 	}
-
+	/**
+	 * Restricts the particles' velocities to the range [0,1].
+	 * <p>
+	 * This is done by dividing the social and cognitive velocity by max{cognitive velocity, social velocity}
+	 */
 	private void normaliseVelocities() {
 		int rows = velocities.length / 2;
 		for(int i = 0; i < rows; i++){
 			for(int k = 0; k < velocities[i].length; k++){
-				/*if(velocities[i][k] + velocities[i + rows][k] == 0){
-					velocities[i][k] = Math.random();
-					velocities[i + rows][k] = Math.random();
-				}*/
 				double denominator = velocities[i + rows][k];
 				if(velocities[i][k] > velocities[i + rows][k]){
 					denominator = velocities[i][k];
@@ -105,7 +116,11 @@ public class CombinatorialVelocityUpdate implements
 	}
 	
 	/**
-	 * The social velocity is in the 'top' part of the matrix; 
+	 * Updates the social velocity of the particles.
+	 * <p>
+	 * The index from number of particles (i.e. velocities.length / 2) to velocities.length - 1 are those of 
+	 * the social velocities of the particles. These are updated by adding the normalised deviation distance
+	 * metric of the particles current position from its neighbourhood position to the particle's previous velocity
 	 */
 	private void updateSocialVelocity() {
 		int rows = velocities.length / 2;
@@ -117,7 +132,13 @@ public class CombinatorialVelocityUpdate implements
 			}
 		}
 	}
-
+	/**
+	 * Updates the cognitive velocity of the particles.
+	 * <p>
+	 * The index from 0 to number of particles (i.e. velocities.length / 2) are those of 
+	 * the cognitive velocities of the particles. These are updated by adding the normalised deviation distance
+	 * metric of the particles current position from its best position to the particle's previous velocity
+	 */
 	private void updateCognitiveVelocity() {
 		for(int i = 0; i < velocities.length / 2; i++){
 			for(int k = 0; k < velocities[i].length; k++){
@@ -125,6 +146,29 @@ public class CombinatorialVelocityUpdate implements
 				velocities[i][k] = weight * velocities[i][k] + cognitiveConstant * normDevDist;
 			}
 		}
+	}
+	
+	/**
+	 * Calculates the normalised deviation distance metric.
+	 * <p>
+	 * The deviation distance between two arrays a1[i] = e,  is i-k where a2[k] = e. The distance is normalised
+	 * by dividing the deviation distance by the length of a2 or a1. This method takes the element, its index in one array
+	 * and another array (personal or neighbourhood best) and searches for the element in the array and then
+	 * caluclates the normalised deviation distance metric according to the above formula.
+	 * 
+	 * @param elementIndex, index of element in particle current position
+	 * @param element, element at current position
+	 * @param array, neighbourhood or personal best solution 
+	 * @return double, normalised devation distance metric
+	 */
+	private double calculateNormalisedDeviationDistance(int elementIndex, double element, double[] array){
+		double distance = 0;
+		for(int i = 0; i < array.length; i++){
+			if(Math.abs(element - array[i]) < epsilon){
+				distance = elementIndex - i;
+			}
+		}
+		return Math.abs(distance)/(array.length - 1);
 	}
 	
 	public double getSocialConstant() {
@@ -141,16 +185,6 @@ public class CombinatorialVelocityUpdate implements
 
 	public void setCognitiveConstant(double cognitiveConstant) {
 		this.cognitiveConstant = cognitiveConstant;
-	}
-
-	private double calculateNormalisedDeviationDistance(int elementIndex, double element, double[] array){
-		double distance = 0;
-		for(int i = 0; i < array.length; i++){
-			if(Math.abs(element - array[i]) < epsilon){
-				distance = elementIndex - i;
-			}
-		}
-		return Math.abs(distance)/(array.length - 1);
 	}
 
 	@Override

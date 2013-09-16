@@ -26,9 +26,9 @@ public class CombinatorialLoadTests {
 	
 	private Function f;
 	
-	private HaltingCriteria halt = new IterationHalt(200);
+	private HaltingCriteria halt = new IterationHalt(1000);
 	
-	private String location = "/Users/williamhogarth/Documents/ComSci/Project/Results/combinatorialLoad.txt";
+	private String location = "/Users/williamhogarth/Documents/ComSci/Project/Results/horrorCombinatorialTest.txt";
 	
 	private File file;
 	
@@ -71,7 +71,7 @@ public class CombinatorialLoadTests {
 	private void testFunction(Function function, String str){
 		double best = 0.0;
 		double worst = 0.0;
-		for(int i = 0; i < 100; i++){
+		for(int i = 0; i < 10; i++){
 			Vector<Double> solution = comb.optimise(function);
 			results.add(function.CalculateFitness(solution));
 			if(i == 0){
@@ -94,7 +94,7 @@ public class CombinatorialLoadTests {
 	private void testGeneticFunction(Function function, String str){
 		double best = 0.0;
 		double worst = 0.0;
-		for(int i = 0; i < 100; i++){
+		for(int i = 0; i < 10; i++){
 			Vector<Double> solution = comb.geneticOptimise(function);
 			results.add(function.CalculateFitness(solution));
 			if(i == 0){
